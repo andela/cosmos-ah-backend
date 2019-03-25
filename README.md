@@ -1,3 +1,6 @@
+
+[![Reviewed by Hound](https://img.shields.io/badge/Reviewed__By-HoundCI-%23A873D1.svg)](https://houndci.com)
+
 Authors Haven - A Social platform for the creative at heart.
 =======
 
