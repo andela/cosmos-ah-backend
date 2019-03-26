@@ -2,6 +2,7 @@ import express from 'express';
 import bodyParser from 'body-parser';
 import cors from 'cors';
 import dotenv from 'dotenv';
+import testRoute from './routes/index';
 
 dotenv.config();
 
@@ -15,12 +16,7 @@ app.use(bodyParser.urlencoded({ extended: false }));
 app.use(bodyParser.json());
 app.use(cors());
 
-app.get('/', (req, res) => {
-  res.status(200).json({
-    status: 200,
-    message: 'welcome to cosmos authors haeven'
-  });
-});
+app.get('/', testRoute);
 
 // catch 404 error
 app.use((req, res, next) => {
