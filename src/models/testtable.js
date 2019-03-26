@@ -1,10 +1,8 @@
-'use strict';
-module.exports = (sequelize, DataTypes) => {
+
+export default (sequelize, DataTypes) => {
   const TestTable = sequelize.define('TestTable', {
-    title: DataTypes.STRING
+    title: DataTypes.STRING,
+    id: DataTypes.STRING
   }, {});
-  TestTable.associate = function(models) {
-    // associations can be defined here
-  };
   return TestTable;
 };
