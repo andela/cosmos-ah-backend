@@ -1,4 +1,6 @@
-require("dotenv").config();
+const dotenv = require('dotenv');
+
+dotenv.config();
 
 const {
   LOCAL_DB_USER,
@@ -12,16 +14,17 @@ module.exports = {
     username: LOCAL_DB_USER,
     password: LOCAL_DB_PASSWORD,
     database: LOCAL_DB_NAME,
-    host: "127.0.0.1",
+    host: '127.0.0.1',
     port: 5432,
-    dialect: "postgres"
+    dialect: 'postgres'
   },
   test: {
-    username: "root",
+    username: 'root',
     password: null,
-    database: "database_test",
-    host: "127.0.0.1",
-    dialect: "mysql"
+    database: 'database_test',
+    host: '127.0.0.1',
+    port: 5432,
+    dialect: 'postgres'
   },
   production: {
     use_env_variable: PROD_DB_URL
