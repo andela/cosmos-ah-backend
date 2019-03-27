@@ -6,3 +6,23 @@ node_js:
 cache:
  directories:
    - node_modules
+
+deploy:
+  provider: heroku
+  app: author-haven-stage
+  on:
+    condition: $TRAVIS_BRANCH == develop
+    repo: andela/cosmos-ah-backend
+    branch: develop
+  api_key:
+    secure: $HEROKU_AUTH
+
+deploy:
+  provider: heroku
+  app: author-haven
+  on:
+    condition: $TRAVIS_BRANCH == master
+    repo: andela/cosmos-ah-backend
+    branch: master
+  api_key:
+    secure: $HEROKU_AUTH
