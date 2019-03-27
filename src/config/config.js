@@ -1,13 +1,13 @@
-const dotenv = require('dotenv')
+const dotenv = require('dotenv');
 
-dotenv.config()
+dotenv.config();
 
 const {
   LOCAL_DB_USER,
   LOCAL_DB_PASSWORD,
   LOCAL_DB_NAME,
   PROD_DB_URL,
-} = process.env
+} = process.env;
 
 module.exports = {
   development: {
@@ -29,4 +29,4 @@ module.exports = {
   production: {
     use_env_variable: PROD_DB_URL,
   },
-}
+};

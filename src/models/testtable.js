@@ -6,6 +6,6 @@ export default (sequelize, DataTypes) => {
       id: DataTypes.STRING,
     },
     {}
-  )
-  return TestTable
-}
+  );
+  return TestTable;
+};

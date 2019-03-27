@@ -1,29 +1,29 @@
-import express from 'express'
-import bodyParser from 'body-parser'
-import cors from 'cors'
-import dotenv from 'dotenv'
-import testRoute from './routes/index'
+import express from 'express';
+import bodyParser from 'body-parser';
+import cors from 'cors';
+import dotenv from 'dotenv';
+import testRoute from './routes/index';
 
-dotenv.config()
+dotenv.config();
 
-const PORT = process.env.PORT || 4000
+const PORT = process.env.PORT || 4000;
 
 // Create global app object
-const app = express()
+const app = express();
 
 // Express config defaults
-app.use(bodyParser.urlencoded({ extended: false }))
-app.use(bodyParser.json())
-app.use(cors())
+app.use(bodyParser.urlencoded({ extended: false }));
+app.use(bodyParser.json());
+app.use(cors());
 
-app.get('/', testRoute)
+app.get('/', testRoute);
 
 // catch 404 error
 app.use((req, res, next) => {
-  const err = new Error('Not Found')
-  err.status = 404
-  next(err)
-})
+  const err = new Error('Not Found');
+  err.status = 404;
+  next(err);
+});
 
 // catch error from database and other errors
 app.use((error, res, next) => {
@@ -31,10 +31,10 @@ app.use((error, res, next) => {
     error: {
       message: error.message,
     },
-  })
-  next()
-})
+  });
+  next();
+});
 
-app.listen(PORT, () => console.log(`Running on localhost:${PORT}`))
+app.listen(PORT, () => console.log(`Running on localhost:${PORT}`));
 
-export default app
+export default app;
