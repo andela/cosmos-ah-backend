@@ -1,88 +1,40 @@
-const fs = require("fs"),
-  http = require("http"),
-  path = require("path"),
-  methods = require("methods"),
-  express = require("express"),
-  bodyParser = require("body-parser"),
-  session = require("express-session"),
-  cors = require("cors"),
-  passport = require("passport"),
-  errorhandler = require("errorhandler");
+import express from 'express'
+import bodyParser from 'body-parser'
+import cors from 'cors'
+import dotenv from 'dotenv'
+import testRoute from './routes/index'
 
-const isProduction = process.env.NODE_ENV === "production";
+dotenv.config()
+
+const PORT = process.env.PORT || 4000
 
 // Create global app object
-const app = express();
+const app = express()
 
-app.use(cors());
+// Express config defaults
+app.use(bodyParser.urlencoded({ extended: false }))
+app.use(bodyParser.json())
+app.use(cors())
 
-// Normal express config defaults
-app.use(require("morgan")("dev"));
-app.use(bodyParser.urlencoded({ extended: false }));
-app.use(bodyParser.json());
+app.get('/', testRoute)
 
-app.use(require("method-override")());
-app.use(express.static(__dirname + "/public"));
+// catch 404 error
+app.use((req, res, next) => {
+  const err = new Error('Not Found')
+  err.status = 404
+  next(err)
+})
 
-app.use(
-  session({
-    secret: "authorshaven",
-    cookie: { maxAge: 60000 },
-    resave: false,
-    saveUninitialized: false
+// catch error from database and other errors
+app.use((error, res, next) => {
+  res.status(error.status || 500).json({
+    error: {
+      message: error.message,
+    },
   })
-);
+  next()
+})
 
-if (!isProduction) {
-  app.use(errorhandler());
-}
+app.listen(PORT, () => console.log(`Running on localhost:${PORT}`))
 
-app.get("/", (req, res) => {
-  res.status(200).json({
-    status: 200,
-    message: "welcome to cosmos authors haeven"
-  });
-});
-
-/// catch 404 and forward to error handler
-app.use(function(req, res, next) {
-  const err = new Error("Not Found");
-  err.status = 404;
-  next(err);
-});
-
-/// error handlers
-
-// development error handler
-// will print stacktrace
-if (!isProduction) {
-  app.use(function(err, req, res, next) {
-    console.log(err.stack);
-
-    res.status(err.status || 500);
-
-    res.json({
-      errors: {
-        message: err.message,
-        error: err
-      }
-    });
-  });
-}
-
-// production error handler
-// no stacktraces leaked to user
-app.use(function(err, req, res, next) {
-  res.status(err.status || 500);
-  res.json({
-    errors: {
-      message: err.message,
-      error: {}
-    }
-  });
-});
-
-// finally, let's start our server...
-const server = app.listen(process.env.PORT || 3000, function() {
-  console.log("Listening on port " + server.address().port);
-});
+export default app
