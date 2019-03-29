@@ -30,8 +30,7 @@ User.hasMany(Rating);
 Report.belongsTo(Article);
 Article.hasMany(Report);
 
-export default {
-  // Export Models
+export default { // Export Models
   User,
   Article,
   Comment,
