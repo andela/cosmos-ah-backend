@@ -6,6 +6,7 @@ const {
   LOCAL_DB_USER,
   LOCAL_DB_PASSWORD,
   LOCAL_DB_NAME,
+  LOCAL_DB_HOST,
   PROD_DB_URL,
 } = process.env;
 
@@ -14,7 +15,7 @@ module.exports = {
     username: LOCAL_DB_USER,
     password: LOCAL_DB_PASSWORD,
     database: LOCAL_DB_NAME,
-    host: '127.0.0.1',
+    host: LOCAL_DB_HOST,
     port: 5432,
     dialect: 'postgres',
   },
