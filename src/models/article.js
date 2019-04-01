@@ -52,6 +52,10 @@ class Article extends Model {
           type: DataTypes.ARRAY(DataTypes.TEXT),
           defaultValue: [],
         },
+        likes: {
+          type: DataTypes.ARRAY(DataTypes.UUID),
+          defaultValue: [],
+        },
         favouritesCount: {
           type: DataTypes.INTEGER,
           defaultValue: 0,
