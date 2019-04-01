@@ -19,7 +19,7 @@ class User extends Model {
           allowNull: false,
           primaryKey: true,
           type: DataTypes.UUID,
-          defaultValue: Sequelize.UUIDV4,
+          defaultValue: DataTypes.UUIDV4,
         },
         full_name: {
           type: DataTypes.STRING,
@@ -49,7 +49,11 @@ class User extends Model {
         password: {
           type: DataTypes.STRING,
           allowNull: false,
-          validate: {},
+          validate: {
+            is: /^(?=.*\d).{6,8}$/,
+            msg:
+              'Password must be between 6 and 8 digit long and include atleast one numeric digit',
+          },
         },
         bio: {
           type: DataTypes.STRING,
