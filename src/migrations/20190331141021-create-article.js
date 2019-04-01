@@ -42,6 +42,11 @@ export default {
       },
       tags: {
         type: Sequelize.ARRAY(Sequelize.TEXT),
+        defaultValue: [],
+      },
+      likes: {
+        type: Sequelize.ARRAY(Sequelize.UUID),
+        defaultValue: [],
       },
       favouritesCount: {
         type: Sequelize.INTEGER,

@@ -6,6 +6,7 @@ import Bookmark from './bookmark';
 import Favourite from './favourite';
 import Highlight from './highlight';
 import Rating from './article_rating';
+import Report from './article_report';
 import Follower from './follower';
 
 // Define Model Relationships
@@ -26,6 +27,9 @@ User.hasMany(Bookmark);
 Rating.belongsToMany(User);
 User.hasMany(Rating);
 
+Report.belongsTo(Article);
+Article.hasMany(Report);
+
 export default {
   // Export Models
   User,
@@ -37,4 +41,5 @@ export default {
   Favourite,
   Highlight,
   Follower,
+  Report,
 };

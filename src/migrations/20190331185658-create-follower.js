@@ -6,6 +6,15 @@ export default {
         primaryKey: true,
         type: Sequelize.UUID,
       },
+      userId: {
+        allowNull: false,
+        type: Sequelize.UUID,
+        references: {
+          model: 'users',
+          key: 'id',
+          deferrable: Sequelize.Deferrable.INITIALLY_IMMEDIATE,
+        },
+      },
       followerId: {
         allowNull: false,
         type: Sequelize.UUID,
