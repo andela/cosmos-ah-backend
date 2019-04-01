@@ -1,62 +1,75 @@
-import { Sequelize, Model } from 'sequelize';
+import { Model } from 'sequelize';
 /**
  *
  *
  * @class User
  * @extends {Model}
  */
-class User extends Model {}
-
-export default User.init(
-  {
-    id: {
-      allowNull: false,
-      primaryKey: true,
-      type: Sequelize.UUID,
-      defaultValue: Sequelize.UUIDV4,
-    },
-    full_name: {
-      type: Sequelize.STRING,
-      allowNull: false,
-      validate: {
-        is: ['^[a-z]+$', 'i'],
-        msg: 'field can be alphanumeric only',
+class User extends Model {
+  /**
+   * @name init
+   * @param {sequelize} sequelize
+   * @param {DataTypes} DataTypes
+   * @returns {Model} Returns User model
+   */
+  static init(sequelize, DataTypes) {
+    return super.init(
+      {
+        id: {
+          allowNull: false,
+          primaryKey: true,
+          type: DataTypes.UUID,
+          defaultValue: DataTypes.UUIDV4,
+        },
+        full_name: {
+          type: DataTypes.STRING,
+          allowNull: false,
+          validate: {
+            is: ['^[a-z]+$', 'i'],
+            msg: 'field can be alphanumeric only',
+          },
+        },
+        email: {
+          type: DataTypes.STRING,
+          allowNull: false,
+          validate: {
+            isEmail: true,
+            msg: 'field must be email',
+          },
+        },
+        username: {
+          type: DataTypes.STRING,
+          allowNull: false,
+          unique: true,
+          validate: {
+            isAlphanumeric: true,
+            msg: 'field can be alphanumeric only',
+          },
+        },
+        password: {
+          type: DataTypes.STRING,
+          allowNull: false,
+          validate: {
+            is: /^(?=.*\d).{6,8}$/,
+            msg:
+              'Password must be between 6 and 8 digit long and include atleast one numeric digit',
+          },
+        },
+        bio: {
+          type: DataTypes.STRING,
+        },
+        image_url: {
+          type: DataTypes.STRING,
+          validate: {
+            isUrl: true,
+            msg: 'field can be url only',
+          },
+        },
+        notification: DataTypes.BOOLEAN,
+        role: DataTypes.ENUM('admin', 'author', 'user'),
       },
-    },
-    email: {
-      type: Sequelize.STRING,
-      allowNull: false,
-      validate: {
-        isEmail: true,
-        msg: 'field must be email',
-      },
-    },
-    username: {
-      type: Sequelize.STRING,
-      allowNull: false,
-      unique: true,
-      validate: {
-        isAlphanumeric: true,
-        msg: 'field can be alphanumeric only',
-      },
-    },
-    password: {
-      type: Sequelize.STRING,
-      allowNull: false,
-      validate: {},
-    },
-    bio: {
-      type: Sequelize.STRING,
-    },
-    image_url: {
-      type: Sequelize.STRING,
-      validate: {
-        isUrl: true,
-        msg: 'field can be url only',
-      },
-    },
-    notification: Sequelize.BOOLEAN,
-    role: Sequelize.ENUM('admin', 'author', 'user'),
-  },
-  { sequelize }
-);
+      { sequelize }
+    );
+  }
+}
+export default User;
