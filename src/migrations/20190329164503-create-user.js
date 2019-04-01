@@ -28,7 +28,6 @@ export default {
       },
       image_url: {
         type: Sequelize.STRING,
-        allowNull: false,
       },
       notification: {
         type: Sequelize.BOOLEAN,
