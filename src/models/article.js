@@ -16,6 +16,8 @@ class Article extends Model {
     return super.init(
       {
         id: {
+          primaryKey: true,
+          allowNull: false,
           type: DataTypes.UUID,
           defaultValue: DataTypes.UUIDV4,
         },
@@ -29,9 +31,12 @@ class Article extends Model {
         },
         title: {
           type: DataTypes.STRING,
+          allowNull: false,
         },
         slug: {
           type: DataTypes.STRING,
+          allowNull: false,
+          unique: true,
         },
         description: {
           type: DataTypes.TEXT,
@@ -39,6 +44,7 @@ class Article extends Model {
         },
         body: {
           type: DataTypes.TEXT,
+          allowNull: false,
         },
         imageUrl: {
           type: DataTypes.STRING,
@@ -53,7 +59,11 @@ class Article extends Model {
           defaultValue: [],
         },
         likes: {
-          type: DataTypes.ARRAY(DataTypes.UUID),
+          type: DataTypes.ARRAY(DataTypes.STRING),
+          defaultValue: [],
+        },
+        rating: {
+          type: DataTypes.ARRAY(DataTypes.JSONB),
           defaultValue: [],
         },
         favouritesCount: {
