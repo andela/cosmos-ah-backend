@@ -10,7 +10,7 @@ class Notification extends Model {
    * @name init
    * @param {sequelize} sequelize
    * @param {DataTypes} DataTypes
-   * @returns {Model} Returns notiffication model
+   * @returns {Model} Returns notification model
    */
   static init(sequelize, DataTypes) {
     return super.init(

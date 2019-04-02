@@ -11,7 +11,7 @@ class Highlight extends Model {
    * @name init
    * @param {sequelize} sequelize
    * @param {DataTypes} DataTypes
-   * @returns {Model} Returns notiffication model
+   * @returns {Model} Returns highlight model
    */
   static init(sequelize, DataTypes) {
     return super.init(
