@@ -1,45 +1,43 @@
-import { Model } from 'sequelize';
-import User from './user';
-import Article from './article';
-
 /**
- * @class Favourite
- * @extends {Model}
+ * @name init
+ * @param {sequelize} sequelize
+ * @param {DataTypes} DataTypes
+ * @returns {Model} Returns Favourite model
  */
-class Favourite extends Model {
-  /**
-   * @name init
-   * @param {sequelize} sequelize
-   * @param {DataTypes} DataTypes
-   * @returns {Model} Returns Favourite model
-   */
-  static init(sequelize, DataTypes) {
-    return super.init(
-      {
-        id: {
-          type: DataTypes.UUID,
-          defaultValue: DataTypes.UUIDV4,
-        },
-        userId: {
-          type: DataTypes.UUID,
-          references: {
-            model: User,
-            key: 'id',
-            deferrable: DataTypes.Deferrable.INITIALLY_IMMEDIATE,
-          },
-        },
-        articleId: {
-          type: DataTypes.UUID,
-          references: {
-            model: Article,
-            key: 'id',
-            deferrable: DataTypes.Deferrable.INITIALLY_IMMEDIATE,
-          },
-        },
+export default (sequelize, DataTypes) => {
+  const Favourite = sequelize.define(
+    'Favourite',
+    {
+      id: {
+        type: DataTypes.UUID,
+        defaultValue: DataTypes.UUIDV4,
+        allowNull: false,
+        primaryKey: true,
       },
-      { sequelize }
-    );
-  }
-}
-
-export default Favourite;
+      userId: {
+        type: DataTypes.UUID,
+        allowNull: false,
+      },
+      articleId: {
+        type: DataTypes.UUID,
+        allowNull: false,
+      },
+    },
+    {
+      tableName: 'favourites',
+    }
+  );
+  Favourite.associate = (models) => {
+    Favourite.belongsTo(models.Article, {
+      foreignKey: 'articleId',
+      as: 'article',
+      onDelete: 'CASCADE',
+    });
+    Favourite.belongsTo(models.User, {
+      foreignKey: 'userId',
+      as: 'user',
+      onDelete: 'CASCADE',
+    });
+  };
+  return Favourite;
+};
