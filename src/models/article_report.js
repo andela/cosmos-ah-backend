@@ -1,40 +1,37 @@
-import { Model } from 'sequelize';
-import Article from './article';
-
 /**
- * @class ArticleReport
- * @extends {Model}
+ * @name init
+ * @param {sequelize} sequelize
+ * @param {DataTypes} DataTypes
+ * @returns {Model} Returns ArticleReport model
  */
-class ArticleReport extends Model {
-  /**
-   * @name init
-   * @param {sequelize} sequelize
-   * @param {DataTypes} DataTypes
-   * @returns {Model} Returns ArticleReport model
-   */
-  static init(sequelize, DataTypes) {
-    return super.init(
-      {
-        id: {
-          type: DataTypes.UUID,
-          defaultValue: DataTypes.UUIDV4,
-        },
-        articleId: {
-          type: DataTypes.UUID,
-          references: {
-            model: Article,
-            key: 'id',
-            deferrable: DataTypes.Deferrable.INITIALLY_IMMEDIATE,
-          },
-        },
-        description: {
-          allowNull: false,
-          type: DataTypes.TEXT,
-        },
+export default (sequelize, DataTypes) => {
+  const Report = sequelize.define(
+    'Report',
+    {
+      id: {
+        primaryKey: true,
+        type: DataTypes.UUID,
+        defaultValue: DataTypes.UUIDV4,
       },
-      { sequelize }
-    );
-  }
-}
-
-export default ArticleReport;
+      articleId: {
+        type: DataTypes.UUID,
+        allowNull: false,
+      },
+      description: {
+        allowNull: false,
+        type: DataTypes.TEXT,
+      },
+    },
+    {
+      tableName: 'article_reports',
+    }
+  );
+  Report.associate = (models) => {
+    Report.belongsTo(models.Article, {
+      foreignKey: 'articleId',
+      as: 'article',
+      onDelete: 'CASCADE',
+    });
+  };
+  return Report;
+};
