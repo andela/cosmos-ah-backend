@@ -1,33 +1,22 @@
-const dotenv = require('dotenv');
-
-dotenv.config();
-
-const {
-  LOCAL_DB_USER,
-  LOCAL_DB_PASSWORD,
-  LOCAL_DB_NAME,
-  LOCAL_DB_HOST,
-  PROD_DB_URL,
-} = process.env;
-
 module.exports = {
   development: {
-    username: LOCAL_DB_USER,
-    password: LOCAL_DB_PASSWORD,
-    database: LOCAL_DB_NAME,
-    host: LOCAL_DB_HOST,
-    port: 5432,
+    password: process.env.DB_PASSWORD,
+    database: process.env.DB_DEV,
+    host: process.env.DB_HOST,
+    port: process.env.dB_PORT,
     dialect: 'postgres',
+    username: process.env.USERNAME,
   },
   test: {
-    username: 'root',
-    password: null,
-    database: 'database_test',
-    host: '127.0.0.1',
-    port: 5432,
+    password: process.env.DB_PASSWORD,
+    database: process.env.DB_TEST,
+    host: process.env.DB_HOST,
+    port: process.env.DB_PORT,
+    username: process.env.USERNAME,
     dialect: 'postgres',
   },
   production: {
-    use_env_variable: PROD_DB_URL,
+    use_env_variable: 'DATABASE_URL',
+    dialect: 'postgres',
   },
 };
