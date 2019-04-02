@@ -23,6 +23,7 @@ export default {
       slug: {
         type: Sequelize.STRING,
         allowNull: false,
+        unique: true,
       },
       description: {
         type: Sequelize.TEXT('tiny'),
@@ -45,7 +46,11 @@ export default {
         defaultValue: [],
       },
       likes: {
-        type: Sequelize.ARRAY(Sequelize.UUID),
+        type: Sequelize.ARRAY(Sequelize.STRING),
+        defaultValue: [],
+      },
+      rating: {
+        type: Sequelize.JSONB,
         defaultValue: [],
       },
       favouritesCount: {

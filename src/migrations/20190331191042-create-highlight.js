@@ -3,9 +3,8 @@ export default {
     queryInterface.createTable('highlights', {
       id: {
         allowNull: false,
-        autoIncrement: true,
         primaryKey: true,
-        type: Sequelize.INTEGER,
+        type: Sequelize.UUID,
       },
       userId: {
         allowNull: false,

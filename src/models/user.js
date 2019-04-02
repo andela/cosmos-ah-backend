@@ -50,9 +50,9 @@ class User extends Model {
           type: DataTypes.STRING,
           allowNull: false,
           validate: {
-            is: /^(?=.*\d).{6,8}$/,
-            msg:
-              'Password must be between 6 and 8 digit long and include atleast one numeric digit',
+            is: /^(?=.*\d)$/,
+            min: 6,
+            msg: 'Password length must have a minimum of 6 characters',
           },
         },
         bio: {
