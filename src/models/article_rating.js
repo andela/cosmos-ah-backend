@@ -1,45 +1,42 @@
-import { Model } from 'sequelize';
-import User from './user';
-import Article from './article';
-
 /**
- * @class ArticleRating
- * @extends {Model}
+ * @name init
+ * @param {sequelize} sequelize
+ * @param {DataTypes} DataTypes
+ * @returns {Model} Returns ArticleRating model
  */
-class ArticleRating extends Model {
-  /**
-   * @name init
-   * @param {sequelize} sequelize
-   * @param {DataTypes} DataTypes
-   * @returns {Model} Returns ArticleRating model
-   */
-  static init(sequelize, DataTypes) {
-    return super.init(
-      {
-        id: {
-          type: DataTypes.UUID,
-          defaultValue: DataTypes.UUIDV4,
-        },
-        userId: {
-          type: DataTypes.UUID,
-          references: {
-            model: User,
-            key: 'id',
-            deferrable: DataTypes.Deferrable.INITIALLY_IMMEDIATE,
-          },
-        },
-        articleId: {
-          type: DataTypes.UUID,
-          references: {
-            model: Article,
-            key: 'id',
-            deferrable: DataTypes.Deferrable.INITIALLY_IMMEDIATE,
-          },
-        },
+export default (sequelize, DataTypes) => {
+  const Rating = sequelize.define(
+    'Rating',
+    {
+      id: {
+        primaryKey: true,
+        type: DataTypes.UUID,
+        defaultValue: DataTypes.UUIDV4,
       },
-      { sequelize }
-    );
-  }
-}
-
-export default ArticleRating;
+      userId: {
+        type: DataTypes.UUID,
+        allowNull: false,
+      },
+      articleId: {
+        type: DataTypes.UUID,
+        allowNull: false,
+      },
+    },
+    {
+      tableName: 'article_ratings',
+    }
+  );
+  Rating.associate = models => {
+    Rating.belongsTo(models.Article, {
+      foreignKey: 'articleId',
+      as: 'article',
+      onDelete: 'CASCADE',
+    });
+    Rating.belongsTo(models.User, {
+      foreignKey: 'userId',
+      as: 'user',
+      onDelete: 'CASCADE',
+    });
+  };
+  return Rating;
+};

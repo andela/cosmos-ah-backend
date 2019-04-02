@@ -1,48 +1,43 @@
-import { Model } from 'sequelize';
-import User from './user';
-import Article from './article';
-
 /**
- * @class Bookmark
- * @extends {Model}
+ * @name init
+ * @param {sequelize} sequelize
+ * @param {DataTypes} DataTypes
+ * @returns {Model} Returns Bookmark model
  */
-class Bookmark extends Model {
-  /**
-   * @name init
-   * @param {sequelize} sequelize
-   * @param {DataTypes} DataTypes
-   * @returns {Model} Returns bookmark model
-   */
-  static init(sequelize, DataTypes) {
-    return super.init(
-      {
-        id: {
-          type: DataTypes.UUID,
-          defaultValue: DataTypes.UUIDV4,
-          allowNull: false,
-        },
-        userId: {
-          type: DataTypes.UUID,
-          allowNull: false,
-          references: {
-            model: User,
-            key: 'id',
-            deferrable: DataTypes.Deferrable.INITIALLY_IMMEDIATE,
-          },
-        },
-        articleId: {
-          type: DataTypes.UUID,
-          allowNull: false,
-          references: {
-            model: Article,
-            key: 'id',
-            deferrable: DataTypes.Deferrable.INITIALLY_IMMEDIATE,
-          },
-        },
+export default (sequelize, DataTypes) => {
+  const Bookmark = sequelize.define(
+    'Bookmark',
+    {
+      id: {
+        type: DataTypes.UUID,
+        defaultValue: DataTypes.UUIDV4,
+        allowNull: false,
+        primaryKey: true,
       },
-      { sequelize }
-    );
-  }
-}
-
-export default Bookmark;
+      userId: {
+        type: DataTypes.UUID,
+        allowNull: false,
+      },
+      articleId: {
+        type: DataTypes.UUID,
+        allowNull: false,
+      },
+    },
+    {
+      tableName: 'bookmarks',
+    }
+  );
+  Bookmark.associate = models => {
+    Bookmark.belongsTo(models.Article, {
+      foreignKey: 'articleId',
+      as: 'article',
+      onDelete: 'CASCADE',
+    });
+    Bookmark.belongsTo(models.User, {
+      foreignKey: 'userId',
+      as: 'user',
+      onDelete: 'CASCADE',
+    });
+  };
+  return Bookmark;
+};

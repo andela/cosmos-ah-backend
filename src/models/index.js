@@ -1,44 +1,42 @@
-import User from './user';
-import Article from './article';
-import Comment from './comment';
-import Notification from './notification';
-import Bookmark from './bookmark';
-import Favourite from './favourite';
-import Highlight from './highlight';
-import Rating from './article_rating';
-import Report from './article_report';
-import Follower from './follower';
+const fs = require('fs');
+const path = require('path');
+const Sequelize = require('sequelize');
 
-// Define Model Relationships
+const basename = path.basename(__filename);
+const env = process.env.NODE_ENV || 'development';
+const config = require('../config/config')[env];
 
-Article.belongsTo(User); // Multiple Articles belongs to a User
-Article.hasMany(Comment); // An Article can have multiple Comments
+const db = {};
 
-Comment.belongsTo(Article); // Multiple Comments belongs to a User
-Notification.belongsTo(User); // Multiple Notifications belongs to a User
+let sequelize;
+if (config.use_env_variable) {
+  sequelize = new Sequelize(process.env[config.use_env_variable], config);
+} else {
+  sequelize = new Sequelize(
+    config.database,
+    config.username,
+    config.password,
+    config
+  );
+}
 
-Follower.belongsTo(User); // A single follower belongs to a user
-User.hasMany(Follower); // User can have multiple followers
+fs.readdirSync(__dirname)
+  .filter(
+    file =>
+      file.indexOf('.') !== 0 && file !== basename && file.slice(-3) === '.js'
+  )
+  .forEach(file => {
+    const model = sequelize.import(path.join(__dirname, file));
+    db[model.name] = model;
+  });
 
-Bookmark.belongsTo(Article); // A bookmark can belong to an article
-Article.hasMany(Bookmark); // An Article can have multiple bookmarks
-User.hasMany(Bookmark);
+Object.keys(db).forEach(modelName => {
+  if (db[modelName].associate) {
+    db[modelName].associate(db);
+  }
+});
 
-Rating.belongsToMany(User);
-User.hasMany(Rating);
+db.sequelize = sequelize;
+db.Sequelize = Sequelize;
 
-Report.belongsTo(Article);
-Article.hasMany(Report);
-
-export default { // Export Models
-  User,
-  Article,
-  Comment,
-  Notification,
-  Bookmark,
-  Rating,
-  Favourite,
-  Highlight,
-  Follower,
-  Report,
-};
+module.exports = db;

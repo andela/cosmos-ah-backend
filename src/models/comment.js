@@ -1,52 +1,47 @@
-import { Model } from 'sequelize';
-import User from './user';
-import Article from './article';
-
 /**
- * @class Comment
- * @extends {Model}
+ * @name init
+ * @param {sequelize} sequelize
+ * @param {DataTypes} DataTypes
+ * @returns {Model} Returns Comment model
  */
-class Comment extends Model {
-  /**
-   * @name init
-   * @param {sequelize} sequelize
-   * @param {DataTypes} DataTypes
-   * @returns {Model} Returns comment model
-   */
-  static init(sequelize, DataTypes) {
-    return super.init(
-      {
-        id: {
-          type: DataTypes.UUID,
-          defaultValue: DataTypes.UUIDV4,
-          allowNull: false,
-        },
-        userId: {
-          type: DataTypes.UUID,
-          allowNull: false,
-          references: {
-            model: User,
-            key: 'id',
-            deferrable: DataTypes.Deferrable.INITIALLY_IMMEDIATE,
-          },
-        },
-        articleId: {
-          type: DataTypes.UUID,
-          allowNull: false,
-          references: {
-            model: Article,
-            key: 'id',
-            deferrable: DataTypes.Deferrable.INITIALLY_IMMEDIATE,
-          },
-        },
-        body: {
-          type: DataTypes.TEXT,
-          allowNull: false,
-        },
+export default (sequelize, DataTypes) => {
+  const Comment = sequelize.define(
+    'Comment',
+    {
+      id: {
+        type: DataTypes.UUID,
+        defaultValue: DataTypes.UUIDV4,
+        allowNull: false,
+        primaryKey: true,
       },
-      { sequelize }
-    );
-  }
-}
-
-export default Comment;
+      userId: {
+        type: DataTypes.UUID,
+        allowNull: false,
+      },
+      articleId: {
+        type: DataTypes.UUID,
+        allowNull: false,
+      },
+      body: {
+        type: DataTypes.TEXT,
+        allowNull: false,
+      },
+    },
+    {
+      tableName: 'comments',
+    }
+  );
+  Comment.associate = models => {
+    Comment.belongsTo(models.Article, {
+      foreignKey: 'articleId',
+      as: 'article',
+      onDelete: 'CASCADE',
+    });
+    Comment.belongsTo(models.User, {
+      foreignKey: 'userId',
+      as: 'user',
+      onDelete: 'CASCADE',
+    });
+  };
+  return Comment;
+};
