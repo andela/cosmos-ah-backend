@@ -2,7 +2,9 @@ import express from 'express';
 import bodyParser from 'body-parser';
 import cors from 'cors';
 import dotenv from 'dotenv';
+import swaggerUI from 'swagger-ui-express';
 import testRoute from './routes/index';
+import docs from '../swagger.json';
 
 dotenv.config();
 
@@ -17,6 +19,9 @@ app.use(bodyParser.json());
 app.use(cors());
 
 app.get('/', testRoute);
+
+// route for API documentation
+app.use('/docs', swaggerUI.serve, swaggerUI.setup(docs));
 
 // catch 404 error
 app.use((req, res, next) => {
