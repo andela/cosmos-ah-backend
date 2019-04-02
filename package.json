@@ -7,6 +7,9 @@
     "start": "nodemon --exec babel-node src/index.js",
     "db-create": "sequelize db:create",
     "db-migrate": "./node_modules/.bin/babel-node ./node_modules/.bin/sequelize db:migrate",
+    "db-migrate:undo": "./node_modules/.bin/babel-node ./node_modules/.bin/sequelize db:migrate:undo:all",
+    "db-seed": "./node_modules/.bin/babel-node ./node_modules/.bin/sequelize db:seed:all",
+    "db-refresh": "npm run db-migrate:undo && npm run db-migrate && npm run db-seed",
     "lint": "eslint ./src --fix"
   },
   "husky": {
@@ -43,7 +46,7 @@
     "babel-eslint": "^10.0.1",
     "babel-plugin-syntax-object-rest-spread": "^6.13.0",
     "babel-polyfill": "^6.26.0",
-    "eslint": "^5.3.0",
+    "eslint": "^5.16.0",
     "eslint-config-airbnb": "^17.1.0",
     "eslint-plugin-import": "^2.16.0",
     "eslint-plugin-jsx-a11y": "^6.2.1",
