@@ -1,13 +1,10 @@
 import http from 'http';
 import express from 'express';
-import { config } from 'dotenv';
 import bodyParser from 'body-parser';
 import cors from 'cors';
 import swaggerUI from 'swagger-ui-express';
 import docs from '../swagger.json';
 import indexRouter from './routers';
-
-config();
 
 let httpServer;
 
