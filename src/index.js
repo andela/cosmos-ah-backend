@@ -1,4 +1,3 @@
-
 import { startServer, closeServer } from './server';
 
 const PORT = parseInt(process.env.PORT || 4000, 10);
