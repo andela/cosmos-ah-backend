@@ -35,7 +35,7 @@ export default (sequelize, DataTypes) => {
       tableName: 'notifications',
     }
   );
-  Notification.associate = models => {
+  Notification.associate = (models) => {
     Notification.belongsTo(models.Article, {
       foreignKey: 'articleId',
       as: 'article',

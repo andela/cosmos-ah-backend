@@ -27,7 +27,7 @@ export default (sequelize, DataTypes) => {
       tableName: 'followers',
     }
   );
-  Follower.associate = models => {
+  Follower.associate = (models) => {
     Follower.belongsTo(models.Article, {
       foreignKey: 'articleId',
       as: 'article',

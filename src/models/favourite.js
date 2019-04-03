@@ -27,7 +27,7 @@ export default (sequelize, DataTypes) => {
       tableName: 'favourites',
     }
   );
-  Favourite.associate = models => {
+  Favourite.associate = (models) => {
     Favourite.belongsTo(models.Article, {
       foreignKey: 'articleId',
       as: 'article',

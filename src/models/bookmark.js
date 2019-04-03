@@ -27,7 +27,7 @@ export default (sequelize, DataTypes) => {
       tableName: 'bookmarks',
     }
   );
-  Bookmark.associate = models => {
+  Bookmark.associate = (models) => {
     Bookmark.belongsTo(models.Article, {
       foreignKey: 'articleId',
       as: 'article',

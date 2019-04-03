@@ -31,7 +31,7 @@ export default (sequelize, DataTypes) => {
       tableName: 'comments',
     }
   );
-  Comment.associate = models => {
+  Comment.associate = (models) => {
     Comment.belongsTo(models.Article, {
       foreignKey: 'articleId',
       as: 'article',

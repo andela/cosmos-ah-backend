@@ -35,7 +35,7 @@ export default (sequelize, DataTypes) => {
       tableName: 'highlights',
     }
   );
-  Highlight.associate = models => {
+  Highlight.associate = (models) => {
     Highlight.belongsTo(models.Article, {
       foreignKey: 'articleId',
       as: 'article',

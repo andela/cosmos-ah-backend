@@ -65,7 +65,7 @@ export default (sequelize, DataTypes) => {
       tableName: 'users',
     }
   );
-  User.associate = models => {
+  User.associate = (models) => {
     User.hasMany(models.Article, {
       foreignKey: 'userId',
       as: 'userArticles',

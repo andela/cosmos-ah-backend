@@ -26,7 +26,7 @@ export default (sequelize, DataTypes) => {
       tableName: 'article_ratings',
     }
   );
-  Rating.associate = models => {
+  Rating.associate = (models) => {
     Rating.belongsTo(models.Article, {
       foreignKey: 'articleId',
       as: 'article',

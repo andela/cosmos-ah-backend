@@ -66,7 +66,7 @@ export default (sequelize, DataTypes) => {
     },
     {}
   );
-  Article.associate = models => {
+  Article.associate = (models) => {
     Article.belongsTo(models.User, {
       foreignKey: 'articleId',
       as: 'articleUser',
