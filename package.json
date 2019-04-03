@@ -4,13 +4,15 @@
   "description": "A Social platform for the creative at heart",
   "main": "index.js",
   "scripts": {
-    "start": "nodemon --exec babel-node src/index.js",
+    "start": "node src/index.js",
+    "dev": "nodemon --exec babel-node src/index.js",
     "db-create": "sequelize db:create",
     "db-migrate": "./node_modules/.bin/babel-node ./node_modules/.bin/sequelize db:migrate",
     "db-migrate:undo": "./node_modules/.bin/babel-node ./node_modules/.bin/sequelize db:migrate:undo:all",
     "db-seed": "./node_modules/.bin/babel-node ./node_modules/.bin/sequelize db:seed:all",
     "db-refresh": "npm run db-migrate:undo && npm run db-migrate && npm run db-seed",
-    "lint": "eslint ./src --fix"
+    "lint-fix": "eslint ./src --fix",
+    "lint": "eslint ./src"
   },
   "husky": {
     "hooks": {
@@ -18,9 +20,13 @@
     }
   },
   "lint-staged": {
-    "*.{js,json,md}": [
+    "*.js": [
+      "npm run lint-fix",
+      "git add --force"
+    ],
+    "*.json": [
       "prettier --write",
-      "git add"
+      "git add --force"
     ]
   },
   "author": "Andela Simulations Programme",

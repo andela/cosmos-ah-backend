@@ -1,35 +1,34 @@
 export default {
-  up: (queryInterface, Sequelize) =>
-    queryInterface.createTable('favourites', {
-      id: {
-        allowNull: false,
-        primaryKey: true,
-        type: Sequelize.UUID,
+  up: (queryInterface, Sequelize) => queryInterface.createTable('favourites', {
+    id: {
+      allowNull: false,
+      primaryKey: true,
+      type: Sequelize.UUID,
+    },
+    userId: {
+      type: Sequelize.UUID,
+      references: {
+        model: 'users',
+        key: 'id',
+        deferrable: Sequelize.Deferrable.INITIALLY_IMMEDIATE,
       },
-      userId: {
-        type: Sequelize.UUID,
-        references: {
-          model: 'users',
-          key: 'id',
-          deferrable: Sequelize.Deferrable.INITIALLY_IMMEDIATE,
-        },
+    },
+    articleId: {
+      type: Sequelize.UUID,
+      references: {
+        model: 'articles',
+        key: 'id',
+        deferrable: Sequelize.Deferrable.INITIALLY_IMMEDIATE,
       },
-      articleId: {
-        type: Sequelize.UUID,
-        references: {
-          model: 'articles',
-          key: 'id',
-          deferrable: Sequelize.Deferrable.INITIALLY_IMMEDIATE,
-        },
-      },
-      createdAt: {
-        allowNull: false,
-        type: Sequelize.DATE,
-      },
-      updatedAt: {
-        allowNull: false,
-        type: Sequelize.DATE,
-      },
-    }),
+    },
+    createdAt: {
+      allowNull: false,
+      type: Sequelize.DATE,
+    },
+    updatedAt: {
+      allowNull: false,
+      type: Sequelize.DATE,
+    },
+  }),
   down: queryInterface => queryInterface.dropTable('favourites'),
 };
