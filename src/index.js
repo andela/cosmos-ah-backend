@@ -3,10 +3,13 @@ import bodyParser from 'body-parser';
 import cors from 'cors';
 import dotenv from 'dotenv';
 import swaggerUI from 'swagger-ui-express';
-import testRoute from './routes/index';
+import route from './routes/index';
 import docs from '../swagger.json';
+import passport from 'passport';
+const LinkedInStrategy = require('passport-linkedin-oauth2').Strategy;
 
 dotenv.config();
+const { LINKEDIN_CLIENTID, LINKEDIN_SECRET } = process.env;
 
 const PORT = process.env.PORT || 4000;
 
@@ -18,7 +21,7 @@ app.use(bodyParser.urlencoded({ extended: false }));
 app.use(bodyParser.json());
 app.use(cors());
 
-app.get('/', testRoute);
+app.use('/', route);
 
 // route for API documentation
 app.use('/docs', swaggerUI.serve, swaggerUI.setup(docs));
@@ -39,6 +42,22 @@ app.use((error, res, next) => {
   });
   next();
 });
+
+passport.use(
+  new LinkedInStrategy(
+    {
+      clientID: LINKEDIN_CLIENTID,
+      clientSecret: LINKEDIN_SECRET,
+      callbackURL: `http://localhost:${PORT}/welcome`,
+      scope: ['r_emailaddress', 'r_basicprofile'],
+    },
+    function(accessToken, refreshToken, profile, done) {
+      process.nextTick(function() {
+        return done(null, profile);
+      });
+    }
+  )
+);
 
 app.listen(PORT, () => console.log(`Running on localhost:${PORT}`));
 
