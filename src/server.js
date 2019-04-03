@@ -30,7 +30,6 @@ export const startServer = port => new Promise((resolve, reject) => {
   app.use(bodyParser.urlencoded({ extended: false }));
   app.use(cors());
 
-  app.get('/', indexRouter);
   app.use('/api/v1', indexRouter);
 
   app.use('/docs', swaggerUI.serve, swaggerUI.setup(docs));
