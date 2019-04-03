@@ -1,6 +1,6 @@
 import jwt from 'jsonwebtoken';
-import bcrypt from 'bcryptjs';
 import 'dotenv/config';
+import responseFormat from '../utils/index';
 
 /**
  * @class AuthenticateUser
@@ -10,100 +10,119 @@ import 'dotenv/config';
 class Authenticator {
   /**
    * @static
-   * @param {any} password - The user password to be hashed
+   * @param {any} payload The payload
    * @returns {object} - JSON response object
    *
    * @memberOf Authenticator
    */
-  static hashPassword(password) {
-    return bcrypt.hashSync(password, bcrypt.genSaltSync(10));
-  }
-
-  /**
-   * @static
-   * @param {any} password The user password
-   * @param {any} hashPassword The hashed password
-   * @returns {object} - JSON response object
-   *
-   * @memberOf Authenticator
-   */
-  static comparePassword(password, hashPassword) {
-    return bcrypt.compareSync(password, hashPassword);
-  }
-
-  /**
-   * @static
-   * @param {any} user The user object
-   * @returns {object} - JSON response object
-   *
-   * @memberOf Authenticator
-   */
-  static generateToken(user) {
-    const token = jwt.sign({ user }, process.env.JWTKEY, { expiresIn: '24h' });
+  static generateToken(payload) {
+    const token = jwt.sign(payload, process.env.JWTKEY, { expiresIn: '24h' });
     return token;
   }
 
   /**
-   * @method isAuthenticated
+   * @method verifyToken
    * @description Verifies that user is authenticated
    * @param {object} req - The Request Object
    * @param {object} res - The Response Object
    * @param {object} next - The next function
    * @returns {object} - JSON response object
    */
-  static isAuthenticated(req, res, next) {
-    const token = req.headers['x-access-token'];
+  static verifyToken(req, res, next) {
+    let token = req.headers.authorization;
     if (!token) {
-      res.status(403).json({
-        status: 403,
-        error: 'Missing x-access-token in the request header',
-      });
-    } else {
-      jwt.verify(token, process.env.JWTKEY, (err, decoded) => {
-        if (err) {
-          return res.status(403).json({
-            status: 403,
-            message: 'Invalid token supplied',
-          });
-        }
-        req.user = decoded.user;
-        next();
-      });
+      return res.status(401).json(responseFormat({
+        success: false,
+        data: 'No token supplied',
+      }));
     }
+    token = token.slice(7);
+
+    jwt.verify(token, process.env.JWTKEY, (err, decoded) => {
+      if (err) {
+        return res.status(401).json(responseFormat({
+          success: false,
+          data: 'invalid token supplied',
+        }));
+      }
+      req.user = decoded;
+      next();
+    });
   }
 
   /**
-   * @method isAuthorised
+   * @method verifyUser
    * @description Verifies that user is authorised
    * @param {object} req - The Request Object
    * @param {object} res - The Response Object
    * @param {object} next - The next function
    * @returns {object} - JSON response object
    */
-  static isAuthorised(req, res, next) {
-    const token = req.headers['x-access-token'];
+  static verifyUser(req, res, next) {
+    let token = req.headers.authorization;
     if (!token) {
-      res.status(403).json({
-        status: 404,
-        message: 'Missing x-access-token in the request header',
-      });
+      return res.status(401).json(responseFormat({
+        success: false,
+        data: 'No token supplied',
+      }));
+    }
+    token = token.slice(7);
+
+    jwt.verify(token, process.env.JWTKEY, (err, decoded) => {
+      if (err) {
+        return res.status(403).json(responseFormat({
+          success: false,
+          data: 'invalid token supplied',
+        }));
+      }
+      if (decoded.user.isadmin !== true) {
+        return res.status(403).json(responseFormat({
+          success: false,
+          data: 'unauthorized user',
+        }));
+      }
+      req.user = decoded.user;
+      next();
+    });
+  }
+
+  /**
+   * @method isAdmin
+   * @description Verifies that user is admin
+   * @param {object} req - The Request Object
+   * @param {object} res - The Response Object
+   * @param {object} next - The next function
+   * @returns {object} - JSON response object
+   */
+  static isAdmin(req, res, next) {
+    const { role } = req.decoded;
+    if (role === 'admin') {
+      next();
     } else {
-      jwt.verify(token, process.env.JWTKEY, (err, decoded) => {
-        if (err) {
-          return res.status(403).json({
-            status: 403,
-            error: 'Invalid token supplied',
-          });
-        }
-        if (decoded.user.isadmin !== true) {
-          return res.status(403).json({
-            status: 403,
-            error: 'Unauthorised User',
-          });
-        }
-        req.user = decoded.user;
-        next();
-      });
+      return res.status(403).json(responseFormat({
+        success: false,
+        data: 'Admin privileges is needed'
+      }));
+    }
+  }
+
+  /**
+   * @method isAuthor
+   * @description Verifies that user is an author
+   * @param {object} req - The Request Object
+   * @param {object} res - The Response Object
+   * @param {object} next - The next function
+   * @returns {object} - JSON response object
+   */
+  static isAuthor(req, res, next) {
+    const { role } = req.decoded;
+    if (role === 'author') {
+      next();
+    } else {
+      return res.status(403).json(responseFormat({
+        success: false,
+        data: 'Authors privileges is needed'
+      }));
     }
   }
 }
