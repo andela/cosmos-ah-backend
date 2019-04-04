@@ -1,6 +1,6 @@
 import chai from 'chai';
 import chaiHttp from 'chai-http';
-import { startServer } from '../src/server';
+import { startServer } from '../../src/server';
 
 const { expect } = chai;
 
@@ -16,7 +16,7 @@ describe('Root directory Test', () => {
   });
 
   it('Should return status: 200', (done) => {
-    agent.get('/api/v1').end((err, res) => {
+    agent.get('/').end((_err, res) => {
       expect(res).to.have.status(200);
       done();
     });

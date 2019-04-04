@@ -4,7 +4,7 @@ import bodyParser from 'body-parser';
 import cors from 'cors';
 import swaggerUI from 'swagger-ui-express';
 import docs from '../swagger.json';
-import indexRouter from './routers';
+import router from './routers';
 
 let httpServer;
 
@@ -27,7 +27,7 @@ export const startServer = port => new Promise((resolve, reject) => {
   app.use(bodyParser.urlencoded({ extended: false }));
   app.use(cors());
 
-  app.use('/api/v1', indexRouter);
+  app.use(router);
 
   app.use('/docs', swaggerUI.serve, swaggerUI.setup(docs));
 
