@@ -1,5 +1,5 @@
 export default {
-  up: (queryInterface, Sequelize) => queryInterface.createTable('bookmarks', {
+  up: (queryInterface, Sequelize) => queryInterface.createTable('Bookmarks', {
     id: {
       allowNull: false,
       primaryKey: true,
@@ -9,7 +9,7 @@ export default {
       type: Sequelize.UUID,
       allowNull: false,
       references: {
-        model: 'users',
+        model: 'Users',
         key: 'id',
         deferrable: Sequelize.Deferrable.INITIALLY_IMMEDIATE,
       },
@@ -18,7 +18,7 @@ export default {
       type: Sequelize.UUID,
       allowNull: false,
       references: {
-        model: 'articles',
+        model: 'Article',
         key: 'id',
         deferrable: Sequelize.Deferrable.INITIALLY_IMMEDIATE,
       },
@@ -32,5 +32,5 @@ export default {
       type: Sequelize.DATE,
     },
   }),
-  down: queryInterface => queryInterface.dropTable('bookmarks'),
+  down: queryInterface => queryInterface.dropTable('Bookmarks'),
 };

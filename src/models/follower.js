@@ -33,7 +33,7 @@ export default (sequelize, DataTypes) => {
       as: 'article',
       onDelete: 'CASCADE',
     });
-    Follower.belongsTo(models.User, {
+    Follower.belongsTo(models.Users, {
       foreignKey: 'userId',
       as: 'user',
       onDelete: 'CASCADE',

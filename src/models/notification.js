@@ -41,7 +41,7 @@ export default (sequelize, DataTypes) => {
       as: 'article',
       onDelete: 'CASCADE',
     });
-    Notification.belongsTo(models.User, {
+    Notification.belongsTo(models.Users, {
       foreignKey: 'userId',
       as: 'user',
       onDelete: 'CASCADE',

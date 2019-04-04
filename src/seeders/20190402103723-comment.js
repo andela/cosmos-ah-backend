@@ -1,6 +1,6 @@
 export default {
   up: queryInterface => queryInterface.bulkInsert(
-    'comments',
+    'Comments',
     [
       {
         id: '979eaa2e-5b8f-4103-8192-4639afae2bb9',
@@ -23,5 +23,5 @@ export default {
     ],
     {}
   ),
-  down: queryInterface => queryInterface.bulkDelete('comments', null, {}),
+  down: queryInterface => queryInterface.bulkDelete('Comments', null, {}),
 };

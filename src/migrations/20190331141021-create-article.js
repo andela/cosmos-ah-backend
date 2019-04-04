@@ -1,5 +1,5 @@
 export default {
-  up: (queryInterface, Sequelize) => queryInterface.createTable('articles', {
+  up: (queryInterface, Sequelize) => queryInterface.createTable('Article', {
     id: {
       type: Sequelize.UUID,
       allowNull: false,
@@ -9,7 +9,7 @@ export default {
       type: Sequelize.UUID,
       allowNull: false,
       references: {
-        model: 'users',
+        model: 'Users',
         key: 'id',
       },
       onUpdate: 'CASCADE',
@@ -48,10 +48,6 @@ export default {
       type: Sequelize.ARRAY(Sequelize.STRING),
       defaultValue: [],
     },
-    rating: {
-      type: Sequelize.JSONB,
-      defaultValue: [],
-    },
     favouritesCount: {
       type: Sequelize.INTEGER,
       defaultValue: 0,
@@ -69,5 +65,5 @@ export default {
       type: Sequelize.DATE,
     },
   }),
-  down: queryInterface => queryInterface.dropTable('articles'),
+  down: queryInterface => queryInterface.dropTable('Article'),
 };

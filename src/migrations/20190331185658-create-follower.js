@@ -1,5 +1,5 @@
 export default {
-  up: (queryInterface, Sequelize) => queryInterface.createTable('followers', {
+  up: (queryInterface, Sequelize) => queryInterface.createTable('Followers', {
     id: {
       allowNull: false,
       primaryKey: true,
@@ -9,7 +9,7 @@ export default {
       allowNull: false,
       type: Sequelize.UUID,
       references: {
-        model: 'users',
+        model: 'Users',
         key: 'id',
         deferrable: Sequelize.Deferrable.INITIALLY_IMMEDIATE,
       },
@@ -18,7 +18,7 @@ export default {
       allowNull: false,
       type: Sequelize.UUID,
       references: {
-        model: 'users',
+        model: 'Users',
         key: 'id',
         deferrable: Sequelize.Deferrable.INITIALLY_IMMEDIATE,
       },
@@ -32,5 +32,5 @@ export default {
       type: Sequelize.DATE,
     },
   }),
-  down: queryInterface => queryInterface.dropTable('followers'),
+  down: queryInterface => queryInterface.dropTable('Followers'),
 };

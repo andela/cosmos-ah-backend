@@ -1,5 +1,5 @@
 export default {
-  up: (queryInterface, Sequelize) => queryInterface.createTable('article_ratings', {
+  up: (queryInterface, Sequelize) => queryInterface.createTable('Rating', {
     id: {
       allowNull: false,
       primaryKey: true,
@@ -8,7 +8,7 @@ export default {
     userId: {
       type: Sequelize.UUID,
       references: {
-        model: 'users',
+        model: 'Users',
         key: 'id',
         deferrable: Sequelize.Deferrable.INITIALLY_IMMEDIATE,
       },
@@ -16,10 +16,14 @@ export default {
     articleId: {
       type: Sequelize.UUID,
       references: {
-        model: 'articles',
+        model: 'Article',
         key: 'id',
         deferrable: Sequelize.Deferrable.INITIALLY_IMMEDIATE,
       },
+    },
+    value: {
+      type: Sequelize.INTEGER,
+      defaultValue: 1
     },
     createdAt: {
       allowNull: false,
@@ -30,5 +34,5 @@ export default {
       type: Sequelize.DATE,
     },
   }),
-  down: queryInterface => queryInterface.dropTable('article_ratings'),
+  down: queryInterface => queryInterface.dropTable('Rating'),
 };

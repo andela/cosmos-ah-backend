@@ -6,7 +6,7 @@
  */
 export default (sequelize, DataTypes) => {
   const User = sequelize.define(
-    'User',
+    'Users',
     {
       id: {
         allowNull: false,
@@ -62,7 +62,7 @@ export default (sequelize, DataTypes) => {
       role: DataTypes.ENUM('admin', 'author', 'user'),
     },
     {
-      tableName: 'users',
+      tableName: 'Users'
     }
   );
   User.associate = (models) => {

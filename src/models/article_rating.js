@@ -1,3 +1,5 @@
+import { articleExist } from '../utils';
+
 /**
  * @name init
  * @param {sequelize} sequelize
@@ -15,21 +17,44 @@ export default (sequelize, DataTypes) => {
       },
       userId: {
         type: DataTypes.UUID,
-        allowNull: false,
+        allowNull: false
       },
       articleId: {
         type: DataTypes.UUID,
         allowNull: false,
       },
+      value: {
+        type: DataTypes.INTEGER,
+        defaultValue: 1,
+        validate: {
+          max: 5,
+          min: 1
+        }
+      },
     },
     {
       tableName: 'article_ratings',
+      hooks: {
+        async beforeCreate(rating) {
+          const recordExist = await articleExist(this, rating);
+          if (recordExist) {
+            // user has already rated this article
+            throw new Error('You have already rated this article');
+          }
+        },
+        async beforeUpdate(rating) {
+          const recordExist = await articleExist(this, rating);
+          if (recordExist) {
+            throw new Error('You have already rated this article');
+          }
+        }
+      }
     }
   );
   Rating.associate = (models) => {
     Rating.belongsTo(models.Article, {
       foreignKey: 'articleId',
-      as: 'article',
+      as: 'articleRatings',
       onDelete: 'CASCADE',
     });
     Rating.belongsTo(models.User, {

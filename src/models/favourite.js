@@ -33,7 +33,7 @@ export default (sequelize, DataTypes) => {
       as: 'article',
       onDelete: 'CASCADE',
     });
-    Favourite.belongsTo(models.User, {
+    Favourite.belongsTo(models.Users, {
       foreignKey: 'userId',
       as: 'user',
       onDelete: 'CASCADE',

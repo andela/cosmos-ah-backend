@@ -1,5 +1,5 @@
 export default {
-  up: (queryInterface, Sequelize) => queryInterface.createTable('notifications', {
+  up: (queryInterface, Sequelize) => queryInterface.createTable('Notifications', {
     id: {
       allowNull: false,
       primaryKey: true,
@@ -9,7 +9,7 @@ export default {
       allowNull: false,
       type: Sequelize.UUID,
       references: {
-        model: 'users',
+        model: 'Users',
         key: 'id',
         deferrable: Sequelize.Deferrable.INITIALLY_IMMEDIATE,
       },

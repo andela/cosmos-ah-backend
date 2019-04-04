@@ -1,9 +1,10 @@
+/* eslint-disable no-unused-vars */
 import { Router } from 'express';
 import { AddArticles, UpdateArticle, DeleteArticle } from '../controllers/article';
 
 const router = Router();
 
-router.get('/', (req, res) => res.status(200).json({
+router.get('/api/v1', (req, res) => res.status(200).json({
   message: 'Welcome to the Authors Haven API',
 }));
 

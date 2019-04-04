@@ -41,7 +41,7 @@ export default (sequelize, DataTypes) => {
       as: 'article',
       onDelete: 'CASCADE',
     });
-    Highlight.belongsTo(models.User, {
+    Highlight.belongsTo(models.Users, {
       foreignKey: 'userId',
       as: 'user',
       onDelete: 'CASCADE',

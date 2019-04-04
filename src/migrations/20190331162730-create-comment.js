@@ -1,5 +1,5 @@
 export default {
-  up: (queryInterface, Sequelize) => queryInterface.createTable('comments', {
+  up: (queryInterface, Sequelize) => queryInterface.createTable('Comments', {
     id: {
       allowNull: false,
       primaryKey: true,
@@ -9,7 +9,7 @@ export default {
       type: Sequelize.UUID,
       allowNull: false,
       references: {
-        model: 'users',
+        model: 'Users',
         key: 'id',
       },
       onUpdate: 'CASCADE',
@@ -19,7 +19,7 @@ export default {
       type: Sequelize.UUID,
       allowNull: false,
       references: {
-        model: 'articles',
+        model: 'Article',
         key: 'id',
       },
       onUpdate: 'CASCADE',
@@ -38,5 +38,5 @@ export default {
       type: Sequelize.DATE,
     },
   }),
-  down: queryInterface => queryInterface.dropTable('comments'),
+  down: queryInterface => queryInterface.dropTable('Comments'),
 };
