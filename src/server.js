@@ -3,8 +3,12 @@ import express from 'express';
 import bodyParser from 'body-parser';
 import cors from 'cors';
 import swaggerUI from 'swagger-ui-express';
+import passport from 'passport';
+import session from 'express-session';
 import docs from '../swagger.json';
 import indexRouter from './routers';
+import authRoute from './routers/authRoute';
+import { twitterStrategy, linkedinStrategy } from './config/passportConfig';
 
 let httpServer;
 
@@ -26,8 +30,37 @@ export const startServer = port => new Promise((resolve, reject) => {
   app.use(bodyParser.json());
   app.use(bodyParser.urlencoded({ extended: false }));
   app.use(cors());
+  app.use(
+    session({
+      secret: process.env.SESSION_SECRET,
+      resave: false,
+      saveUninitialized: true,
+    }),
+  );
+
+  passport.use(twitterStrategy);
+  passport.use(linkedinStrategy);
+  app.use(passport.initialize());
+
+  passport.serializeUser((user, done) => {
+    const { username, displayName } = user;
+    console.log({ displayName, username });
+
+    done(null, user);
+  });
 
   app.use('/api/v1', indexRouter);
+  app.use('/route', authRoute);
+  app.get('/auth/twitter', passport.authenticate('twitter'));
+
+  app.get(
+    '/auth/twitter/callback',
+    passport.authenticate('twitter', { failureRedirect: '/login' }),
+    (req, res) => {
+      // Successful authentication, redirect home.
+      res.redirect('/api/v1/');
+    },
+  );
 
   app.use('/docs', swaggerUI.serve, swaggerUI.setup(docs));
 
@@ -48,7 +81,6 @@ export const startServer = port => new Promise((resolve, reject) => {
 
   const server = app.listen(port, () => resolve(server));
 });
-
 
 export const closeServer = () => new Promise((resolve, reject) => {
   httpServer.close((err) => {

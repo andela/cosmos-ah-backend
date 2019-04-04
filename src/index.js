@@ -34,7 +34,6 @@ process.on('uncaughtException', (err) => {
   shutdown(err);
 });
 
-
 process.on('SIGTERM', () => {
   console.log('Termination Signal received');
   shutdown();
@@ -47,3 +46,4 @@ process.on('SIGINT', () => {
   shutdown();
 });
 
+startUp();
