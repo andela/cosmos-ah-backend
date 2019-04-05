@@ -10,8 +10,12 @@ import { Article } from '../models';
  */
 export const AddArticles = async (req, res) => {
   const { body } = req;
-  const article = await Article.create({ ...body, slug: slug(body.title) });
-  return res.status(201).json(article);
+  try {
+    const article = await Article.create({ ...body, slug: slug(body.title) });
+    return res.status(201).json({ status: true, message: 'Your article was successfully created!', data: article });
+  } catch (error) {
+    return res.status(500).json({ status: false, message: 'For some reason, We can\'t save your article, please try again!' });
+  }
 };
 
 /**
