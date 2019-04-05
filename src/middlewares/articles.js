@@ -26,7 +26,8 @@ export const verifyArticle = async (req, res, next) => {
   const article = await findById(Article, id);
   if (!article) { return responseHandler(res, 404, { status: 'fail', message: 'Article not found!', }); }
   const { dataValues: { userId: authorId } } = article;
-  if (authorId !== userId) { return responseHandler(res, 403, { status: 'error', message: 'You are not permitted to edit this article!', }); }
+  const { role } = req.user;
+  if (authorId !== userId && role !== 'author') { return responseHandler(res, 403, { status: 'error', message: 'You are don\'t have access to manage this article!', }); }
   next();
 };
 

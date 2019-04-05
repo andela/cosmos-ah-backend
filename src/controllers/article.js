@@ -49,4 +49,13 @@ export const editArticle = async (req, res) => {
  * @returns {int} Returns true after deleting an article
  * @returns {object} Returns boolean
  */
-export const deleteArticle = async () => true;
+export const deleteArticle = async (req, res) => {
+  const { id } = req.params;
+  try {
+    const deleted = 1;
+    const destroyArticle = await Article.destroy({ where: { id } });
+    if (destroyArticle >= deleted) { return responseHandler(res, 202, { status: 'success', message: 'Your article has been removed.' }); }
+  } catch (error) {
+    return responseHandler(res, 500, { status: 'error', message: 'We are responsible for failing to update your article, please try again!' });
+  }
+};

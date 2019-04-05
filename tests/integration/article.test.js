@@ -109,3 +109,42 @@ describe('PUT /api/v1/articles/:id', () => {
     done();
   });
 });
+
+describe('DELETE /api/v1/articles/:id', () => {
+  beforeEach(async () => {
+    app = await startServer(5000);
+    agent = chai.request(app);
+  });
+
+  it('Should return status: 202', (done) => {
+    agent.delete('/api/v1/articles/979eaa2e-5b8f-4103-8192-4639afae2ba7')
+      .set('Authorization', JWT_TOKEN)
+      .end((_err, res) => {
+        const { body } = res;
+        expect(res).to.have.status(202);
+        expect(body).should.be.an('object');
+        expect(body).to.have.property('status');
+        expect(body).to.have.property('message');
+        done();
+      });
+  });
+
+  it('Should return status: 403 when user is not the owner of the article', (done) => {
+    agent.delete('/api/v1/articles/afa7ac4d-ca41-4d9f-a55d-3ba9f9c06602')
+      .set('Authorization', JWT_TOKEN)
+      .end((_err, res) => {
+        const { body } = res;
+        expect(res).to.have.status(403);
+        expect(body).should.be.an('object');
+        expect(body).to.have.property('status');
+        expect(body).to.have.property('message');
+        done();
+      });
+  });
+
+  after(async (done) => {
+    app.close();
+    app = null;
+    done();
+  });
+});

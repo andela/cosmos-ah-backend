@@ -33,7 +33,7 @@ router.route('/articles/:id/like').patch(Auth.authenticateUser, checkParam, veri
 router
   .route('/articles/:id?')
   .post(Auth.authenticateUser, articleValidation, addArticle)
-  .delete(deleteArticle)
+  .delete(Auth.authenticateUser, verifyArticle, deleteArticle)
   .put(Auth.authenticateUser, articleValidation, verifyArticle, editArticle);
 
 router.post('/login', checkFields, passportAuth, login);
