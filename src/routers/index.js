@@ -66,5 +66,14 @@ router.get('/auth/twitter/callback', passport.authenticate('twitter', { failureR
 
 
 router.post('/login', checkFields, passportAuth, login);
+import articleController from '../controllers/article';
+
+const router = Router();
+
+router.post('/comment/highlight-text', articleController.commentOnHighlight);
+
+router.get('/', (req, res) => res.status(200).json({
+  message: 'Welcome to the Authors Haven API',
+}),);
 
 export default router;

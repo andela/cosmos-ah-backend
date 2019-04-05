@@ -36,3 +36,38 @@ export const UpdateArticle = async () => true;
  * @returns {int} Returns true after deleting an article
  */
 export const DeleteArticle = async () => true;
+import { Highlight } from '../db_api/models';
+/**
+ * @class article
+ */
+class article {
+  /**
+   *
+   * @name commentOnHighlight
+   * @static
+   * @param {req} req - Request object
+   * @param {res} res - Response object
+   * @description Redirect
+   * @memberof socialController
+   * @returns {function} res
+   */
+  static async commentOnHighlight(req, res) {
+    try {
+      const {
+        userId, articleId, highlightedText, comment
+      } = req.body;
+      const highlightComment = await Highlight.create({
+        userId,
+        articleId,
+        highlightedText,
+        comment,
+      });
+      return res.status(201).json({ highlightComment });
+    } catch (error) {
+      res.json({
+        error: 'invalid input',
+      });
+    }
+  }
+}
+export default article;
