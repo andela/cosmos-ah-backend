@@ -15,8 +15,7 @@ class socialController {
    * @returns {function} res
    */
   static async socialRedirect(req, res) {
-    console.log(req.user);
-    console.log(res);
+    res.redirect('/api/v1');
   }
 }
 

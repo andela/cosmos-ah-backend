@@ -19,5 +19,12 @@ router.get(
   socialController.socialRedirect,
 );
 
+// Route for google Authentication
+router.get('/auth/google', passport.authenticate('google', { scope: ['email profile'] }));
+router.get(
+  '/auth/google/callback',
+  passport.authenticate('google', { failureRedirect: '/login' }),
+  socialController.socialRedirect,
+);
 
 export default router;
