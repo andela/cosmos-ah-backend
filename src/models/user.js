@@ -25,9 +25,6 @@ export default (sequelize, DataTypes) => {
         type: DataTypes.STRING,
         allowNull: false,
         unique: true,
-        validate: {
-          isEmail: true,
-        },
       },
       username: {
         type: DataTypes.STRING,
@@ -47,7 +44,10 @@ export default (sequelize, DataTypes) => {
         allowNull: false,
       },
       notification: DataTypes.BOOLEAN,
-      role: DataTypes.ENUM('admin', 'author', 'user'),
+      role: {
+        type: DataTypes.ENUM('admin', 'author'),
+        defaultValue: 'author',
+      }
     },
     {
       tableName: 'users',

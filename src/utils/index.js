@@ -1,9 +1,10 @@
 import Validator from 'validatorjs';
 
 export const responseFormat = (response) => {
-  const { data, status } = response;
+  const { data, status, message } = response;
   return {
     status,
+    message,
     data,
   };
 };
@@ -15,12 +16,36 @@ export const responseFormat = (response) => {
  */
 export const validateParameters = async (body) => {
   const rules = {
-    fullName: 'required',
-    email: 'required',
-    password: 'required',
-    username: 'required',
+    fullName: 'required|string',
+    email: 'required|email',
+    password: ['required', 'regex:/^(?=.*[a-z])(?=.*[A-Z])(?=.*[0-9])(?=.*[!@#\\$%\\^&\\*])(?=.{8,})/i'],
+    username: 'required|string',
   };
-  return new Validator(body, rules);
+  const errorMessages = {
+    'string.fullName': 'The:attribute must be a string!',
+    'email.email': 'The :attribute must be valid!',
+    'min.password': 'Your :attribute must have a minimum of six characters!',
+    'alpha_num.password': 'Your :attribute must consist of alphabets and numbers!',
+    'regex.password': 'At least a lowercase character, uppercase character, numeric character, special character and eight characters long.',
+  };
+  return new Validator(body, rules, errorMessages);
+};
+
+/**
+ * @name responseFormat
+ * @description This is a response handler
+ * @param {object} res The response object
+ * @param {object} code Valid HTTP code
+ * @param {object} payload The response data to the user
+ * @returns {object} Returns the response object
+ */
+export const responseHandler = (res, code, payload) => {
+  const { data, status, message } = payload;
+  return res.status(code).json({
+    status,
+    message,
+    data,
+  });
 };
 
 /**

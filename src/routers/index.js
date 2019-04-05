@@ -1,14 +1,15 @@
 import { Router } from 'express';
 import passport from 'passport';
 import passportAuth from '../middlewares/passport';
-import { AddArticles, UpdateArticle, DeleteArticle } from '../controllers/article';
+import { addArticle, editArticle, deleteArticle } from '../controllers/article';
 import checkFields from '../middlewares/auth/loginValidator';
+import Auth from '../middlewares/authenticator';
 import socialRedirect from '../controllers/authentication/socialRedirect';
 import { login, createUser, linkedinUser, linkedinCallback } from '../controllers/authentication/user';
 import checkBody from '../middlewares/signUpValidator';
 import likeArticle from '../controllers/like';
-import Authenticator from '../middlewares/authenticator';
 
+import articleValidation, { verifyArticle } from '../middlewares/articles';
 
 const router = Router();
 
@@ -16,7 +17,7 @@ router.get('/', (req, res) => res.status(200).json({
   message: 'Welcome to the Authors Haven API',
 }));
 
-router.route('/articles/:articleid/like').patch(Authenticator.verifyToken, likeArticle);
+router.route('/articles/:articleid/like').patch(Auth.authenticateUser, likeArticle);
 
 /**
  * Resource handling articles
@@ -24,16 +25,16 @@ router.route('/articles/:articleid/like').patch(Authenticator.verifyToken, likeA
  * @function
  * @memberof module:Express.Router
  * @inner
- * @param {function} AddArticles - Express path
- * @param {function} DeleteArticle - Express path
- * @param {function} UpdateArticle - Express path
+ * @param {function} addArticle - Express path
+ * @param {function} deleteArticle - Express path
+ * @param {function} editArticle - Express path
  * @returns Response Object
  */
 router
   .route('/articles/:id?')
-  .post(AddArticles)
-  .delete(DeleteArticle)
-  .patch(UpdateArticle);
+  .post(Auth.authenticateUser, articleValidation, addArticle)
+  .delete(deleteArticle)
+  .put(Auth.authenticateUser, articleValidation, verifyArticle, editArticle);
 
 router.post('/login', checkFields, passportAuth, login);
 

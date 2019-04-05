@@ -1,10 +1,10 @@
-import { errorResponseFormat, validateParameters, parseErrorResponse } from '../utils/index';
+import { errorResponseFormat, validateParameters, } from '../utils';
 
 const checkBody = async (req, res, next) => {
   const validate = await validateParameters(req.body);
   if (validate.fails()) {
     return res.status(400).json(errorResponseFormat({
-      message: parseErrorResponse(validate.errors.all())
+      message: validate.errors.all(),
     }));
   }
   next();

@@ -1,43 +1,37 @@
 import 'chai/register-should';
 import { expect } from 'chai';
 import { validateArticle } from '../../src/utils/article';
-import ARTICLE from '../mock/article';
+import { ARTICLE } from '../mock/article';
 
 describe('validateArticle()', () => {
-  it('should return true if the validation passes', () => {
-    const validate = validateArticle(ARTICLE);
-    validate.then((res) => {
-      expect(res.passes()).to.be.equal(true);
-    });
+  it('should return true if the validation passes', async () => {
+    const validate = await validateArticle(ARTICLE);
+    expect(validate.passes()).to.be.equal(true);
   });
 
-  it('should return false if the validation fails due to missing field', () => {
+  it('should return false if the validation fails due to missing field', async () => {
     delete ARTICLE.title;
-    const validate = validateArticle(ARTICLE);
-    validate.then((res) => {
-      expect(res.fails()).to.be.equal(true);
-      expect(res.passes()).to.be.equal(false);
+    const validate = await validateArticle(ARTICLE);
+    expect(validate.fails()).to.be.equal(true);
+    expect(validate.passes()).to.be.equal(false);
 
-      const error = res.errors.all();
-      expect(error).should.be.an('object');
-      expect(error).to.have.property('title');
-      expect(error.title).to.be.an('array');
-    });
+    const error = validate.errors.all();
+    expect(error).should.be.an('object');
+    expect(error).to.have.property('title');
+    expect(error.title).to.be.an('array');
   });
 
-  it('should return false if the validation fails due to an invalid field', () => {
+  it('should return false if the validation fails due to an invalid field', async () => {
     ARTICLE.title = 1111111111;
     ARTICLE.tags = 1111111111;
-    const validate = validateArticle(ARTICLE);
-    validate.then((res) => {
-      expect(res.fails()).to.be.equal(true);
-      expect(res.passes()).to.be.equal(false);
+    const validate = await validateArticle(ARTICLE);
+    expect(validate.fails()).to.be.equal(true);
+    expect(validate.passes()).to.be.equal(false);
 
-      const error = res.errors.all();
-      expect(error).should.be.an('object');
-      expect(error).to.have.property('title');
-      expect(error.title).to.be.an('array');
-      expect(error.tags).to.be.an('array');
-    });
+    const error = validate.errors.all();
+    expect(error).should.be.an('object');
+    expect(error).to.have.property('title');
+    expect(error.title).to.be.an('array');
+    expect(error.tags).to.be.an('array');
   });
 });
