@@ -17,46 +17,46 @@ export default (sequelize, DataTypes) => {
       full_name: {
         type: DataTypes.STRING,
         allowNull: false,
-        validate: {
-          is: ['^[a-z]+$', 'i'],
-          msg: 'field can be alphanumeric only',
-        },
+        // validate: {
+        //   is: ['^[a-z]+$', 'i'],
+        //   msg: 'field can be alphanumeric only',
+        // },
       },
       email: {
         type: DataTypes.STRING,
         allowNull: false,
-        validate: {
-          isEmail: true,
-          msg: 'field must be email',
-        },
+        // validate: {
+        //   isEmail: true,
+        //   msg: 'field must be email',
+        // },
       },
       username: {
         type: DataTypes.STRING,
         allowNull: false,
         unique: true,
-        validate: {
-          isAlphanumeric: true,
-          msg: 'field can be alphanumeric only',
-        },
+        // validate: {
+        //   isAlphanumeric: true,
+        //   msg: 'field can be alphanumeric only',
+        // },
       },
       password: {
         type: DataTypes.STRING,
         allowNull: false,
-        validate: {
-          is: /^(?=.*\d)$/,
-          min: 6,
-          msg: 'Password length must have a minimum of 6 characters',
-        },
+        // validate: {
+        //   is: /^(?=.*\d)$/,
+        //   min: 6,
+        //   msg: 'Password length must have a minimum of 6 characters',
+        // },
       },
       bio: {
         type: DataTypes.STRING,
       },
       image_url: {
         type: DataTypes.STRING,
-        validate: {
-          isUrl: true,
-          msg: 'field can be url only',
-        },
+        // validate: {
+        //   isUrl: true,
+        //   msg: 'field can be url only',
+        // },
       },
       notification: DataTypes.BOOLEAN,
       role: DataTypes.ENUM('admin', 'author', 'user'),
