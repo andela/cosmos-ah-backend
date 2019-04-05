@@ -1,4 +1,4 @@
-import { validateArticle, slug } from '../utils/article';
+import { slug } from '../utils/article';
 import { Article } from '../models';
 
 /**
@@ -10,8 +10,6 @@ import { Article } from '../models';
  */
 export const AddArticles = async (req, res) => {
   const { body } = req;
-  const validate = await validateArticle(body);
-  if (validate.fails()) return res.status(400).json(validate.errors.all());
   const article = await Article.create({ ...body, slug: slug(body.title) });
   return res.status(201).json(article);
 };
