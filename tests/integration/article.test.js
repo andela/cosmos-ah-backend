@@ -2,6 +2,7 @@ import 'chai/register-should';
 import chai from 'chai';
 import chaiHttp from 'chai-http';
 import { startServer } from '../../src/server';
+import ARTICLE from '../mock/article';
 
 const { expect } = chai;
 let app = null;
@@ -28,10 +29,12 @@ describe('POST /api/v1/articles', () => {
       .send(article)
       .end((_err, res) => {
         expect(res).to.have.status(201);
-        expect(res.body).should.be.an('object');
-        expect(res.body).to.have.property('title');
-        expect(res.body.title).to.be.a('string');
-        expect(res.body.tags).to.be.a('array');
+        const { body } = res;
+        expect(body).should.be.an('object');
+        expect(body).to.have.property('title');
+        expect(body.title).to.be.equal(ARTICLE.title);
+        expect(body).to.have.property('slug');
+        expect(body.slug).to.be.a('string');
         done();
       });
   });

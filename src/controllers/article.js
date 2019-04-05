@@ -9,10 +9,10 @@ import { Article } from '../models';
  * @returns {int} Returns the inserted article after success
  */
 export const AddArticles = async (req, res) => {
-  const validate = await validateArticle(req.body);
+  const { body } = req;
+  const validate = await validateArticle(body);
   if (validate.fails()) return res.status(400).json(validate.errors.all());
-  req.body.slug = slug(req.body.title);
-  const article = await Article.create(req.body);
+  const article = await Article.create({ ...body, slug: slug(body.title) });
   return res.status(201).json(article);
 };
 

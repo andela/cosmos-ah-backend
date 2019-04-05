@@ -9,7 +9,7 @@ router.get('/', (req, res) => res.status(200).json({
 
 /**
  * Resource handling articles
- * @name /api/v1/articles/:id?
+ * @name router:/articles/:id?
  * @function
  * @memberof module:Express.Router
  * @inner
@@ -19,7 +19,7 @@ router.get('/', (req, res) => res.status(200).json({
  * @returns Response Object
  */
 router
-  .route('/api/v1/articles/:id?')
+  .route('/articles/:id?')
   .post(AddArticles)
   .delete(DeleteArticle)
   .patch(UpdateArticle);

@@ -16,7 +16,7 @@ describe('Root directory Test', () => {
   });
 
   it('Should return status: 200', (done) => {
-    agent.get('/').end((_err, res) => {
+    agent.get('/api/v1/').end((_err, res) => {
       expect(res).to.have.status(200);
       done();
     });
