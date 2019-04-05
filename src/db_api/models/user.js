@@ -1,3 +1,5 @@
+import bcrypt from 'bcryptjs';
+
 /**
  * @name init
  * @param {sequelize} sequelize
@@ -65,6 +67,10 @@ export default (sequelize, DataTypes) => {
       tableName: 'users',
     }
   );
+
+  User.beforeCreate((user) => {
+    user.prototype.password = bcrypt.hashSync(user.prototype.password, bcrypt.genSaltSync(10));
+  });
   User.associate = (models) => {
     User.hasMany(models.Article, {
       foreignKey: 'userId',

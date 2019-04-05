@@ -1,5 +1,4 @@
 import jwt from 'jsonwebtoken';
-import 'dotenv/config';
 import responseFormat from '../utils/index';
 
 /**
@@ -10,14 +9,13 @@ import responseFormat from '../utils/index';
 class Authenticator {
   /**
    * @static
-   * @param {any} payload The payload
+   * @param {any} id The user
    * @returns {object} - JSON response object
    *
    * @memberOf Authenticator
    */
-  static generateToken(payload) {
-    const token = jwt.sign(payload, process.env.JWTKEY, { expiresIn: '24h' });
-    return token;
+  static generateToken(id) {
+    return jwt.sign({ id }, process.env.JWTKEY, { expiresIn: '24h' });
   }
 
   /**
@@ -28,26 +26,27 @@ class Authenticator {
    * @param {object} next - The next function
    * @returns {object} - JSON response object
    */
-  static verifyToken(req, res, next) {
-    let token = req.headers.authorization;
-    if (!token) {
-      return res.status(401).json(responseFormat({
-        success: false,
-        data: 'No token supplied',
-      }));
-    }
-    token = token.slice(7);
-
-    jwt.verify(token, process.env.JWTKEY, (err, decoded) => {
-      if (err) {
-        return res.status(401).json(responseFormat({
-          success: false,
-          data: 'invalid token supplied',
-        }));
+  static async verifyToken(req, res, next) {
+    try {
+      const { authorization } = req.headers;
+      if (!authorization) {
+        return res.status(401)
+          .json(responseFormat({
+            success: false,
+            data: 'No token supplied',
+          }));
       }
-      req.user = decoded;
+      jwt.verify(authorization, process.env.JWTKEY, (error, decodedToken) => {
+        if (error) {
+          return res.status(401)
+            .json(responseFormat({ success: false, data: 'Invalid token supplied' }));
+        }
+        req.user = decodedToken;
+      });
       next();
-    });
+    } catch (err) {
+      return res.status(401).json(responseFormat({ success: false, data: err }));
+    }
   }
 
   /**
@@ -58,32 +57,21 @@ class Authenticator {
    * @param {object} next - The next function
    * @returns {object} - JSON response object
    */
-  static verifyUser(req, res, next) {
-    let token = req.headers.authorization;
-    if (!token) {
-      return res.status(401).json(responseFormat({
-        success: false,
-        data: 'No token supplied',
-      }));
-    }
-    token = token.slice(7);
-
-    jwt.verify(token, process.env.JWTKEY, (err, decoded) => {
-      if (err) {
-        return res.status(403).json(responseFormat({
+  static async verifyUser(req, res, next) {
+    try {
+      const token = req.headers.authorization;
+      if (!token) {
+        return res.status(401).json(responseFormat({
           success: false,
-          data: 'invalid token supplied',
+          data: 'No token supplied',
         }));
       }
-      if (decoded.user.isadmin !== true) {
-        return res.status(403).json(responseFormat({
-          success: false,
-          data: 'unauthorized user',
-        }));
-      }
-      req.user = decoded.user;
+      const data = await jwt.verify(token, process.env.JWTKEY);
+      console.log(data);
       next();
-    });
+    } catch (error) {
+      return res.status(401).json(responseFormat({ success: false, data: error }));
+    }
   }
 
   /**
@@ -101,7 +89,7 @@ class Authenticator {
     } else {
       return res.status(403).json(responseFormat({
         success: false,
-        data: 'Admin privileges is needed'
+        data: 'you are not authorised to access this route'
       }));
     }
   }
@@ -121,7 +109,7 @@ class Authenticator {
     } else {
       return res.status(403).json(responseFormat({
         success: false,
-        data: 'Authors privileges is needed'
+        data: 'you are not authorised to access this route'
       }));
     }
   }
