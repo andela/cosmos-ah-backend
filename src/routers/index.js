@@ -23,7 +23,7 @@ router.get(
 router.get('/auth/google', passport.authenticate('google', { scope: ['email profile'] }));
 router.get(
   '/auth/google/callback',
-  passport.authenticate('google', { failureRedirect: '/login' }),
+  passport.authenticate('google', { failureRedirect: '/api/v1/login' }),
   socialController.socialRedirect,
 );
 

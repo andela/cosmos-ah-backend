@@ -8,7 +8,6 @@ const { User } = db;
 const googleStrategy = new GoogleStrategy(
   passportConfig.googleAuth,
   async (accessToken, refreshToken, profile, done) => {
-    console.log(profile);
     const {
       id, displayName, photos, emails
     } = profile;
