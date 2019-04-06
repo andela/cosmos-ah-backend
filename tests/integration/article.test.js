@@ -15,26 +15,23 @@ before(async () => {
   agent = chai.request(app);
 });
 
-const article = {
-  title: 'Andela is cool 7888',
-  userId: '979eaa2e-5b8f-4103-8192-4639afae2ba8',
-  description: 'Lorem ipsum dolor sit amet, sit ut dolor alterum, sed malis referrentur cu. Aperiam fabulas eos ea. Sea mazim senserit tincidunt te.',
-  body: 'Lorem ipsum dolor sit amet, sit ut dolor alterum, sed malis referrentur cu. Aperiam fabulas eos ea. Sea mazim senserit tincidunt te. Mei volutpat delicatissimi ut, id mollis alienum argumentum has, semper efficiendi sed ea. Ius decore consul forensibus ne, enim verear corpora sit ut. Usu eu possit equidem menandri, quo et noster officiis iracundia.',
-  imageUrl: 'https://picsum.photos/200/300',
-  tags: ['hello', 'async', 'await']
-};
 describe('POST /api/v1/articles', () => {
   it('Should return status: 201', (done) => {
     agent.post('/api/v1/articles')
-      .send(article)
+      .send(ARTICLE)
       .end((_err, res) => {
         expect(res).to.have.status(201);
         const { body } = res;
         expect(body).should.be.an('object');
-        expect(body).to.have.property('title');
-        expect(body.title).to.be.equal(ARTICLE.title);
-        expect(body).to.have.property('slug');
-        expect(body.slug).to.be.a('string');
+        expect(body).to.have.property('status');
+        expect(body).to.have.property('message');
+        expect(body).to.have.property('data');
+        expect(body.status).to.be.equal(true);
+        expect(body.data).to.have.property('id');
+        expect(body.data).to.have.property('title');
+        expect(body.data).to.have.property('slug');
+        expect(body.data.title).to.be.equal(ARTICLE.title);
+        expect(body.data.body).to.be.equal(ARTICLE.body);
         done();
       });
   });
