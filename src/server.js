@@ -6,9 +6,7 @@ import swaggerUI from 'swagger-ui-express';
 import passport from 'passport';
 import docs from '../swagger.json';
 import indexRouter from './routers';
-import facebookStrategy from './middleware/facebookStrategy';
-import googleStrategy from './middleware/googleStrategy';
-
+import socialStrategy from './middleware/socialStrategy';
 
 let httpServer;
 
@@ -42,9 +40,8 @@ export const startServer = port => new Promise((resolve, reject) => {
   app.use(passport.session());
 
   app.use('/api/v1', indexRouter);
-  passport.use(facebookStrategy);
-  passport.use(googleStrategy);
-
+  passport.use(socialStrategy.facebookStrategy);
+  passport.use(socialStrategy.googleStrategy);
 
   app.use('/docs', swaggerUI.serve, swaggerUI.setup(docs));
 

@@ -15,9 +15,6 @@ export default {
         tagList: 'true, false',
         tags: ['true', 'false'],
         likes: ['979eaa2e-5b8f-4103-8192-4639afae2ba9'],
-        rating: JSON.stringify([
-          { user: '979eaa2e-5b8f-4103-8192-4639afae2ba9', value: 5 },
-        ]),
         favouritesCount: 500,
         readCount: 230,
         createdAt: new Date(),
@@ -36,9 +33,6 @@ export default {
         tagList: 'true, false',
         tags: ['true', 'false'],
         likes: ['979eaa2e-5b8f-4103-8192-4639afae2ba9'],
-        rating: JSON.stringify([
-          { user: '979eaa2e-5b8f-4103-8192-4639afae2ba9', value: 5 },
-        ]),
         favouritesCount: 500,
         readCount: 230,
         createdAt: new Date(),
