@@ -1,7 +1,7 @@
 import chai from 'chai';
 import chaiHttp from 'chai-http';
 import { startServer } from '../../src/server';
-import { updateArticleTag, updateErrorArticleTag } from '../mock/signup';
+import { updateArticleTag, updateErrorArticleTag } from '../mock/article_tag';
 
 const { expect } = chai;
 
