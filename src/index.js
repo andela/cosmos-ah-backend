@@ -1,45 +1,50 @@
-import express from 'express';
-import bodyParser from 'body-parser';
-import cors from 'cors';
-import dotenv from 'dotenv';
-import swaggerUI from 'swagger-ui-express';
-import testRoute from './routes/index';
-import docs from '../swagger.json';
+import { startServer, closeServer } from './server';
 
-dotenv.config();
+const PORT = parseInt(process.env.PORT || 4000, 10);
 
-const PORT = process.env.PORT || 4000;
+const startUp = async () => {
+  try {
+    console.log('Starting application...');
+    await startServer(PORT);
+    await console.log(`Server started listening on http://localhost:${PORT}`);
+  } catch (error) {
+    console.error(error);
+    process.exit(1);
+  }
+};
 
-// Create global app object
-const app = express();
+const shutdown = async (err = {}) => {
+  try {
+    console.log('Shutting down server');
+    await closeServer();
+  } catch (error) {
+    console.log('An error occured', error);
+  }
 
-// Express config defaults
-app.use(bodyParser.urlencoded({ extended: false }));
-app.use(bodyParser.json());
-app.use(cors());
+  if (err) {
+    process.exit(1); // exit with a failure code
+  } else {
+    process.exit();
+  }
+};
 
-app.get('/', testRoute);
-
-// route for API documentation
-app.use('/docs', swaggerUI.serve, swaggerUI.setup(docs));
-
-// catch 404 error
-app.use((req, res, next) => {
-  const err = new Error('Not Found');
-  err.status = 404;
-  next(err);
+// handles javascript error that thrown but not caught and handled with try-catch
+process.on('uncaughtException', (err) => {
+  console.log('uncaught Exception', err);
+  shutdown(err);
 });
 
-// catch error from database and other errors
-app.use((error, res, next) => {
-  res.status(error.status || 500).json({
-    error: {
-      message: error.message,
-    },
-  });
-  next();
+
+process.on('SIGTERM', () => {
+  console.log('Termination Signal received');
+  shutdown();
 });
 
-app.listen(PORT, () => console.log(`Running on localhost:${PORT}`));
+// handles signal like ctrl + c
+process.on('SIGINT', () => {
+  console.log('Received SIGINT');
 
-export default app;
+  shutdown();
+});
+
+startUp();
