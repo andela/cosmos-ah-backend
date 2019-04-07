@@ -52,7 +52,7 @@ export default (sequelize, DataTypes) => {
         defaultValue: [],
       },
       rating: {
-        type: DataTypes.ARRAY(DataTypes.TEXT),
+        type: DataTypes.ARRAY(DataTypes.STRING),
         defaultValue: [],
       },
       favouritesCount: {
