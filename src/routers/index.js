@@ -1,5 +1,6 @@
 import { Router } from 'express';
 import { AddArticles, UpdateArticle, DeleteArticle } from '../controllers/article';
+import user from './user';
 
 const router = Router();
 
@@ -18,10 +19,12 @@ router.get('/', (req, res) => res.status(200).json({
  * @param {function} UpdateArticle - Express path
  * @returns Response Object
  */
+router.use('/', user);
 router
   .route('/articles/:id?')
   .post(AddArticles)
   .delete(DeleteArticle)
   .patch(UpdateArticle);
+
 
 export default router;

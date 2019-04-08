@@ -1,3 +1,5 @@
+import bcrypt from 'bcryptjs';
+
 /**
  * @name init
  * @param {sequelize} sequelize
@@ -19,7 +21,7 @@ export default (sequelize, DataTypes) => {
         allowNull: false,
         validate: {
           is: ['^[a-z]+$', 'i'],
-          msg: 'field can be alphanumeric only',
+          // msg: 'field can be alphanumeric only',
         },
       },
       email: {
@@ -27,7 +29,7 @@ export default (sequelize, DataTypes) => {
         allowNull: false,
         validate: {
           isEmail: true,
-          msg: 'field must be email',
+          // msg: 'field must be email',
         },
       },
       username: {
@@ -36,16 +38,16 @@ export default (sequelize, DataTypes) => {
         unique: true,
         validate: {
           isAlphanumeric: true,
-          msg: 'field can be alphanumeric only',
+          // msg: 'field can be alphanumeric only',
         },
       },
       password: {
         type: DataTypes.STRING,
         allowNull: false,
         validate: {
-          is: /^(?=.*\d)$/,
+          // is: /^(?=.*\d)$/,
           min: 6,
-          msg: 'Password length must have a minimum of 6 characters',
+          // msg: 'Password length must have a minimum of 6 characters',
         },
       },
       bio: {
@@ -55,7 +57,7 @@ export default (sequelize, DataTypes) => {
         type: DataTypes.STRING,
         validate: {
           isUrl: true,
-          msg: 'field can be url only',
+          // msg: 'field can be url only',
         },
       },
       notification: DataTypes.BOOLEAN,
@@ -65,6 +67,15 @@ export default (sequelize, DataTypes) => {
       tableName: 'users',
     }
   );
+
+  // eslint-disable-next-line func-names
+  const hash = password => bcrypt.hashSync(password, bcrypt.genSaltSync(10));
+
+  User.beforeCreate((user) => {
+    const hashedPass = hash(user.dataValues.password);
+    user.password = hashedPass;
+  });
+
   User.associate = (models) => {
     User.hasMany(models.Article, {
       foreignKey: 'userId',
