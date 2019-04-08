@@ -8,8 +8,7 @@ import bcrypt from 'bcryptjs';
  * @returns {Model} Returns User model
  */
 export default (sequelize, DataTypes) => {
-  const User = sequelize.define(
-    'User',
+  const User = sequelize.define('User',
     {
       id: {
         allowNull: false,
@@ -58,8 +57,7 @@ export default (sequelize, DataTypes) => {
     },
     {
       tableName: 'users',
-    },
-  );
+    },);
 
   // eslint-disable-next-line func-names
   const hash = password => bcrypt.hashSync(password, bcrypt.genSaltSync(10));

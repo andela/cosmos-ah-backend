@@ -1,6 +1,5 @@
 export default {
-  up: queryInterface => queryInterface.bulkInsert(
-    'rating',
+  up: queryInterface => queryInterface.bulkInsert('article_ratings',
     [
       {
         id: '979eaa2e-5b8f-4103-8192-4639afae2bb9',
@@ -19,7 +18,6 @@ export default {
         updatedAt: new Date(),
       },
     ],
-    {}
-  ),
-  down: queryInterface => queryInterface.bulkDelete('rating', null, {}),
+    {}),
+  down: queryInterface => queryInterface.bulkDelete('article_ratings', null, {}),
 };

@@ -6,7 +6,9 @@
     "es6": true,
     "mocha": true
   },
-  "parser": "babel-eslint",
+  "parserOptions": {
+    "ecmaVersion": 2018
+  },
   "rules": {
     "one-var": 0,
     "one-var-declaration-per-line": 0,
@@ -17,9 +19,9 @@
     "camelcase": 0,
     "no-console": 0,
     "import/prefer-default-export": 0,
-    "function-paren-newline": 0,
     "object-curly-newline": 0,
     "curly": ["error", "multi-line"],
+    "function-paren-newline": [0, "never"],
     "import/no-unresolved": [2, { "commonjs": true }],
     "no-shadow": ["error", { "allow": ["req", "res", "err"] }],
     "valid-jsdoc": [

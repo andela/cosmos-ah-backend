@@ -5,8 +5,7 @@
  * @returns {Model} Returns Highlight model
  */
 export default (sequelize, DataTypes) => {
-  const Notification = sequelize.define(
-    'Notification',
+  const Notification = sequelize.define('Notification',
     {
       id: {
         primaryKey: true,
@@ -33,8 +32,7 @@ export default (sequelize, DataTypes) => {
     },
     {
       tableName: 'notifications',
-    }
-  );
+    });
   Notification.associate = (models) => {
     Notification.belongsTo(models.Article, {
       foreignKey: 'articleId',

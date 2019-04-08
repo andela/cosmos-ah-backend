@@ -98,7 +98,7 @@ describe('Signup Authentication Test', () => {
           .to.have.property('status')
           .eql('fail');
         expect(res.body.message).to.have.property('notification')
-          .eql('The notification field is required.');
+          .eql(['The notification field is required.']);
         done();
       });
   });

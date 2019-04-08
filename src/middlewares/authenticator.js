@@ -47,7 +47,7 @@ class Authenticator {
     jwt.verify(token, process.env.JWTKEY, (error, decodedToken) => {
       if (error) {
         return res.status(401)
-          .json(responseFormat({ status: 'error', message: 'Invalid token supplied' }));
+          .json(responseFormat({ status: 'fail', data: 'Invalid token supplied' }));
       }
       req.user = decodedToken;
     });

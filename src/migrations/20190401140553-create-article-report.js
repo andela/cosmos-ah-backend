@@ -1,5 +1,5 @@
 export default {
-  up: (queryInterface, Sequelize) => queryInterface.createTable('report', {
+  up: (queryInterface, Sequelize) => queryInterface.createTable('article_reports', {
     id: {
       allowNull: false,
       primaryKey: true,
@@ -29,5 +29,5 @@ export default {
       type: Sequelize.DATE,
     },
   }),
-  down: queryInterface => queryInterface.dropTable('report'),
+  down: queryInterface => queryInterface.dropTable('article_reports'),
 };

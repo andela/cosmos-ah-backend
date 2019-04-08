@@ -5,8 +5,7 @@
  * @returns {Model} Returns ArticleRating model
  */
 export default (sequelize, DataTypes) => {
-  const Rating = sequelize.define(
-    'Rating',
+  const Rating = sequelize.define('Rating',
     {
       id: {
         primaryKey: true,
@@ -31,9 +30,8 @@ export default (sequelize, DataTypes) => {
       }
     },
     {
-      tableName: 'ratings',
-    }
-  );
+      tableName: 'article_ratings',
+    });
   Rating.associate = (models) => {
     Rating.belongsTo(models.Article, {
       foreignKey: 'articleId',

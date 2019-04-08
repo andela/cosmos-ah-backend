@@ -7,6 +7,7 @@ export const ARTICLE = {
   tags: ['hello', 'async', 'await']
 };
 
+
 export const UPDATED_ARTICLE = {
   title: 'Andela is cool 7888',
   userId: '979eaa2e-5b8f-4103-8192-4639afae2ba9',
@@ -23,4 +24,26 @@ export const MALFORMED_ARTICLE = {
   body: 'Lorem ipsum dolor sit amet, sit ut dolor alterum, sed malis referrentur cu. Aperiam fabulas eos ea. Sea mazim senserit tincidunt te. Mei volutpat delicatissimi ut, id mollis alienum argumentum has, semper efficiendi sed ea. Ius decore consul forensibus ne, enim verear corpora sit ut. Usu eu possit equidem menandri, quo et noster officiis iracundia.',
   imageUrl: 'https://picsum.photos/200/300',
   tags: 'jh3rfbjhf4jfhrfjh4j'
+};
+
+const ArticleModel = {
+  articles: [{
+    id: '22222-22222-2222',
+    userId: '33333-3333-3333'
+  },
+  {
+    id: '22222-22222-2224',
+    userId: '33333-3333-3334'
+  }],
+  findOne({ where }) {
+    const { userId, id } = where;
+    const articles = this.articles.filter(article => article.id === id
+      && article.userId === userId);
+    return Promise.resolve(articles[0]);
+  }
+};
+
+export default {
+  ARTICLE,
+  ArticleModel
 };

@@ -11,28 +11,26 @@ passport.deserializeUser((user, done) => {
 });
 
 const passportConfig = () => {
-  passport.use('local-login', new LocalStrategy(
-    {
-      usernameField: 'email',
-      passwordField: 'password',
-      passReqToCallback: true
-    },
-    (async (req, email, password, done) => {
-      try {
-        const user = await User.findOne({ where: { email } });
-        if (!user) {
-          return done(null, false);
-        }
-        if (!user.comparePassword(password, user.password)) {
-          return done(null, false);
-        }
-        return done(null, user.dataValues);
-      } catch (error) {
-        return done(error);
+  passport.use('local-login', new LocalStrategy({
+    usernameField: 'email',
+    passwordField: 'password',
+    passReqToCallback: true
+  },
+  (async (req, email, password, done) => {
+    try {
+      const user = await User.findOne({ where: { email } });
+      if (!user) {
+        return done(null, false);
       }
+      if (!user.comparePassword(password, user.password)) {
+        return done(null, false);
+      }
+      return done(null, user.dataValues);
+    } catch (error) {
+      return done(error);
     }
-    )
-  ));
+  }
+  )));
 };
 
 export default passportConfig;

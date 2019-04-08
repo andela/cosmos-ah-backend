@@ -5,8 +5,7 @@
  * @returns {Model} Returns Comment model
  */
 export default (sequelize, DataTypes) => {
-  const Comment = sequelize.define(
-    'Comment',
+  const Comment = sequelize.define('Comment',
     {
       id: {
         type: DataTypes.UUID,
@@ -29,8 +28,7 @@ export default (sequelize, DataTypes) => {
     },
     {
       tableName: 'comments',
-    }
-  );
+    });
   Comment.associate = (models) => {
     Comment.belongsTo(models.Article, {
       foreignKey: 'articleId',

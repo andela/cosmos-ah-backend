@@ -1,6 +1,5 @@
 export default {
-  up: queryInterface => queryInterface.bulkInsert(
-    'highlights',
+  up: queryInterface => queryInterface.bulkInsert('highlights',
     [
       {
         id: '979eaa2e-5b8f-4103-8192-4639afae2bb9',
@@ -21,7 +20,6 @@ export default {
         updatedAt: new Date(),
       },
     ],
-    {}
-  ),
+    {}),
   down: queryInterface => queryInterface.bulkDelete('highlights', null, {}),
 };

@@ -1,6 +1,6 @@
 import { slug } from '../utils/article';
-import { Article } from '../models';
-import { responseHandler } from '../utils';
+import { sendResponse, responseHandler, omitProps } from '../utils';
+import { Article, Rating } from '../models';
 
 /**
  * @name addArticle
@@ -51,6 +51,7 @@ export const editArticle = async (req, res) => {
  * @returns {int} Returns true after deleting an article
  * @returns {object} Returns boolean
  */
+
 export const deleteArticle = async (req, res) => {
   const { id } = req.params;
   try {
@@ -59,5 +60,44 @@ export const deleteArticle = async (req, res) => {
     if (destroyArticle >= deleted) { return responseHandler(res, 202, { status: 'success', message: 'Your article has been removed.' }); }
   } catch (error) {
     return responseHandler(res, 500, { status: 'error', message: 'We are responsible for failing to update your article, please try again!' });
+  }
+};
+
+/**
+ * @function rateArticle
+ * @param {Request} req
+ * @param {Response} res
+ * @returns {Response} Returns server response to user
+ */
+export const rateArticle = async (req, res) => {
+  const { user, params, body } = req;
+  const { articleId, userId = user.id } = params;
+  try {
+    const [rating, created] = await Rating.findOrCreate({
+      where: { userId, articleId },
+      defaults: {
+        userId,
+        articleId,
+        value: body.rating
+      }
+    });
+    if (!created) {
+      const updatedRating = await rating.update({
+        value: body.rating
+      }, { returning: true });
+      return sendResponse(res, 200, {
+        responseType: 'success',
+        data: omitProps(updatedRating.dataValues, ['createdAt', 'updatedAt'])
+      });
+    }
+    return sendResponse(res, 201, {
+      responseType: 'success',
+      data: omitProps(rating.dataValues, ['createdAt', 'updatedAt'])
+    });
+  } catch (error) {
+    return sendResponse(res, 500, {
+      responseType: 'error',
+      data: 'Invalid request. Please check and try again'
+    });
   }
 };

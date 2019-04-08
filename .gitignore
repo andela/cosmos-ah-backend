@@ -74,3 +74,6 @@ typings/
 
 # Build folder
 dist
+
+# project ideas
+.idea

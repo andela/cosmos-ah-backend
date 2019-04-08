@@ -5,8 +5,7 @@
  * @returns {Model} Returns article model
  */
 export default (sequelize, DataTypes) => {
-  const Article = sequelize.define(
-    'Article',
+  const Article = sequelize.define('Article',
     {
       id: {
         primaryKey: true,
@@ -62,8 +61,7 @@ export default (sequelize, DataTypes) => {
     },
     {
       tableName: 'articles',
-    }
-  );
+    });
   Article.associate = (models) => {
     Article.belongsTo(models.User, {
       foreignKey: 'userId',
