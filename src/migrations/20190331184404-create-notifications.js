@@ -13,6 +13,8 @@ export default {
         key: 'id',
         deferrable: Sequelize.Deferrable.INITIALLY_IMMEDIATE,
       },
+      onUpdate: 'CASCADE',
+      onDelete: 'CASCADE',
     },
     message: {
       type: Sequelize.TEXT,

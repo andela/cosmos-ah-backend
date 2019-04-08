@@ -13,6 +13,8 @@ export default {
         key: 'id',
         deferrable: Sequelize.Deferrable.INITIALLY_IMMEDIATE,
       },
+      onUpdate: 'CASCADE',
+      onDelete: 'CASCADE',
     },
     articleId: {
       allowNull: false,
@@ -22,6 +24,8 @@ export default {
         key: 'id',
         deferrable: Sequelize.Deferrable.INITIALLY_IMMEDIATE,
       },
+      onUpdate: 'CASCADE',
+      onDelete: 'CASCADE',
     },
     highlightedText: {
       type: Sequelize.TEXT,

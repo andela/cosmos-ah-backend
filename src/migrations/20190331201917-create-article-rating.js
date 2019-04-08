@@ -12,6 +12,8 @@ export default {
         key: 'id',
         deferrable: Sequelize.Deferrable.INITIALLY_IMMEDIATE,
       },
+      onUpdate: 'CASCADE',
+      onDelete: 'CASCADE',
     },
     articleId: {
       type: Sequelize.UUID,
@@ -20,6 +22,8 @@ export default {
         key: 'id',
         deferrable: Sequelize.Deferrable.INITIALLY_IMMEDIATE,
       },
+      onUpdate: 'CASCADE',
+      onDelete: 'CASCADE',
     },
     value: {
       type: Sequelize.INTEGER,

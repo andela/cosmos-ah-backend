@@ -13,6 +13,8 @@ export default {
         key: 'id',
         deferrable: Sequelize.Deferrable.INITIALLY_IMMEDIATE,
       },
+      onUpdate: 'CASCADE',
+      onDelete: 'CASCADE',
     },
     followerId: {
       allowNull: false,
@@ -22,6 +24,8 @@ export default {
         key: 'id',
         deferrable: Sequelize.Deferrable.INITIALLY_IMMEDIATE,
       },
+      onUpdate: 'CASCADE',
+      onDelete: 'CASCADE',
     },
     createdAt: {
       allowNull: false,
