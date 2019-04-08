@@ -48,10 +48,6 @@ export default {
       type: Sequelize.ARRAY(Sequelize.STRING),
       defaultValue: [],
     },
-    rating: {
-      type: Sequelize.JSONB,
-      defaultValue: [],
-    },
     favouritesCount: {
       type: Sequelize.INTEGER,
       defaultValue: 0,

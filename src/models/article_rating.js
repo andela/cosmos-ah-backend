@@ -21,6 +21,14 @@ export default (sequelize, DataTypes) => {
         type: DataTypes.UUID,
         allowNull: false,
       },
+      value: {
+        type: DataTypes.INTEGER,
+        defaultValue: 1,
+        validate: {
+          min: 1,
+          max: 5
+        }
+      }
     },
     {
       tableName: 'article_ratings',

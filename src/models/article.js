@@ -51,10 +51,6 @@ export default (sequelize, DataTypes) => {
         type: DataTypes.ARRAY(DataTypes.STRING),
         defaultValue: [],
       },
-      rating: {
-        type: DataTypes.ARRAY(DataTypes.JSONB),
-        defaultValue: [],
-      },
       favouritesCount: {
         type: DataTypes.INTEGER,
         defaultValue: 0,
