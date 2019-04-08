@@ -2,8 +2,7 @@ const responseFormat = (response) => {
   const { data, success } = response;
   return {
     data,
-    success
+    success,
   };
 };
-
 export default responseFormat;

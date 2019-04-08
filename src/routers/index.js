@@ -1,6 +1,9 @@
 import { Router } from 'express';
+import login from '../controllers/authentication/user';
+import passport from '../middlewares/passport';
 import { AddArticles, UpdateArticle, DeleteArticle } from '../controllers/article';
 import user from './user';
+import checkFields from '../middlewares/auth/loginValidator';
 
 const router = Router();
 
@@ -26,5 +29,6 @@ router
   .delete(DeleteArticle)
   .patch(UpdateArticle);
 
+router.post('/login', checkFields, passport, login);
 
 export default router;
