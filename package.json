@@ -8,6 +8,8 @@
     "dev": "nodemon --exec babel-node src/index.js",
     "db-create": "sequelize db:create",
     "db-create:test": "NODE_ENV=test sequelize db:create",
+    "db-drop": "sequelize db:drop",
+    "db-drop:test": "NODE_ENV=test sequelize db:drop",
     "db-migrate": "./node_modules/.bin/babel-node ./node_modules/.bin/sequelize db:migrate",
     "db-migrate:test": "NODE_ENV=test ./node_modules/.bin/babel-node ./node_modules/.bin/sequelize db:migrate",
     "db-migrate:undo": "./node_modules/.bin/babel-node ./node_modules/.bin/sequelize db:migrate:undo:all",
@@ -18,6 +20,7 @@
     "lint-fix": "eslint ./src --fix",
     "lint": "eslint ./src",
     "db-refresh:test": "NODE_ENV=test npm run db-migrate:undo:test && npm run db-migrate:test && npm run db-seed:test",
+    "db-clean:test": "npm run db-drop:test && npm run db-create:test",
     "test": "npm run db-refresh:test && nyc mocha --require @babel/register  tests/**/*.js --timeout 20000 --exit",
     "coverage": "nyc report --reporter=text-lcov | coveralls"
   },
