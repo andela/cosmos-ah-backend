@@ -5,8 +5,7 @@
  * @returns {Model} Returns Favourite model
  */
 export default (sequelize, DataTypes) => {
-  const Favourite = sequelize.define(
-    'Favourite',
+  const Favourite = sequelize.define('Favourite',
     {
       id: {
         type: DataTypes.UUID,
@@ -25,8 +24,7 @@ export default (sequelize, DataTypes) => {
     },
     {
       tableName: 'favourites',
-    }
-  );
+    });
   Favourite.associate = (models) => {
     Favourite.belongsTo(models.Article, {
       foreignKey: 'articleId',

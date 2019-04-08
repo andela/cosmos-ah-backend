@@ -5,8 +5,7 @@
  * @returns {Model} Returns Follower model
  */
 export default (sequelize, DataTypes) => {
-  const Follower = sequelize.define(
-    'Follower',
+  const Follower = sequelize.define('Follower',
     {
       id: {
         type: DataTypes.UUID,
@@ -25,8 +24,7 @@ export default (sequelize, DataTypes) => {
     },
     {
       tableName: 'followers',
-    }
-  );
+    });
   Follower.associate = (models) => {
     Follower.belongsTo(models.User, {
       foreignKey: 'userId',

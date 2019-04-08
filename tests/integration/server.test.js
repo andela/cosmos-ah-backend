@@ -16,8 +16,10 @@ describe('Root directory Test', () => {
   });
 
   it('Should return status: 200', (done) => {
-    agent.get('/api/v1/').end((_err, res) => {
+    agent.get('/api/v1/').end((err, res) => {
       expect(res).to.have.status(200);
+      expect(res.body.data).to.equal('Welcome to the Author\'s Haven API');
+      expect(res.body.status).to.equal('success');
       done();
     });
   });

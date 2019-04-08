@@ -5,8 +5,7 @@
  * @returns {Model} Returns Bookmark model
  */
 export default (sequelize, DataTypes) => {
-  const Bookmark = sequelize.define(
-    'Bookmark',
+  const Bookmark = sequelize.define('Bookmark',
     {
       id: {
         type: DataTypes.UUID,
@@ -25,8 +24,7 @@ export default (sequelize, DataTypes) => {
     },
     {
       tableName: 'bookmarks',
-    }
-  );
+    });
   Bookmark.associate = (models) => {
     Bookmark.belongsTo(models.Article, {
       foreignKey: 'articleId',

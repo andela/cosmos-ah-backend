@@ -74,7 +74,7 @@ export const parseErrorResponse = (responses) => {
 
   const errorFieldNames = Object.keys(responses);
   errorFieldNames.forEach((errorFieldName) => {
-    errorMessages[errorFieldName] = responses[errorFieldName].join('');
+    errorMessages[errorFieldName] = responses[errorFieldName];
   });
 
   return errorMessages;
@@ -113,4 +113,80 @@ export const generateDummyWords = (word, number = 10) => {
     count += 1;
   }
   return newParagraph;
+}
+
+/*
+ * @function parseResponse
+ * @param {*} payload
+ * @returns {*} parses and returns new response
+ */
+const parseResponse = (payload) => {
+  const { data, responseType } = payload;
+  return {
+    status: responseType,
+    [`${responseType === 'error' ? 'message' : 'data'}`]: data
+  };
+};
+
+/**
+ * @function sendResponse
+ * @param {Response} res
+ * @param {Number} statusCode
+ * @param {*} payload  A hash of data and responseType.
+ * ResponseType is an enum of strings [fail, success, error]
+ * @returns {Response} Returns a response from the server
+ * based on the `responseType` property in `payload`
+ */
+export const sendResponse = (res, statusCode, payload) => {
+  const parsedResponse = parseResponse(payload);
+  return res.status(statusCode).json(parsedResponse);
+};
+
+/**
+ * @function createErrorResponse
+ * @param {*} error
+ * @param {*} Sequelize
+ * @returns {*} Returns a response based on sequelize error types
+ */
+export const createErrorResponse = (error, Sequelize) => {
+  const response = {};
+  const {
+    DatabaseError,
+    ForeignKeyConstraintError,
+    ValidationError,
+    ValidationErrorItem
+  } = Sequelize;
+  if (error instanceof DatabaseError) {
+    response.data = 'Invalid request. please check and try again';
+  } else if (error instanceof ForeignKeyConstraintError) {
+    response.data = 'You may not have supplied all field values that are foreign keys. please check and try again';
+  } else if (error instanceof ValidationError) {
+    response.data = error.errors;
+  } else if (error instanceof ValidationErrorItem) {
+    response.data = error.message;
+  }
+
+  return response;
+};
+
+/**
+ * @function omitProps
+ * @param {*} obj A hash of props and values from which to omit props from
+ * @param {Array<String>} props An array of props to omit
+ * @returns {*} A hash of the omitted props
+ */
+export const omitProps = (obj, props) => {
+  const filtered = {};
+  const filteredKeys = Object.keys(obj).filter(key => !props.includes(key));
+  /* eslint-disable no-restricted-syntax */
+  for (const key of filteredKeys) {
+    filtered[key] = obj[key];
+  }
+  return filtered;
+};
+
+export default {
+  parseResponse,
+  sendResponse,
+  createErrorResponse
 };

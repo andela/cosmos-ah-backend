@@ -9,6 +9,7 @@ export const ARTICLE = {
   tags: ['hello', 'async', 'await']
 };
 
+
 export const UPDATED_ARTICLE = {
   title: 'Andela is cool 7888',
   userId: '979eaa2e-5b8f-4103-8192-4639afae2ba9',
@@ -27,6 +28,29 @@ export const MALFORMED_ARTICLE = {
   tags: 'jh3rfbjhf4jfhrfjh4j'
 };
 
+
 export const articleTag = {
   tags: ['java', 'ruby']
+};
+
+const ArticleModel = {
+  articles: [{
+    id: '22222-22222-2222',
+    userId: '33333-3333-3333'
+  },
+  {
+    id: '22222-22222-2224',
+    userId: '33333-3333-3334'
+  }],
+  findOne({ where }) {
+    const { userId, id } = where;
+    const articles = this.articles.filter(article => article.id === id
+      && article.userId === userId);
+    return Promise.resolve(articles[0]);
+  }
+};
+
+export default {
+  ARTICLE,
+  ArticleModel
 };

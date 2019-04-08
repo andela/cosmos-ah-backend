@@ -5,8 +5,7 @@
  * @returns {Model} Returns ArticleReport model
  */
 export default (sequelize, DataTypes) => {
-  const Report = sequelize.define(
-    'Report',
+  const Report = sequelize.define('Report',
     {
       id: {
         primaryKey: true,

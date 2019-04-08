@@ -1,7 +1,19 @@
-import { validateArticle, getArticleReportValidator, validateArticleTag } from '../utils/article';
+import Sequelize from 'sequelize';
+import { 
+  validateArticle, 
+  getArticleReportValidator,
+  validateArticleTag,
+  validateArticleRating,
+  isOwnArticle, 
+} from '../utils/article';
 import { findById } from '../utils/query';
 import { Article } from '../models';
-import { responseHandler, parseErrorResponse } from '../utils';
+import {
+  parseErrorResponse,
+  sendResponse, 
+  createErrorResponse, 
+  responseHandler 
+} from '../utils';
 
 /**
  *@name articleValidation
@@ -20,7 +32,6 @@ const articleValidation = async (req, res, next) => {
   next();
 };
 
-
 /**
  *@name verifyArticle
  *@description Middleware for verifying that article exists
@@ -33,12 +44,15 @@ const articleValidation = async (req, res, next) => {
 export const verifyArticle = async (req, res, next) => {
   const { id } = req.params;
   const article = await findById(Article, id);
-  if (!article) { return responseHandler(res, 404, { status: 'fail', message: 'Article not found!', }); }
-  const { dataValues: { userId: authorId } } = article;
+  if (!article) {
+    return responseHandler(res, 404, { status: 'fail', message: 'Article not found!' });
+  }
+  const {
+    dataValues: { userId: authorId },
+  } = article;
   req.authorId = authorId;
   next();
 };
-
 
 /**
  *@name isAuthor
@@ -52,9 +66,15 @@ export const verifyArticle = async (req, res, next) => {
 export const isAuthor = async (req, res, next) => {
   const { id: userId, role } = req.user;
   const { authorId } = req;
-  if (authorId !== userId && role !== 'admin') { return responseHandler(res, 403, { status: 'error', message: 'You don\'t have access to manage this article!', }); }
+  if (authorId !== userId && role !== 'admin') {
+    return responseHandler(res, 403, {
+      status: 'error',
+      message: "You don't have access to manage this article!",
+    });
+  }
   next();
 };
+
 /**
  * @function articleReportValidation
  * @param {Request} req
@@ -66,7 +86,27 @@ export const isAuthor = async (req, res, next) => {
 export const articleReportValidation = (req, res, next) => {
   const validator = getArticleReportValidator(req.body);
   if (validator.fails()) {
-    return res.status(400).json({ status: 'fail', data: parseErrorResponse(validator.errors.all()) });
+    return res
+      .status(400)
+      .json({ status: 'fail', data: parseErrorResponse(validator.errors.all()) });
+  }
+  next();
+};
+
+/*
+ * @function validateRating
+ * @param {Request} req
+ * @param {Response} res
+ * @param {function} next
+ * @returns {Response | Function} Returns a validation error response
+ */
+export const validateRating = (req, res, next) => {
+  const validator = validateArticleRating(req.body);
+  if (validator.fails()) {
+    return sendResponse(res, 400, {
+      responseType: 'fail',
+      data: parseErrorResponse(validator.errors.all()),
+    });
   }
   next();
 };
@@ -86,6 +126,36 @@ export const articleTagValidation = async (req, res, next) => {
     return res.status(400).json({ status: 'fail', error: validate.errors.all() });
   }
   return next();
+};
+/*
+ * @function checkIfAuthoredBySameUser
+ * @param {*} ArticleModel Article model
+ * @returns {function} Returns middleware function
+ * @description checks if an article belongs to the
+ * user who is about to rate it
+ */
+export const checkIfAuthoredBySameUser = ArticleModel => async (req, res, next) => {
+  try {
+    const { articleId } = req.params;
+    const { id: userId } = req.user;
+    const authoredByThisUser = await isOwnArticle(ArticleModel, {
+      userId,
+      articleId,
+      searchUserId: req.user.id,
+    });
+    if (authoredByThisUser) {
+      return sendResponse(res, 409, {
+        responseType: 'fail',
+        data: 'You cannot rate your own article',
+      });
+    }
+    next();
+  } catch (e) {
+    return sendResponse(res, 500, {
+      status: 'error',
+      data: createErrorResponse(e, Sequelize),
+    });
+  }
 };
 
 export default articleValidation;

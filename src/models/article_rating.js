@@ -26,9 +26,9 @@ export default (sequelize, DataTypes) => {
         defaultValue: 1,
         validate: {
           min: 1,
-          max: 5
-        }
-      }
+          max: 5,
+        },
+      },
     },
     {
       tableName: 'article_ratings',

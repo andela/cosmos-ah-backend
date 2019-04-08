@@ -5,8 +5,7 @@
  * @returns {Model} Returns Highlight model
  */
 export default (sequelize, DataTypes) => {
-  const Highlight = sequelize.define(
-    'Highlight',
+  const Highlight = sequelize.define('Highlight',
     {
       id: {
         allowNull: false,
@@ -33,8 +32,7 @@ export default (sequelize, DataTypes) => {
     },
     {
       tableName: 'highlights',
-    }
-  );
+    });
   Highlight.associate = (models) => {
     Highlight.belongsTo(models.Article, {
       foreignKey: 'articleId',

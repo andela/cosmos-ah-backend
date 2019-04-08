@@ -43,6 +43,9 @@
       "git add --force"
     ]
   },
+  "nyc": {
+    "exclude": "tests/*"
+  },
   "author": "Andela Simulations Programme",
   "license": "MIT",
   "dependencies": {
@@ -79,10 +82,10 @@
     "@babel/node": "^7.2.2",
     "@babel/preset-env": "^7.4.2",
     "@babel/register": "^7.4.0",
-    "babel-eslint": "^10.0.1",
     "babel-plugin-syntax-object-rest-spread": "^6.13.0",
     "babel-polyfill": "^6.26.0",
     "chai": "^4.2.0",
+    "chai-as-promised": "^7.1.1",
     "chai-http": "^4.2.1",
     "coveralls": "^3.0.2",
     "eslint": "^5.16.0",

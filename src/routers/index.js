@@ -8,6 +8,7 @@ import {
   deleteArticle,
   reportArticle,
   bookmarkArticle,
+  rateArticle,
   editArticleTag
 } from '../controllers/article';
 import checkFields from '../middlewares/auth/loginValidator';
@@ -27,20 +28,24 @@ import articleValidation, {
   verifyArticle,
   isAuthor,
   articleReportValidation,
-  articleTagValidation
+  articleTagValidation,
+  validateRating, 
+  checkIfAuthoredBySameUser
 } from '../middlewares/articles';
 import { checkParam } from '../middlewares/checkParam';
 import checkEditBody from '../middlewares/editProfileValidator';
 import { editUser } from '../controllers/editUser';
 import { followUser } from '../controllers/follower';
 import getAuthors from '../controllers/authors';
+import { Article } from '../models';
+
 
 const router = Router();
 
 router.get('/', (req, res) => res.status(200).json({
-  message: 'Welcome to the Authors Haven API',
-}),
-);
+  status: 'success',
+  data: 'Welcome to the Author\'s Haven API',
+}));
 
 router
   .route('/articles/:id/like')
@@ -142,5 +147,12 @@ router.get(
 );
 
 router.get('/authors', Auth.authenticateUser, getAuthors);
+
+router
+  .route('/articles/:articleId/ratings')
+  .post(Auth.authenticateUser,
+    validateRating,
+    checkIfAuthoredBySameUser(Article),
+    rateArticle);
 
 export default router;

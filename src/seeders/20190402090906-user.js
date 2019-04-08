@@ -1,6 +1,5 @@
 export default {
-  up: queryInterface => queryInterface.bulkInsert(
-    'users',
+  up: queryInterface => queryInterface.bulkInsert('users',
     [
       {
         id: '979eaa2e-5b8f-4103-8192-4639afae2ba9',
@@ -67,6 +66,13 @@ export default {
         email: 'seyi@gmail.com',
         username: 'seyishay',
         password: '$2a$10$ijw.0rXSMhzRlBWV1xsEEOOZ3c6sVnVE7TmzttlfwtojXOtPd8hte',
+      },
+      {
+        id: '979eaa2e-5b8f-4103-8192-4639afae2bb2',
+        fullName: 'Dennis Ritchie',
+        email: 'dennisritchie@gmail.com',
+        username: 'dennisritchie',
+        password: '%RYYT&^UTB*UYT*IUYIU',
         bio:
             "Hold on now, aren't there already specs for this kind of thing? - Well... no. While there are a few handy specifications for dealing with JSON data, most notably Douglas Crockford's JSONRequest proposal, there's nothing to address the problems of general application-level messaging. More on this later.",
         imageUrl: 'http://waterease.herokuapp.com/images/board/comfort.jpg',
@@ -75,8 +81,22 @@ export default {
         createdAt: new Date(),
         updatedAt: new Date(),
       },
+
+      {
+        id: '979eaa2e-5b8f-4103-8192-4639afae2bb3',
+        fullName: 'Linus Torvards',
+        email: 'linustorvards@gmail.com',
+        username: 'linustorvards',
+        password: '%RYYT&^UTB*UYT*IUYIU',
+        bio:
+            "Hold on now, aren't there already specs for this kind of thing? - Well... no. While there are a few handy specifications for dealing with JSON data, most notably Douglas Crockford's JSONRequest proposal, there's nothing to address the problems of general application-level messaging. More on this later.",
+        imageUrl: 'http://waterease.herokuapp.com/images/board/comfort.jpg',
+        notification: true,
+        role: 'user',
+        createdAt: new Date(),
+        updatedAt: new Date(),
+      },
     ],
-    {}
-  ),
+    {}),
   down: queryInterface => queryInterface.bulkDelete('users', null, {}),
 };

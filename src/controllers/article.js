@@ -1,6 +1,12 @@
 import { slug } from '../utils/article';
-import { responseHandler, responseFormat, errorResponseFormat } from '../utils';
-import { Article, Bookmark, Report, Sequelize } from '../models';
+import {
+  responseHandler,
+  responseFormat,
+  errorResponseFormat,
+  sendResponse,
+  omitProps,
+} from '../utils';
+import { Article, Bookmark, Report, Sequelize, Rating } from '../models';
 
 /**
  * @name addArticle
@@ -96,6 +102,7 @@ export const editArticleTag = async (req, res) => {
  * @returns {int} Returns true after deleting an article
  * @returns {object} Returns boolean
  */
+
 export const deleteArticle = async (req, res) => {
   const { id } = req.params;
   try {
@@ -194,6 +201,48 @@ export const reportArticle = async (req, res) => {
     return res.status(500).json({
       status: 'error',
       message: 'Invalid request. Please check and try again',
+    });
+  }
+};
+
+/**
+ * @function rateArticle
+ * @param {Request} req
+ * @param {Response} res
+ * @returns {Response} Returns server response to user
+ */
+export const rateArticle = async (req, res) => {
+  const { user, params, body } = req;
+  const { articleId, userId = user.id } = params;
+  try {
+    const [rating, created] = await Rating.findOrCreate({
+      where: { userId, articleId },
+      defaults: {
+        userId,
+        articleId,
+        value: body.rating,
+      },
+    });
+    if (!created) {
+      const updatedRating = await rating.update(
+        {
+          value: body.rating,
+        },
+        { returning: true },
+      );
+      return sendResponse(res, 200, {
+        responseType: 'success',
+        data: omitProps(updatedRating.dataValues, ['createdAt', 'updatedAt']),
+      });
+    }
+    return sendResponse(res, 201, {
+      responseType: 'success',
+      data: omitProps(rating.dataValues, ['createdAt', 'updatedAt']),
+    });
+  } catch (error) {
+    return sendResponse(res, 500, {
+      responseType: 'error',
+      data: 'Invalid request. Please check and try again',
     });
   }
 };

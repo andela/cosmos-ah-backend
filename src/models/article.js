@@ -7,8 +7,7 @@ import { computeArticleReadingTime } from '../utils/article';
  * @returns {Model} Returns article model
  */
 export default (sequelize, DataTypes) => {
-  const Article = sequelize.define(
-    'Article',
+  const Article = sequelize.define('Article',
     {
       id: {
         primaryKey: true,
