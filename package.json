@@ -20,8 +20,7 @@
     "lint-fix": "eslint ./src --fix",
     "lint": "eslint ./src",
     "db-refresh:test": "NODE_ENV=test npm run db-migrate:undo:test && npm run db-migrate:test && npm run db-seed:test",
-    "db-clean:test": "npm run db-drop:test && npm run db-create:test",
-    "test": "npm run db-refresh:test && nyc mocha --require @babel/register  tests/**/*.js --timeout 20000 --exit",
+    "test": "export ENV=dev && npm run db-refresh:test && nyc mocha --require @babel/register  tests/**/*.js --timeout 20000 --exit",
     "coverage": "nyc report --reporter=text-lcov | coveralls"
   },
   "husky": {

@@ -13,7 +13,7 @@ export default {
         key: 'id',
       },
       onUpdate: 'CASCADE',
-      onDelete: 'SET NULL',
+      onDelete: 'CASCADE',
     },
     title: {
       type: Sequelize.STRING,
