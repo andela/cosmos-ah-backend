@@ -1,4 +1,5 @@
 import chai from 'chai';
+import jwt from 'jsonwebtoken';
 import chaiHttp from 'chai-http';
 import { startServer } from '../../src/server';
 
@@ -23,6 +24,21 @@ describe('Users Login', () => {
       })
       .end((err, res) => {
         expect(res).to.have.status(200);
+        done();
+      });
+  });
+  it('should return true for valid token', (done) => {
+    const payload = {
+      email: 'martins@gmail.com',
+      password: '%RYYT&^UTB*UYT*IUYIU',
+    };
+    agent.post('/api/v1/login')
+      .send(payload)
+      .end((err, res) => {
+        expect(res).to.have.status(200);
+        const { token } = res.body.data;
+        const { email } = jwt.decode(token);
+        expect(email).to.equal(payload.email);
         done();
       });
   });

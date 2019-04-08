@@ -9,12 +9,12 @@ import responseFormat from '../../utils';
    */
 
 const login = (req, res) => {
-  const { id } = req.user;
+  const { id, email } = req.user;
   return res.status(200).json(responseFormat({
     success: true,
     data: {
       user: req.user,
-      token: tokenizer({ id })
+      token: tokenizer({ id, email })
     },
   }));
 };
