@@ -9,13 +9,13 @@ import responseFormat from '../utils/index';
 class Authenticator {
   /**
    * @static
-   * @param {any} id The user
+   * @param {object} user The user
    * @returns {object} - JSON response object
    *
    * @memberOf Authenticator
    */
-  static generateToken(id) {
-    return jwt.sign({ id }, process.env.JWTKEY, { expiresIn: '24h' });
+  static generateToken(user) { // { id, full_name, email , username , role }
+    return jwt.sign(user, process.env.JWTKEY, { expiresIn: '1 day' });
   }
 
   /**
@@ -27,51 +27,29 @@ class Authenticator {
    * @returns {object} - JSON response object
    */
   static async verifyToken(req, res, next) {
-    try {
-      const { authorization } = req.headers;
-      if (!authorization) {
-        return res.status(401)
-          .json(responseFormat({
-            success: false,
-            data: 'No token supplied',
-          }));
-      }
-      jwt.verify(authorization, process.env.JWTKEY, (error, decodedToken) => {
-        if (error) {
-          return res.status(401)
-            .json(responseFormat({ success: false, data: 'Invalid token supplied' }));
-        }
-        req.user = decodedToken;
-      });
-      next();
-    } catch (err) {
-      return res.status(401).json(responseFormat({ success: false, data: err }));
+    let token = '';
+    /* eslint-disable no-unused-vars */
+    let str = '';
+    if (req.get('Authorization').startsWith('Bearer')) {
+      [str, token] = req.get('Authorization').split(' ');
+    } else {
+      token = req.get('Authorization') ? req.get('Authorization') : req.headers.token;
     }
-  }
-
-  /**
-   * @method verifyUser
-   * @description Verifies that user is authorised
-   * @param {object} req - The Request Object
-   * @param {object} res - The Response Object
-   * @param {object} next - The next function
-   * @returns {object} - JSON response object
-   */
-  static async verifyUser(req, res, next) {
-    try {
-      const token = req.headers.authorization;
-      if (!token) {
-        return res.status(401).json(responseFormat({
+    if (!token) {
+      return res.status(401)
+        .json(responseFormat({
           success: false,
           data: 'No token supplied',
         }));
-      }
-      const data = await jwt.verify(token, process.env.JWTKEY);
-      console.log(data);
-      next();
-    } catch (error) {
-      return res.status(401).json(responseFormat({ success: false, data: error }));
     }
+    jwt.verify(token, process.env.JWTKEY, (error, decodedToken) => {
+      if (error) {
+        return res.status(401)
+          .json(responseFormat({ success: false, data: 'Invalid token supplied' }));
+      }
+      req.user = decodedToken;
+    });
+    next();
   }
 
   /**
@@ -83,7 +61,7 @@ class Authenticator {
    * @returns {object} - JSON response object
    */
   static isAdmin(req, res, next) {
-    const { role } = req.decoded;
+    const { role } = req.user;
     if (role === 'admin') {
       next();
     } else {
