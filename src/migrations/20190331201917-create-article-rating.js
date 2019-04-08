@@ -21,6 +21,10 @@ export default {
         deferrable: Sequelize.Deferrable.INITIALLY_IMMEDIATE,
       },
     },
+    value: {
+      type: Sequelize.INTEGER,
+      defaultValue: 1
+    },
     createdAt: {
       allowNull: false,
       type: Sequelize.DATE,
