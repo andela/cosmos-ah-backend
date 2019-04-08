@@ -64,11 +64,13 @@ export default (sequelize, DataTypes) => {
         defaultValue: 0,
       },
     },
-    {}
+    {
+      tableName: 'articles',
+    }
   );
   Article.associate = (models) => {
     Article.belongsTo(models.User, {
-      foreignKey: 'articleId',
+      foreignKey: 'userId',
       as: 'articleUser',
       onDelete: 'CASCADE',
     });
