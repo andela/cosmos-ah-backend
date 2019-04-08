@@ -19,7 +19,7 @@ module.exports = {
     username: process.env.DB_USER,
     dialect: 'postgres',
     dialectOptions: {
-      ssl: process.env.ENV !== 'dev',
+      ssl: process.env.HEROKU_AUTH !== '',
     },
     logging: false,
   },
