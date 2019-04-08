@@ -44,7 +44,7 @@ export default (sequelize, DataTypes) => {
     },
     {
       tableName: 'users',
-    }
+    },
   );
 
   // eslint-disable-next-line func-names
