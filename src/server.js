@@ -6,7 +6,7 @@ import swaggerUI from 'swagger-ui-express';
 import passport from 'passport';
 import docs from '../swagger.json';
 import router from './routers/index';
-import passportConfig from './config/passportConfig';
+import passportConfig from './middlewares/localStrategy';
 
 let httpServer;
 

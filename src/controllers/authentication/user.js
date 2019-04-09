@@ -1,4 +1,4 @@
-import tokenizer from '../../helpers/tokenizer';
+import Auth from '../../middlewares/authenticator';
 import responseFormat from '../../utils';
 
 /**
@@ -9,14 +9,19 @@ import responseFormat from '../../utils';
    */
 
 const login = (req, res) => {
-  const { id, email } = req.user;
+  const {
+    id, email, username, role
+  } = req.user;
   return res.status(200).json(responseFormat({
     success: true,
     data: {
       user: req.user,
-      token: tokenizer({ id, email })
+      token: Auth.generateToken({
+        id, email, username, role
+      })
     },
   }));
 };
+
 
 export default login;

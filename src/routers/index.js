@@ -2,7 +2,6 @@ import { Router } from 'express';
 import login from '../controllers/authentication/user';
 import passport from '../middlewares/passport';
 import { AddArticles, UpdateArticle, DeleteArticle } from '../controllers/article';
-import user from './user';
 import checkFields from '../middlewares/auth/loginValidator';
 
 const router = Router();
@@ -22,7 +21,6 @@ router.get('/', (req, res) => res.status(200).json({
  * @param {function} UpdateArticle - Express path
  * @returns Response Object
  */
-router.use('/', user);
 router
   .route('/articles/:id?')
   .post(AddArticles)

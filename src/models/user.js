@@ -116,6 +116,5 @@ export default (sequelize, DataTypes) => {
 
   User.hashPassword = password => bcrypt.hashSync(password, bcrypt.genSaltSync(10));
 
-  User.prototype.comparePassword = (password, hashPassword) => bcrypt.compareSync(password, hashPassword);
   return User;
 };
