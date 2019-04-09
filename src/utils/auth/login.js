@@ -1,7 +1,7 @@
 import Validator from 'validatorjs';
 
 /**
- * @description This is the method for validating articles before inserting
+ * @description This is the method for validating users
  * @param {object} payload The request object
  * @returns {function} Returns validation object
  */
