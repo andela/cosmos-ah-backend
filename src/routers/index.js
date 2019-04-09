@@ -27,23 +27,18 @@ router
   .patch(UpdateArticle);
 
 // Route for facebook Authentication
-router.get(
-  '/auth/facebook',
-  passport.authenticate(
-    'facebook', { authType: 'rerequest', scope: ['email'] },
-  ),
-);
+router.get('/auth/facebook',
+  passport.authenticate('facebook', { authType: 'rerequest', scope: ['email'] }),);
 
-router.get(
-  '/auth/facebook/callback',
+router.get('/auth/facebook/callback',
   passport.authenticate('facebook', { failureRedirect: '/api/v1/auth/login' }),
   (req, res) => {
     res.redirect('/api/v1');
-  },
-);
+  },);
 
 // Route for google Authentication
-router.get('/auth/google', passport.authenticate('google', { scope: ['email profile'] }));
+router.get('/auth/google',
+  passport.authenticate('google', { scope: ['email profile'] }));
 
 router.get(
   '/auth/google/callback',
