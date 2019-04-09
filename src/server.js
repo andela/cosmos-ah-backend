@@ -3,8 +3,10 @@ import express from 'express';
 import bodyParser from 'body-parser';
 import cors from 'cors';
 import swaggerUI from 'swagger-ui-express';
+import passport from 'passport';
 import docs from '../swagger.json';
-import router from './routers';
+import router from './routers/index';
+import passportConfig from './middlewares/localStrategy';
 
 let httpServer;
 
@@ -26,6 +28,10 @@ export const startServer = port => new Promise((resolve, reject) => {
   app.use(bodyParser.json());
   app.use(bodyParser.urlencoded({ extended: false }));
   app.use(cors());
+
+  app.use(passport.initialize());
+
+  passportConfig();
 
   app.use('/api/v1', router);
 

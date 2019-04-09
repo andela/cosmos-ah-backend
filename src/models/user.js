@@ -1,3 +1,4 @@
+/* eslint-disable max-len */
 import bcrypt from 'bcryptjs';
 
 /**
@@ -16,56 +17,44 @@ export default (sequelize, DataTypes) => {
         type: DataTypes.UUID,
         defaultValue: DataTypes.UUIDV4,
       },
-      full_name: {
+      fullName: {
         type: DataTypes.STRING,
         allowNull: false,
-        validate: {
-          is: ['^[a-z]+$', 'i'],
-          // msg: 'field can be alphanumeric only',
-        },
       },
       email: {
         type: DataTypes.STRING,
         allowNull: false,
+        unique: true,
         validate: {
           isEmail: true,
-          // msg: 'field must be email',
         },
       },
       username: {
         type: DataTypes.STRING,
         allowNull: false,
-        unique: true,
-        validate: {
-          isAlphanumeric: true,
-          // msg: 'field can be alphanumeric only',
-        },
-      },
-      password: {
-        type: DataTypes.STRING,
-        allowNull: false,
-        validate: {
-          // is: /^(?=.*\d)$/,
-          min: 6,
-          // msg: 'Password length must have a minimum of 6 characters',
-        },
+        unique: true
       },
       bio: {
-        type: DataTypes.STRING,
+        type: DataTypes.TEXT,
+        allowNull: true,
       },
-      image_url: {
-        type: DataTypes.STRING,
+      imageUrl: {
+        type: DataTypes.TEXT,
         validate: {
           isUrl: true,
-          // msg: 'field can be url only',
         },
+        allowNull: true,
+      },
+      password: {
+        type: DataTypes.TEXT,
+        allowNull: false,
       },
       notification: DataTypes.BOOLEAN,
       role: DataTypes.ENUM('admin', 'author', 'user'),
     },
     {
       tableName: 'users',
-    }
+    },
   );
 
   // eslint-disable-next-line func-names
@@ -113,5 +102,8 @@ export default (sequelize, DataTypes) => {
       onDelete: 'CASCADE',
     });
   };
+
+  User.prototype.comparePassword = (password, hashPassword) => bcrypt.compareSync(password, hashPassword);
+
   return User;
 };

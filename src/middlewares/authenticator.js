@@ -1,5 +1,5 @@
 import jwt from 'jsonwebtoken';
-import responseFormat from '../utils/index';
+import { responseFormat } from '../utils/index';
 
 /**
  * @class AuthenticateUser
