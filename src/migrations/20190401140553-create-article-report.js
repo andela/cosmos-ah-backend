@@ -8,6 +8,13 @@ export default {
     articleId: {
       allowNull: false,
       type: Sequelize.UUID,
+      references: {
+        model: 'articles',
+        key: 'id',
+        deferrable: Sequelize.Deferrable.INITIALLY_IMMEDIATE,
+      },
+      onUpdate: 'CASCADE',
+      onDelete: 'CASCADE',
     },
     description: {
       allowNull: false,

@@ -13,7 +13,7 @@ export default {
         key: 'id',
       },
       onUpdate: 'CASCADE',
-      onDelete: 'SET NULL',
+      onDelete: 'CASCADE',
     },
     articleId: {
       type: Sequelize.UUID,
@@ -23,7 +23,7 @@ export default {
         key: 'id',
       },
       onUpdate: 'CASCADE',
-      onDelete: 'SET NULL',
+      onDelete: 'CASCADE',
     },
     body: {
       type: Sequelize.TEXT,
