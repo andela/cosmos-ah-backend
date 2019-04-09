@@ -62,7 +62,7 @@ describe('Users Login', () => {
       .end((err, res) => {
         expect(res).to.have.status(400);
         const { body } = res;
-        expect(body.data).to.be.equal('invalid login details');
+        expect(body.data).to.be.equal('Incorrect email or password');
         done();
       });
   });

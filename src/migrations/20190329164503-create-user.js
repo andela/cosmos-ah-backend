@@ -6,17 +6,22 @@ export default {
       type: Sequelize.UUID,
       defaultValue: Sequelize.UUIDV4,
     },
-    full_name: {
+    fullName: {
       type: Sequelize.STRING,
       allowNull: false,
     },
     email: {
       type: Sequelize.STRING,
+      validate: {
+        isEmail: true,
+      },
+      unique: true,
       allowNull: false,
     },
     username: {
       type: Sequelize.STRING,
       allowNull: false,
+      unique: true,
     },
     password: {
       type: Sequelize.STRING,
@@ -24,9 +29,14 @@ export default {
     },
     bio: {
       type: Sequelize.TEXT,
+      allowNull: true,
     },
-    image_url: {
-      type: Sequelize.STRING,
+    imageUrl: {
+      type: Sequelize.TEXT,
+      validate: {
+        isUrl: true,
+      },
+      allowNull: true,
     },
     notification: {
       type: Sequelize.BOOLEAN,
@@ -43,6 +53,5 @@ export default {
       type: Sequelize.DATE,
     },
   }),
-
   down: queryInterface => queryInterface.dropTable('users'),
 };
