@@ -7,6 +7,7 @@ import socialRedirect from '../controllers/authentication/socialRedirect';
 import { login, createUser } from '../controllers/authentication/user';
 import checkBody from '../middlewares/signUpValidator';
 
+
 const router = Router();
 
 router.get('/', (req, res) => {
@@ -57,5 +58,12 @@ router.get('/auth/google/callback', passport.authenticate('google', { failureRed
 
 router
   .post('/signup', checkBody, createUser);
+
+// route for twitter authentication
+router.get('/auth/twitter', passport.authenticate('twitter'));
+router.get('/auth/twitter/callback', passport.authenticate('twitter', { failureRedirect: '/login', successRedirect: '/api/v1' }));
+
+
+router.post('/login', checkFields, passportAuth, login);
 
 export default router;

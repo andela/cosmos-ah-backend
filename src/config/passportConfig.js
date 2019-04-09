@@ -17,4 +17,10 @@ export default {
     callbackURL: CALLBACK_URL,
     profileFields: ['id', 'email', 'displayName', 'photos'],
   },
+  twitterAuth: {
+    consumerKey: 'Y7SLg4Y0eR6n3203QcpGWAVlB',
+    consumerSecret: 'ua3XAGiBZinEX8toPlfOB2XNqL1MXf8VYzZapirjB6364p4K3r',
+    callbackURL: 'http://localhost:4000/api/v1/auth/twitter/callback',
+    includeEmail: true,
+  }
 };

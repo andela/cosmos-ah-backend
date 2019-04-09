@@ -1,11 +1,12 @@
 import { User } from '../models';
+import Auth from './authenticator';
 
 const strategyCallback = async (accessToken, refreshToken, profile, done) => {
   const {
-    id, displayName, photos, emails
+    id, displayName, photos, emails, username
   } = profile;
 
-  const [user] = await User.findOrCreate({
+  const user = await User.findOrCreate({
     where: { email: emails[0].value },
     defaults: {
       fullName: displayName,
@@ -17,5 +18,15 @@ const strategyCallback = async (accessToken, refreshToken, profile, done) => {
   });
   return done(null, user.dataValues);
 };
+
+
+  // const loggedinUser = user[0].dataValues;
+  // console.log(Auth.generateToken({ id, displayName, username }));
+
+
+  // return done(null, loggedinUser);
+};
+
+
 
 export default strategyCallback;
