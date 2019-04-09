@@ -6,7 +6,7 @@ import swaggerUI from 'swagger-ui-express';
 import passport from 'passport';
 import docs from '../swagger.json';
 import router from './routers';
-import socialStrategy from './middleware/socialStrategy';
+import socialStrategy from './middlewares/socialStrategy';
 
 let httpServer;
 
@@ -29,7 +29,6 @@ export const startServer = port => new Promise((resolve, reject) => {
     cb(null, obj);
   });
 
-
   const app = express();
   httpServer = http.createServer(app);
   app.set('json spaces', 2);
@@ -40,7 +39,6 @@ export const startServer = port => new Promise((resolve, reject) => {
 
   app.use(passport.initialize());
   app.use(passport.session());
-
 
   app.use('/api/v1', router);
   passport.use(socialStrategy.facebookStrategy);
@@ -65,7 +63,6 @@ export const startServer = port => new Promise((resolve, reject) => {
 
   const server = app.listen(port, () => resolve(server));
 });
-
 
 export const closeServer = () => new Promise((resolve, reject) => {
   httpServer.close((err) => {

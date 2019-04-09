@@ -1,6 +1,6 @@
 import nock from 'nock';
 import chai from 'chai';
-import strategyCallback from '../../src/middleware/socialCallback';
+import strategyCallback from '../../src/middlewares/socialCallback';
 import { startServer } from '../../src/server';
 
 const { expect } = chai;
