@@ -33,6 +33,7 @@ router.get(
     'facebook', { authType: 'rerequest', scope: ['email'] },
   ),
 );
+
 router.get(
   '/auth/facebook/callback',
   passport.authenticate('facebook', { failureRedirect: '/api/v1/auth/login' }),
@@ -43,6 +44,7 @@ router.get(
 
 // Route for google Authentication
 router.get('/auth/google', passport.authenticate('google', { scope: ['email profile'] }));
+
 router.get(
   '/auth/google/callback',
   passport.authenticate('google', { failureRedirect: '/api/v1/auth/login' }),
