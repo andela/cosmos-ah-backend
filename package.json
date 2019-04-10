@@ -4,8 +4,9 @@
   "description": "A Social platform for the creative at heart",
   "main": "index.js",
   "scripts": {
-    "start": "node src/index.js",
-    "dev": "nodemon --exec babel-node src/index.js",
+    "build": "babel -d ./dist ./src",
+    "clean": "rm -rf ./build",
+    "coverage": "nyc report --reporter=text-lcov | coveralls",
     "db-create": "sequelize db:create",
     "db-create:test": "NODE_ENV=test sequelize db:create",
     "db-drop": "sequelize db:drop",
@@ -14,14 +15,17 @@
     "db-migrate:test": "NODE_ENV=test ./node_modules/.bin/babel-node ./node_modules/.bin/sequelize db:migrate",
     "db-migrate:undo": "./node_modules/.bin/babel-node ./node_modules/.bin/sequelize db:migrate:undo:all",
     "db-migrate:undo:test": "NODE_ENV=test ./node_modules/.bin/babel-node ./node_modules/.bin/sequelize db:migrate:undo:all",
+    "db-refresh": "npm run db-migrate:undo && npm run db-migrate && npm run db-seed",
+    "db-refresh:test": "NODE_ENV=test npm run db-migrate:undo:test && npm run db-migrate:test && npm run db-seed:test",
     "db-seed": "./node_modules/.bin/babel-node ./node_modules/.bin/sequelize db:seed:all",
     "db-seed:test": "NODE_ENV=test ./node_modules/.bin/babel-node ./node_modules/.bin/sequelize db:seed:all",
-    "db-refresh": "npm run db-migrate:undo && npm run db-migrate && npm run db-seed",
-    "lint-fix": "eslint ./src --fix",
+    "dev": "nodemon --exec babel-node src/index.js",
+    "heroku-prebuild": "npm run prod",
     "lint": "eslint ./src",
-    "db-refresh:test": "NODE_ENV=test npm run db-migrate:undo:test && npm run db-migrate:test && npm run db-seed:test",
-    "test": "export ENV=dev && npm run db-refresh:test && nyc mocha --require @babel/register  tests/**/*.js --timeout 20000 --exit",
-    "coverage": "nyc report --reporter=text-lcov | coveralls"
+    "lint-fix": "eslint ./src --fix",
+    "prod": "npm run clean && npm run build",
+    "start": "node dist/index.js",
+    "test": "npm run db-refresh:test && nyc mocha --require @babel/register  tests/**/*.js --timeout 20000 --exit"
   },
   "husky": {
     "hooks": {
