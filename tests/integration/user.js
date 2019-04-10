@@ -2,7 +2,7 @@ import chai from 'chai';
 import chaiHttp from 'chai-http';
 import jwt from 'jsonwebtoken';
 import { startServer } from '../../src/server';
-import { createUser, createUserErrorSecond, createUserErrorThird } from '../mock/user';
+import { createUser, createUserEmailError, createUserOtherError } from '../mock/user';
 
 const { expect } = chai;
 
@@ -59,7 +59,7 @@ describe('Signup Authentication Test', () => {
   it('Should return error for usernamne', (done) => {
     agent
       .post('/api/v1/signup')
-      .send(createUserErrorSecond)
+      .send(createUserEmailError)
       .end((err, res) => {
         expect(res).to.have.status(409);
         expect(res.body)
@@ -74,7 +74,7 @@ describe('Signup Authentication Test', () => {
   it('Should return error for other errors', (done) => {
     agent
       .post('/api/v1/signup')
-      .send(createUserErrorThird)
+      .send(createUserOtherError)
       .end((err, res) => {
         expect(res).to.have.status(500);
         expect(res.body)

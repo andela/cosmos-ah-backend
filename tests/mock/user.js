@@ -13,7 +13,7 @@ export const createUserError = {
   bio: 'I Love Javascript',
   imageUrl: 'http://waterease.herokuapp.com/images/board/comfort.com'
 };
-export const createUserErrorSecond = {
+export const createUserEmailError = {
   fullName: 'Tolulope Olaniyan',
   email: 'tolulope3@gmail.com',
   username: 'tolulope',
@@ -22,7 +22,7 @@ export const createUserErrorSecond = {
   imageUrl: 'http://waterease.herokuapp.com/images/board/comfort.com'
 };
 
-export const createUserErrorThird = {
+export const createUserOtherError = {
   fullName: 'Tolulope Olaniyan',
   email: 'tolulope3gmail.com',
   username: 'tolulope',

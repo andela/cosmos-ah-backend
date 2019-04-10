@@ -29,13 +29,12 @@ export const createUser = async (req, res) => {
     const { id, username, email, role, fullName, bio } = user;
 
     if (user) {
-      const token = Auth.generateToken({
-        id, username, email, role, fullName, bio
-      });
       return res.status(201).json(responseFormat({
         status: 'success',
         data: {
-          token,
+          token: Auth.generateToken({
+            id, fullName, bio, email, username, role
+          })
         },
       }));
     }
