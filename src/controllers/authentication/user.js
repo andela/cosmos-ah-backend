@@ -27,6 +27,7 @@ export const createUser = async (req, res) => {
     const { body } = req;
     const user = await User.create({ ...body });
     const { id, username, email, role, fullName, bio } = user;
+
     if (user) {
       const token = Auth.generateToken({
         id, username, email, role, fullName, bio
@@ -39,16 +40,20 @@ export const createUser = async (req, res) => {
       }));
     }
   } catch (error) {
-    if (error.errors[0].message === 'email must be unique') {
-      return res.status(409).json(errorResponseFormat({
-        message: 'This Email Already Exist',
-      }));
+    if (error.name === 'SequelizeUniqueConstraintError') {
+      if (error.fields.email) {
+        return res.status(409).json(errorResponseFormat({
+          message: 'This Email Already Exist',
+        }));
+      }
+
+      if (error.fields.username) {
+        return res.status(409).json(errorResponseFormat({
+          message: 'This Username Already Exist',
+        }));
+      }
     }
-    if (error.errors[0].message === 'username must be unique') {
-      return res.status(409).json(errorResponseFormat({
-        message: 'This Username Already Exist',
-      }));
-    }
+
     return res.status(500).json(errorResponseFormat({
       message: 'Something Went Wrong',
     }));
