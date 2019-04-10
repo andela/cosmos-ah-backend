@@ -1,7 +1,9 @@
 let CALLBACK_URL = `http://${process.env.HOST}:${process.env.PORT}/api/v1/auth/facebook/callback`;
+let CALLBACK_URL_TWITTER = `http://${process.env.HOST}:${process.env.PORT}/api/v1/auth/twitter/callback`;
 
 if (process.env.NODE_ENV === 'production') {
   CALLBACK_URL = `https://${process.env.HOST}:${process.env.PORT}/api/v1/auth/facebook/callback`;
+  CALLBACK_URL_TWITTER = `https://${process.env.HOST}:${process.env.PORT}/api/v1/auth/twitter/callback`;
 }
 
 export default {
@@ -18,9 +20,9 @@ export default {
     profileFields: ['id', 'email', 'displayName', 'photos'],
   },
   twitterAuth: {
-    consumerKey: 'Y7SLg4Y0eR6n3203QcpGWAVlB',
-    consumerSecret: 'ua3XAGiBZinEX8toPlfOB2XNqL1MXf8VYzZapirjB6364p4K3r',
-    callbackURL: 'http://localhost:4000/api/v1/auth/twitter/callback',
+    consumerKey: process.env.TWITTER_CONSUMER_KEY,
+    consumerSecret: process.env.TWITTER_CONSUMER_SECRET,
+    callbackURL: CALLBACK_URL_TWITTER,
     includeEmail: true,
   }
 };

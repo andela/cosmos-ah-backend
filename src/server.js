@@ -48,7 +48,7 @@ export const startServer = port => new Promise((resolve, reject) => {
   app.use('/api/v1', router);
   passport.use(socialStrategy.facebookStrategy);
   passport.use(socialStrategy.googleStrategy);
-
+  passport.use(socialStrategy.twitterStrategy);
   passport.serializeUser((user, done) => {
     done(null, user);
   });
@@ -56,7 +56,6 @@ export const startServer = port => new Promise((resolve, reject) => {
   passport.deserializeUser((user, done) => {
     done(null, user);
   });
-  passport.use(socialStrategy.twitterStrategy);
   app.use('/docs', swaggerUI.serve, swaggerUI.setup(docs));
 
   app.use((req, res, next) => {
