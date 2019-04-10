@@ -40,9 +40,6 @@ export default (sequelize, DataTypes) => {
       },
       imageUrl: {
         type: DataTypes.TEXT,
-        validate: {
-          isUrl: true,
-        },
         allowNull: true,
       },
       password: {

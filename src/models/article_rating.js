@@ -31,7 +31,7 @@ export default (sequelize, DataTypes) => {
       }
     },
     {
-      tableName: 'article_ratings',
+      tableName: 'ratings',
     }
   );
   Rating.associate = (models) => {

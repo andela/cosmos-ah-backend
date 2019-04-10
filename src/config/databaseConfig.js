@@ -5,6 +5,9 @@ module.exports = {
     host: process.env.DB_HOST,
     port: process.env.DB_PORT,
     dialect: 'postgres',
+    dialectOptions: {
+      ssl: false,
+    },
     username: process.env.DB_USER,
     logging: false,
   },
@@ -15,6 +18,9 @@ module.exports = {
     port: process.env.DB_PORT,
     username: process.env.DB_USER,
     dialect: 'postgres',
+    // dialectOptions: {
+    //   ssl: process.env.HEROKU_AUTH !== '',
+    // },
     logging: false,
   },
   production: {

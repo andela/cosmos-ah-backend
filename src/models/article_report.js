@@ -23,7 +23,7 @@ export default (sequelize, DataTypes) => {
       },
     },
     {
-      tableName: 'article_reports',
+      tableName: 'report',
     }
   );
   Report.associate = (models) => {

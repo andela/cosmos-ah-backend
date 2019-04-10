@@ -1,16 +1,19 @@
 import { Router } from 'express';
 import passport from 'passport';
-import login from '../controllers/authentication/user';
 import passportAuth from '../middlewares/passport';
 import { AddArticles, UpdateArticle, DeleteArticle } from '../controllers/article';
 import checkFields from '../middlewares/auth/loginValidator';
 import socialRedirect from '../controllers/authentication/socialRedirect';
+import { login, createUser } from '../controllers/authentication/user';
+import checkBody from '../middlewares/signUpValidator';
 
 const router = Router();
 
-router.get('/', (req, res) => res.status(200).json({
-  message: 'Welcome to the Authors Haven API',
-}));
+router.get('/', (req, res) => {
+  res.status(200).json({
+    message: 'welcome to the base url',
+  });
+});
 
 /**
  * Resource handling articles
@@ -42,5 +45,17 @@ router.get('/auth/google', passport.authenticate('google', { scope: ['email prof
 
 router.get('/auth/google/callback', passport.authenticate('google', { failureRedirect: '/api/v1/auth/login' }), socialRedirect);
 
+/**
+ * Resource handling signup
+ * @name router:/signup
+ * @function
+ * @memberof module:Express.Router
+ * @inner
+ * @param {function} CreateUser - Express path
+ * @returns Response Object
+ */
+
+router
+  .post('/signup', checkBody, createUser);
 
 export default router;
