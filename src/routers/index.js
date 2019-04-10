@@ -1,6 +1,5 @@
 import { Router } from 'express';
 import passport from 'passport';
-import login from '../controllers/authentication/user';
 import passportAuth from '../middlewares/passport';
 import { AddArticles, UpdateArticle, DeleteArticle } from '../controllers/article';
 import checkFields from '../middlewares/auth/loginValidator';
