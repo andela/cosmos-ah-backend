@@ -32,7 +32,7 @@ export const createUser = async (req, res) => {
         id, username, email, role, fullName, bio
       });
       return res.status(201).json(responseFormat({
-        status: true,
+        status: 'success',
         data: {
           token,
         },
