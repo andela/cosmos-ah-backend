@@ -13,7 +13,7 @@ export const login = (req, res) => {
     id, fullName, bio, email, username, role
   } = req.user;
   return res.status(200).json(responseFormat({
-    success: 'success',
+    status: 'success',
     data: {
       token: Auth.generateToken({
         id, fullName, bio, email, username, role
