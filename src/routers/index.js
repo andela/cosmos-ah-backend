@@ -32,18 +32,15 @@ router
 router.post('/login', checkFields, passportAuth, login);
 
 // Route for facebook Authentication
-router.get('/auth/facebook',
-  passport.authenticate('facebook', { authType: 'rerequest', scope: ['email'] }));
+router.get('/auth/facebook', passport.authenticate('facebook', { authType: 'rerequest', scope: ['email'] }));
 
-router.get('/auth/facebook/callback',
-  passport.authenticate('facebook', { failureRedirect: '/api/v1/auth/login' }), socialRedirect);
+router.get('/auth/facebook/callback', passport.authenticate('facebook', { failureRedirect: '/api/v1/auth/login' }), socialRedirect);
 
 
 // Route for google Authentication
 router.get('/auth/google', passport.authenticate('google', { scope: ['email profile'] }));
 
-router.get('/auth/google/callback',
-  passport.authenticate('google', { failureRedirect: '/api/v1/auth/login' }), socialRedirect);
+router.get('/auth/google/callback', passport.authenticate('google', { failureRedirect: '/api/v1/auth/login' }), socialRedirect);
 
 
 export default router;
