@@ -7,6 +7,7 @@ import passport from 'passport';
 import docs from '../swagger.json';
 import router from './routers/index';
 import passportConfig from './middlewares/localStrategy';
+import socialStrategy from './middlewares/socialStrategy';
 
 let httpServer;
 
@@ -30,10 +31,20 @@ export const startServer = port => new Promise((resolve, reject) => {
   app.use(cors());
 
   app.use(passport.initialize());
+  app.use(passport.session());
+  passport.serializeUser((user, cb) => {
+    cb(null, user);
+  });
+
+  passport.deserializeUser((obj, cb) => {
+    cb(null, obj);
+  });
 
   passportConfig();
 
   app.use('/api/v1', router);
+  passport.use(socialStrategy.facebookStrategy);
+  passport.use(socialStrategy.googleStrategy);
 
   app.use('/docs', swaggerUI.serve, swaggerUI.setup(docs));
 
@@ -54,7 +65,6 @@ export const startServer = port => new Promise((resolve, reject) => {
 
   const server = app.listen(port, () => resolve(server));
 });
-
 
 export const closeServer = () => new Promise((resolve, reject) => {
   httpServer.close((err) => {
