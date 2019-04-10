@@ -1,5 +1,6 @@
 import { Router } from 'express';
 import passport from 'passport';
+import { login, twitterLogin } from '../controllers/authentication/user';
 import passportAuth from '../middlewares/passport';
 import { AddArticles, UpdateArticle, DeleteArticle } from '../controllers/article';
 import checkFields from '../middlewares/auth/loginValidator';
@@ -61,7 +62,8 @@ router
 
 // route for twitter authentication
 router.get('/auth/twitter', passport.authenticate('twitter'));
-router.get('/auth/twitter/callback', passport.authenticate('twitter', { failureRedirect: '/login', successRedirect: '/api/v1' }));
+router.get('/auth/twitter/callback', passport.authenticate('twitter', { failureRedirect: '/loginFail', successRedirect: '/api/v1/twitter-success' }));
+router.get('/twitter-success', twitterLogin);
 
 
 router.post('/login', checkFields, passportAuth, login);

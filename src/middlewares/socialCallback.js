@@ -20,13 +20,26 @@ const strategyCallback = async (accessToken, refreshToken, profile, done) => {
 };
 
 
-  // const loggedinUser = user[0].dataValues;
-  // console.log(Auth.generateToken({ id, displayName, username }));
+// const loggedinUser = user[0].dataValues;
+// console.log(Auth.generateToken({ id, displayName, username }));
 
 
-  // return done(null, loggedinUser);
-};
+// return done(null, loggedinUser);
+const loggedinUser = user[0].dataValues;
 
+const token = Auth.generateToken({
+  id: loggedinUser.id,
+  fullName: loggedinUser.fullName,
+  email: loggedinUser.email,
+  username: loggedinUser.username,
+  imageUrl: loggedinUser.imageUrl,
+  bio: loggedinUser.bio,
+  role: loggedinUser.HTMLTableRowElement,
+  isNew: user[0].isNewRecord,
+});
+
+
+return done(null, token);
 
 
 export default strategyCallback;
