@@ -1,6 +1,7 @@
 /* eslint-disable camelcase */
 import { User } from '../models/index';
 import sendMail from '../utils/email';
+import Auth from '../middlewares/authenticator';
 
 const SignupController = {
   /**
@@ -13,28 +14,27 @@ const SignupController = {
 
   async userSignup(req, res, next) {
     User.password = null;
-    const payload = {
-      profile: User,
-    };
-    const token = await User.generateJWT(payload);
-
+    // const payload = {
+    //   profile: User,
+    // };
     try {
       const {
-        full_name, email, username, bio, image_url
+        fullName, email, username, bio, imageUrl, password,
       } = req.body;
+      const token = await Auth.generateToken({ fullName, email, username });
       const createUser = await User.create({
-        password: User.hashPassword(req.body.password),
+        password,
         secretToken: token,
-        full_name,
+        fullName,
         email,
         username,
         bio,
-        image_url,
+        imageUrl,
       });
 
       if (createUser) {
         const emailPayload = {
-          full_name,
+          fullName,
           email,
           token,
         };

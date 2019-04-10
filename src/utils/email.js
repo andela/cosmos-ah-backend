@@ -9,13 +9,14 @@ const transporter = nodemailer.createTransport(
     }
   )
 );
-const url = 'localhost:4000';
+const url = 'http://localhost:4000';
 const sendMail = (payload) => {
+  const fullUrl = `${url}/verify/${payload.secretToken}`;
   const message = `
     <div>
-      <p>Hi ${payload.full_name},</p>
+      <p>Hi ${payload.fullName},</p>
       <p>Welcome to Authors Haven, a place to be inspired! Your account was successfully created.</p>
-      <p>Please click this link <a href="${url}/verify/${payload.secretToken}"> to confirm your account.</p>
+      <p>Please click this <a href=${fullUrl}>${fullUrl}</a> to confirm your account.</p>
     </div>`;
 
   const mailOptions = {
@@ -26,7 +27,7 @@ const sendMail = (payload) => {
   };
   return transporter.sendMail(mailOptions, (err) => {
     if (err) { return console(err); }
-    return console.log(`Verification mail has been sent to ${payload.full_name}`);
+    return console.log(`Verification mail has been sent to ${payload.fullName}`);
   });
 };
 
