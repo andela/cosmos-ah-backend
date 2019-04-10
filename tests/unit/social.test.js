@@ -28,9 +28,8 @@ describe('SocialStrategy', () => {
     app = await startServer(5000);
     agent = chai.request(app);
   });
-
-  it('Should be A function', (done) => {
-    strategyCallback(accessToken, refreshToken, profile, done);
+  it('Should be A function', async () => {
+    strategyCallback(accessToken, refreshToken, profile);
     expect(strategyCallback).to.be.a('function');
   });
   it('should call the social route', async () => {

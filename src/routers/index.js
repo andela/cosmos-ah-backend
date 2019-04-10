@@ -10,7 +10,7 @@ const router = Router();
 
 router.get('/', (req, res) => res.status(200).json({
   message: 'Welcome to the Authors Haven API',
-}),);
+}));
 
 /**
  * Resource handling articles
