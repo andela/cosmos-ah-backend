@@ -39,7 +39,6 @@ export const createUser = async (req, res) => {
       }));
     }
   } catch (error) {
-    console.log(error.errors[0].message);
     if (error.errors[0].message === 'email must be unique') {
       return res.status(409).json(errorResponseFormat({
         message: 'This Email Already Exist',
