@@ -25,7 +25,7 @@ describe('Signup Authentication Test', () => {
         expect(res).to.have.status(201);
         expect(res.body)
           .to.have.property('status')
-          .eql(true);
+          .eql('success');
         const { body } = res;
         const { token } = body.data;
         const decoded = jwt.decode(token);
