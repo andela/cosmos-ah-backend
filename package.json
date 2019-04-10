@@ -23,9 +23,9 @@
     "heroku-prebuild": "npm run prod",
     "lint": "eslint ./src",
     "lint-fix": "eslint ./src --fix",
-    "prod": "npm run clean && npm run lint-fix && npm run build",
+    "prod": "npm run clean && npm run build",
     "start": "node dist/index.js",
-    "test": "export ENV=dev && npm run db-refresh:test && nyc mocha --require @babel/register  tests/**/*.js --timeout 20000 --exit"
+    "test": "npm run db-refresh:test && nyc mocha --require @babel/register  tests/**/*.js --timeout 20000 --exit"
   },
   "husky": {
     "hooks": {
