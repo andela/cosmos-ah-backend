@@ -64,7 +64,7 @@ export default (sequelize, DataTypes) => {
       totalReadTime: {
         type: DataTypes.INTEGER,
         defaultValue: 1,
-      },
+      }
     },
     {
       tableName: 'articles',
