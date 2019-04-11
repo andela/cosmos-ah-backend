@@ -3,11 +3,13 @@ import express from 'express';
 import bodyParser from 'body-parser';
 import cors from 'cors';
 import swaggerUI from 'swagger-ui-express';
+import session from 'express-session';
 import passport from 'passport';
+import socialStrategy from './middlewares/socialStrategy';
 import docs from '../swagger.json';
 import router from './routers/index';
 import passportConfig from './middlewares/localStrategy';
-import socialStrategy from './middlewares/socialStrategy';
+
 
 let httpServer;
 
@@ -30,6 +32,7 @@ export const startServer = port => new Promise((resolve, reject) => {
   app.use(bodyParser.urlencoded({ extended: false }));
   app.use(cors());
 
+  app.use(session({ secret: 'this is', resave: true, saveUninitialized: true }));
   app.use(passport.initialize());
   app.use(passport.session());
   passport.serializeUser((user, cb) => {
@@ -45,6 +48,7 @@ export const startServer = port => new Promise((resolve, reject) => {
   app.use('/api/v1', router);
   passport.use(socialStrategy.facebookStrategy);
   passport.use(socialStrategy.googleStrategy);
+  passport.use(socialStrategy.twitterStrategy);
 
   app.use('/docs', swaggerUI.serve, swaggerUI.setup(docs));
 
@@ -53,6 +57,7 @@ export const startServer = port => new Promise((resolve, reject) => {
     error.status = 404;
     next(error);
   });
+
 
   app.use((error, res, next) => {
     res.status(error.status || 500).json({
