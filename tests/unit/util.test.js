@@ -1,5 +1,8 @@
 import { expect } from 'chai';
-import { parseErrorResponse, errorResponseFormat } from '../../src/utils';
+import {
+  parseErrorResponse, errorResponseFormat,
+  calcTimeToRead
+} from '../../src/utils';
 
 describe('Util test', () => {
   describe('parseErrorResponse()', () => {
@@ -24,5 +27,15 @@ describe('Util test', () => {
       const response = errorResponseFormat({ message: 'server is down at the moment' });
       expect(response.message).to.equal('server is down at the moment');
     });
+  });
+});
+
+describe.only('calcReadTime', () => {
+  it('should return the total time (mins) to read an article', () => {
+    calcTimeToRead(230).should.equal(1);
+  });
+
+  it('should return the total time (mins) to read an article', () => {
+    calcTimeToRead(210).should.equal(1);
   });
 });
