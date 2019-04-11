@@ -4,7 +4,7 @@ import passportAuth from '../middlewares/passport';
 import { AddArticles, UpdateArticle, DeleteArticle } from '../controllers/article';
 import checkFields from '../middlewares/auth/loginValidator';
 import socialRedirect from '../controllers/authentication/socialRedirect';
-import { login, createUser } from '../controllers/authentication/user';
+import { login, createUser, linkedinUser, linkedinCallback } from '../controllers/authentication/user';
 import checkBody from '../middlewares/signUpValidator';
 
 
@@ -45,6 +45,9 @@ router.get('/auth/facebook/callback', passport.authenticate('facebook', { failur
 router.get('/auth/google', passport.authenticate('google', { scope: ['email profile'] }));
 
 router.get('/auth/google/callback', passport.authenticate('google', { failureRedirect: '/api/v1/auth/login' }), socialRedirect);
+
+router.get('/auth/linkedin/callback', linkedinCallback);
+router.get('/auth/linkedin', linkedinUser);
 
 /**
  * Resource handling signup
