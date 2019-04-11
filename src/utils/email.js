@@ -16,10 +16,7 @@ const sendMail = (payload) => {
     subject: payload.subject,
     Html: payload.message,
   };
-  return transporter.sendMail(mailOptions, (error) => {
-    if (error) { return (error); }
-    return (`Verification mail has been sent to ${payload.fullName}`);
-  });
+  return transporter.sendMail(mailOptions);
 };
 
 export default sendMail;

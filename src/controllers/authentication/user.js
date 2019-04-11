@@ -62,7 +62,7 @@ export const verifyUser = async (req, res) => {
     let user = await User.findOne({ where: { id, verificationToken } });
     if (!user) { return res.status(403).json(errorResponseFormat({ status: 'fail', message: 'Invalid token supplied, kindly reauthenticate!', })); }
     user = await user.update({ verified: true, verificationToken: null });
-    if (user) { return res.status(202).json(responseFormat({ message: 'Your account was successfully verified!', })); }
+    if (user) { return res.status(202).json(responseFormat({ status: 'success', data: 'Your account was successfully verified!', })); }
   } catch (error) {
     if (error) { return res.status(500).json(errorResponseFormat({ status: 'fail', message: 'We could not verify you at the moment, please try again', })); }
   }

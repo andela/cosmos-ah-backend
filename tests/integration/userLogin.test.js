@@ -2,6 +2,7 @@ import chai from 'chai';
 import jwt from 'jsonwebtoken';
 import chaiHttp from 'chai-http';
 import { startServer } from '../../src/server';
+import { failedVerificationLogin, successLogin, invalidLoginEmail, invalidLoginPassowrd } from '../mock/login';
 
 const { expect } = chai;
 
@@ -14,6 +15,17 @@ describe('Users Login', () => {
   beforeEach(async () => {
     app = await startServer(5000);
     agent = chai.request(app);
+  });
+
+  it('should return error for account that is yet to be verifiied', (done) => {
+    agent.post('/api/v1/login')
+      .send(failedVerificationLogin)
+      .end((err, res) => {
+        expect(res).to.have.status(401);
+        const { body } = res;
+        expect(body.data).to.be.equal('You are yet to verify your account');
+        done();
+      });
   });
 
   it('should login user', (done) => {
@@ -38,16 +50,13 @@ describe('Users Login', () => {
         expect(res).to.have.status(200);
         const { token } = res.body.data;
         const { email } = jwt.decode(token);
-        expect(email).to.equal(payload.email);
+        expect(email).to.equal(successLogin.email);
         done();
       });
   });
   it('should return error for invalid email', (done) => {
     agent.post('/api/v1/login')
-      .send({
-        email: 'newmail@gmail.com',
-        password: '%RYYT&^UTB*UYT*IUYIU',
-      })
+      .send(invalidLoginEmail)
       .end((err, res) => {
         expect(res).to.have.status(400);
         done();
@@ -55,10 +64,7 @@ describe('Users Login', () => {
   });
   it('should return error for invalid password', (done) => {
     agent.post('/api/v1/login')
-      .send({
-        email: 'martins@gmail.com',
-        password: 'wrongpassword',
-      })
+      .send(invalidLoginPassowrd)
       .end((err, res) => {
         expect(res).to.have.status(400);
         const { body } = res;
