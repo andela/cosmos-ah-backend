@@ -1,3 +1,4 @@
+import isUUID from 'validator/lib/isUUID';
 import { Like } from '../models';
 import { responseFormat, errorResponseFormat } from '../utils';
 
@@ -5,10 +6,12 @@ const likeArticle = (req, res) => {
   const { id: userId } = req.user;
   const { articleid: articleId } = req.params;
   const condition = { userId, articleId };
-  console.log(condition);
+
+  if (!isUUID(articleId, '4')) {
+    return res.status(400).json(errorResponseFormat({ message: 'invalid Article Id' }));
+  }
   Like.findOrCreate({ where: condition })
     .then((likedArticle) => {
-      console.log(likedArticle);
       if (!likedArticle[1]) {
         Like.destroy({ where: condition }).then((result) => {
           if (result) {
