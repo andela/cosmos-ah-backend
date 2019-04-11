@@ -43,10 +43,10 @@ export default {
       defaultValue: false,
     },
     verified: {
-      type: Sequelize.STRING,
+      type: Sequelize.BOOLEAN,
       defaultValue: false,
     },
-    secretToken: {
+    verificationToken: {
       type: Sequelize.STRING,
     },
     role: {

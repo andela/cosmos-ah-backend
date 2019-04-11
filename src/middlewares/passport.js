@@ -9,6 +9,7 @@ const passportAuth = (req, res, next) => {
         data: 'Incorrect email or password',
       }));
     }
+    if (user.verified !== true) { return res.status(401).json(responseFormat({ status: 'fail', data: 'You are yet to verify your account', })); }
     req.user = user;
     delete user.password;
     return next();

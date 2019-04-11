@@ -44,9 +44,10 @@ export default (sequelize, DataTypes) => {
         allowNull: false,
       },
       verified: {
-        type: DataTypes.STRING,
+        type: DataTypes.BOOLEAN,
+        defaultValue: false
       },
-      secretToken: {
+      verificationToken: {
         type: DataTypes.STRING,
       },
       notification: DataTypes.BOOLEAN,
