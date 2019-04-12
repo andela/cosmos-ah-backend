@@ -8,6 +8,7 @@ const { expect } = chai;
 let app = null;
 let agent = null;
 
+
 chai.use(chaiHttp);
 
 before(async () => {
@@ -17,7 +18,8 @@ before(async () => {
 
 describe('POST /api/v1/articles', () => {
   it('Should return status: 201', (done) => {
-    agent.post('/api/v1/articles')
+    agent
+      .post('/api/v1/articles')
       .send(ARTICLE)
       .end((_err, res) => {
         expect(res).to.have.status(201);
