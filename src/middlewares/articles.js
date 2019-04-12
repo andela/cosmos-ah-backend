@@ -1,7 +1,7 @@
-import { validateArticle } from '../utils/article';
+import { validateArticle, getArticleReportValidator } from '../utils/article';
 import { findById } from '../utils/query';
 import { Article } from '../models';
-import { responseHandler } from '../utils';
+import { responseHandler, parseErrorResponse } from '../utils';
 
 /**
  *@name articleValidation
@@ -17,7 +17,7 @@ const articleValidation = async (req, res, next) => {
   if (validate.fails()) {
     return res.status(400).json({ status: 'fail', error: validate.errors.all() });
   }
-  return next();
+  next();
 };
 
 
@@ -53,6 +53,21 @@ export const isAuthor = async (req, res, next) => {
   const { id: userId, role } = req.user;
   const { authorId } = req;
   if (authorId !== userId && role !== 'admin') { return responseHandler(res, 403, { status: 'error', message: 'You don\'t have access to manage this article!', }); }
+  next();
+};
+/**
+ * @function articleReportValidation
+ * @param {Request} req
+ * @param {Response} res
+ * @param {Function} next
+ * @returns {Response} Returns a server response or call the next
+ * middleware function
+ */
+export const articleReportValidation = (req, res, next) => {
+  const validator = getArticleReportValidator(req.body);
+  if (validator.fails()) {
+    return res.status(400).json({ status: 'fail', data: parseErrorResponse(validator.errors.all()) });
+  }
   next();
 };
 

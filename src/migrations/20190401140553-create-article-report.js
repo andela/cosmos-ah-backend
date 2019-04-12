@@ -1,5 +1,5 @@
 export default {
-  up: (queryInterface, Sequelize) => queryInterface.createTable('report', {
+  up: (queryInterface, Sequelize) => queryInterface.createTable('article_reports', {
     id: {
       allowNull: false,
       primaryKey: true,
@@ -16,9 +16,22 @@ export default {
       onUpdate: 'CASCADE',
       onDelete: 'CASCADE',
     },
+    reporterId: {
+      type: Sequelize.UUID,
+      references: {
+        model: 'users',
+        key: 'id',
+        deferrable: Sequelize.Deferrable.INITIALLY_IMMEDIATE,
+      },
+      allowNull: false,
+    },
     description: {
       allowNull: false,
       type: Sequelize.TEXT,
+    },
+    reportCategory: {
+      type: Sequelize.STRING,
+      defaultValue: 'others'
     },
     createdAt: {
       allowNull: false,
@@ -29,5 +42,5 @@ export default {
       type: Sequelize.DATE,
     },
   }),
-  down: queryInterface => queryInterface.dropTable('report'),
+  down: queryInterface => queryInterface.dropTable('article_reports'),
 };

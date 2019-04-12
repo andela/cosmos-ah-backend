@@ -47,3 +47,17 @@ export const computeArticleReadingTime = (words, { wordsPerMinute = 250, locale 
   const totalTime = readingTime(words, { wordsPerMinute, locale });
   return Math.ceil(totalTime.minutes);
 };
+
+export const getArticleReportValidator = (payload) => {
+  const rules = {
+    description: 'required|string|min:3',
+    category: 'string|min:3'
+  };
+  const errorMessages = {
+    'required.description': 'Please supply a :attribute of your report',
+    'string.description': 'Your :attribute field must be of string format',
+    'min.description': 'Your :attribute must be at least 3 characters long',
+    'string.category': 'Your :attribute field must be of string format'
+  };
+  return new Validator(payload, rules, errorMessages);
+};

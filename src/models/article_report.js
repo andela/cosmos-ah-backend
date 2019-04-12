@@ -17,13 +17,21 @@ export default (sequelize, DataTypes) => {
         type: DataTypes.UUID,
         allowNull: false,
       },
+      reporterId: {
+        type: DataTypes.UUID,
+        allowNull: false,
+      },
+      reportCategory: {
+        type: DataTypes.STRING,
+        defaultValue: 'others'
+      },
       description: {
         allowNull: false,
         type: DataTypes.TEXT,
       },
     },
     {
-      tableName: 'report',
+      tableName: 'article_reports',
     }
   );
   Report.associate = (models) => {
