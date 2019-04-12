@@ -1,4 +1,4 @@
-import axios from 'axios';
+import fetch from 'node-fetch';
 import { User } from '../../models';
 import Auth from '../../middlewares/authenticator';
 import { responseFormat, errorResponseFormat } from '../../utils/index';
@@ -62,61 +62,53 @@ export const createUser = async (req, res) => {
 
 export const linkedinUser = (req, res) => {
   res.redirect('https://www.linkedin.com/oauth/v2/authorization?response_type=code&client_id=77vhpd3l5lnv4z&redirect_uri=http://localhost:4000/api/v1/auth/linkedin/callback&state=fooobar&scope=r_liteprofile%20r_emailaddress%20w_member_social');
-
-  // get code token from url thorugh https://www.linkedin.com/oauth/v2/accessToken
 };
 
 export const linkedinCallback = async (req, res) => {
-  console.log(req.query.code);
-
-  const body = {
-    client_id: '77vhpd3l5lnv4z',
-    grant_type: 'authorization_code',
-    code: req.query.code,
-    redirect_uri: 'http://localhost:4000/api/v1/auth/linkedin/callback',
-    client_secret: 'Gl9FuRA0xpZpYf7u'
-  };
-
   try {
-    const linkedRes = await axios({
-      url: 'https://www.linkedin.com/oauth/v2/accessToken',
-      method: 'post',
-      data: body,
+    const linkedinToken = await fetch(`https://www.linkedin.com/oauth/v2/accessToken?grant_type=authorization_code&code=${req.query.code}&redirect_uri=http://localhost:4000/api/v1/auth/linkedin/callback&client_id=77vhpd3l5lnv4z&client_secret=Gl9FuRA0xpZpYf7u`);
+    const linkedinTokenResult = await linkedinToken.json();
+
+    const linkedinUserProfile = await fetch('https://api.linkedin.com/v2/me?projection=(id,firstName,lastName,profilePicture(displayImage~:playableStreams))', {
       headers: {
-        'Content-Type': 'multipart/form-data; boundary=CUSTOM'
+        Authorization: `Bearer ${linkedinTokenResult.access_token}` }
+    });
+    const linkedinUserProfileResult = await linkedinUserProfile.json();
+
+    const firstname = linkedinUserProfileResult.firstName.localized.en_US;
+    const lastname = linkedinUserProfileResult.lastName.localized.en_US;
+    const LinkedinImageUrl = linkedinUserProfileResult.profilePicture['displayImage~'].elements[0].identifiers[0].identifier;
+    const linkedinId = linkedinUserProfileResult.id;
+
+    const linkedinUserEmail = await fetch('https://api.linkedin.com/v2/emailAddress?q=members&projection=(elements*(handle~))', {
+      headers: {
+        Authorization: `Bearer ${linkedinTokenResult.access_token}` }
+    });
+
+    const linkedinUserEmailResult = await linkedinUserEmail.json();
+    const linkedinEmail = linkedinUserEmailResult.elements[0]['handle~'].emailAddress;
+
+
+    const user = await User.findOrCreate({
+      where: { email: linkedinEmail },
+      defaults: {
+        fullName: `${lastname} ${firstname}`,
+        email: linkedinEmail,
+        username: `${lastname} ${firstname}`,
+        imageUrl: LinkedinImageUrl,
+        password: linkedinId
       }
     });
-    console.log(linkedRes);
-    console.log(body);
+
+
+    const { id, fullName, email, username, imageUrl } = User.dataValues;
+    console.log(user.User);
+
+    const token = Auth.generateToken({ id, fullName, email, username, imageUrl });
+
+    res.cookie('jwt-token', token);
+    res.redirect('/api/v1');
   } catch (error) {
-    console.log(body);
-    console.log(error.response.data);
+    console.log(error);
   }
-
-  // fetch('https://www.linkedin.com/oauth/v2/accessToken', {
-  //   method: 'post',
-  //   body,
-  //   headers: { 'Content-Type': 'application/json' },
-  // })
-  //   .then(res => res.json())
-  //   .then((json) => {
-  //     console.log(json);
-  //   });
-
-  // const linkedRes = await fetch('https://www.linkedin.com/oauth/v2/accessToken', {
-  //   body,
-  //   method: 'post',
-  //   headers: {
-  //     Accept: 'application/json, text/plain, */*',
-  //     'Content-Type': 'application/x-www-form-urlencoded'
-  //   },
-
-  // });
-
-  // const content = await linkedRes.json();
-  // console.log(content);
-
-  res.status(200).json({
-    message: 'welcome to theparams',
-  });
 };
