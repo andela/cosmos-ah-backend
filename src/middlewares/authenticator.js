@@ -40,14 +40,14 @@ class Authenticator {
     if (!token) {
       return res.status(401)
         .json(responseFormat({
-          success: 'error',
+          status: 'error',
           message: 'No token supplied',
         }));
     }
     jwt.verify(token, process.env.JWTKEY, (error, decodedToken) => {
       if (error) {
         return res.status(401)
-          .json(responseFormat({ success: 'error', message: 'Invalid token supplied' }));
+          .json(responseFormat({ status: 'error', message: 'Invalid token supplied' }));
       }
       req.user = decodedToken;
     });
@@ -68,7 +68,7 @@ class Authenticator {
       next();
     } else {
       return res.status(403).json(responseFormat({
-        success: false,
+        status: 'fail',
         data: 'you are not authorised to access this route'
       }));
     }
