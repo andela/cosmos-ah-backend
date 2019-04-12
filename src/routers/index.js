@@ -1,7 +1,7 @@
 import { Router } from 'express';
 import passport from 'passport';
 import passportAuth from '../middlewares/passport';
-import { AddArticles, UpdateArticle, DeleteArticle } from '../controllers/article';
+import { AddArticles, UpdateArticle, DeleteArticle, commentOnHighlight, } from '../controllers/article';
 import checkFields from '../middlewares/auth/loginValidator';
 import socialRedirect from '../controllers/authentication/socialRedirect';
 import { login, createUser } from '../controllers/authentication/user';
@@ -32,6 +32,8 @@ router
   .post(AddArticles)
   .delete(DeleteArticle)
   .patch(UpdateArticle);
+
+router.post('/comment/highlight-text', commentOnHighlight);
 
 router.post('/login', checkFields, passportAuth, login);
 
@@ -66,11 +68,7 @@ router.get('/auth/twitter/callback', passport.authenticate('twitter', { failureR
 
 
 router.post('/login', checkFields, passportAuth, login);
-import articleController from '../controllers/article';
 
-const router = Router();
-
-router.post('/comment/highlight-text', articleController.commentOnHighlight);
 
 router.get('/', (req, res) => res.status(200).json({
   message: 'Welcome to the Authors Haven API',

@@ -1,5 +1,6 @@
 import { slug } from '../utils/article';
-import { Article } from '../models';
+import { Article, Highlight } from '../models';
+import { responseFormat, errorResponseFormat } from '../utils/index';
 
 /**
  * @name AddArticles
@@ -36,12 +37,11 @@ export const UpdateArticle = async () => true;
  * @returns {int} Returns true after deleting an article
  */
 export const DeleteArticle = async () => true;
-import { Highlight } from '../db_api/models';
 /**
  * @class article
  */
-class article {
-  /**
+
+/**
    *
    * @name commentOnHighlight
    * @static
@@ -51,23 +51,18 @@ class article {
    * @memberof socialController
    * @returns {function} res
    */
-  static async commentOnHighlight(req, res) {
-    try {
-      const {
-        userId, articleId, highlightedText, comment
-      } = req.body;
-      const highlightComment = await Highlight.create({
-        userId,
-        articleId,
-        highlightedText,
-        comment,
-      });
-      return res.status(201).json({ highlightComment });
-    } catch (error) {
-      res.json({
-        error: 'invalid input',
-      });
-    }
+export const commentOnHighlight = async (req, res) => {
+  try {
+    const { userId, articleId, highlightedText, comment } = req.body;
+    const highlightComment = await Highlight.create({ userId, articleId, highlightedText, comment,
+    });
+    return res.status(201).json(responseFormat({
+      status: 'success',
+      data: { highlightComment },
+    }));
+  } catch (error) {
+    return res.status(500).json(errorResponseFormat({
+      message: 'Something Went Wrong',
+    }));
   }
-}
-export default article;
+};
