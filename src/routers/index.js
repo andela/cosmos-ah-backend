@@ -31,6 +31,7 @@ import { checkParam } from '../middlewares/checkParam';
 import checkEditBody from '../middlewares/editProfileValidator';
 import { editUser } from '../controllers/editUser';
 import { followUser } from '../controllers/follower';
+import getAuthors from '../controllers/authors';
 
 const router = Router();
 
@@ -129,5 +130,7 @@ router.get(
   bookmarkValidation,
   bookmarkArticle,
 );
+
+router.get('/authors', Auth.verifyToken, getAuthors);
 
 export default router;
