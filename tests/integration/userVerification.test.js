@@ -1,7 +1,6 @@
 import chai from 'chai';
 import chaiHttp from 'chai-http';
 import { startServer } from '../../src/server';
-// import { failedVerificationLogin } from '../mock/login';
 
 const { expect } = chai;
 

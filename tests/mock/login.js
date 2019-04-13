@@ -17,3 +17,8 @@ export const invalidLoginPassowrd = {
   email: 'martins@gmail.com',
   password: 'wrongpassword',
 };
+
+export const failedLoginValidation = {
+  email: '',
+  password: '',
+};

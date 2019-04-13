@@ -4,6 +4,7 @@ import { User } from '../../models';
 import Auth from '../../middlewares/authenticator';
 import { responseFormat, errorResponseFormat } from '../../utils/index';
 import sendMail from '../../utils/email';
+import { subject, content } from '../../utils/mailContent/verificationMail';
 
 /**
  * @description user will be able to create their profile.
@@ -23,25 +24,10 @@ export const createUser = async (req, res) => {
     const verificationToken = uuid();
     const user = await User.create({ ...body, verificationToken });
     const { id, username, email, role, fullName, bio } = user;
-
-    let url = `http://${process.env.HOST}:${process.env.PORT}/api/v1/verify`;
-
-    if (process.env.NODE_ENV === 'production') { url = `https://${process.env.HOST}:${process.env.PORT}/api/v1/verify`; }
-
-    const verificationUrl = `${url}/${id}/${verificationToken}`;
-
-    const subject = 'Welcome to Authors\' Haven';
-
-    const message = `
-      <div>
-        <p>Hi ${fullName},</p>
-        <p>Welcome to Authors Haven, a place to be inspired! Your account was successfully created.</p>
-        <p>Please click this <a href=${verificationUrl}>link</a> to confirm your account.</p>
-      </div>`;
-
+    const message = content(fullName, id, verificationToken);
     if (user) {
-      const verificationPayload = { id, fullName, email, subject, message };
-      sendMail(verificationPayload);
+      const welcomeMessage = { email, subject, message };
+      sendMail(welcomeMessage);
       return res.status(201).json(responseFormat({ status: 'success',
         data: { token: Auth.generateToken({ id, fullName, bio, email, username, role }) },
       }));
@@ -62,7 +48,7 @@ export const verifyUser = async (req, res) => {
     let user = await User.findOne({ where: { id, verificationToken } });
     if (!user) { return res.status(403).json(errorResponseFormat({ status: 'fail', message: 'Invalid token supplied, kindly reauthenticate!', })); }
     user = await user.update({ verified: true, verificationToken: null });
-    if (user) { return res.status(202).json(responseFormat({ status: 'success', data: 'Your account was successfully verified!', })); }
+    return res.status(202).json(responseFormat({ status: 'success', data: 'Your account was successfully verified!', }));
   } catch (error) {
     if (error) { return res.status(500).json(errorResponseFormat({ status: 'fail', message: 'We could not verify you at the moment, please try again', })); }
   }

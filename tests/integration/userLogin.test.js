@@ -2,7 +2,7 @@ import chai from 'chai';
 import jwt from 'jsonwebtoken';
 import chaiHttp from 'chai-http';
 import { startServer } from '../../src/server';
-import { failedVerificationLogin, successLogin, invalidLoginEmail, invalidLoginPassowrd } from '../mock/login';
+import { failedVerificationLogin, successLogin, invalidLoginEmail, invalidLoginPassowrd, failedLoginValidation } from '../mock/login';
 
 const { expect } = chai;
 
@@ -69,6 +69,14 @@ describe('Users Login', () => {
         expect(res).to.have.status(400);
         const { body } = res;
         expect(body.data).to.be.equal('Incorrect email or password');
+        done();
+      });
+  });
+  it('should return error for failed field validation', (done) => {
+    agent.post('/api/v1/login')
+      .send(failedLoginValidation)
+      .end((err, res) => {
+        expect(res).to.have.status(400);
         done();
       });
   });
