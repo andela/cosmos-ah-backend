@@ -78,6 +78,7 @@ export const parseErrorResponse = (responses) => {
   return errorMessages;
 };
 
+<<<<<<< HEAD
 export const validateEditParameters = async (body) => {
   const rules = {
     fullName: 'required',
@@ -96,4 +97,20 @@ export const validateEditParameters = async (body) => {
 export const checkIDParamType = (param) => {
   if (!isUUID(param, '4')) { return false; }
   return true;
+=======
+/**
+ * @function generateDummyWords
+ * @param {string} word
+ * @param {number} number
+ * @returns {string} Returns `word` duplicated `number` times
+ */
+export const generateDummyWords = (word, number = 10) => {
+  let newParagraph = '';
+  let count = 1;
+  while (count < number) {
+    newParagraph += ` ${word}`;
+    count += 1;
+  }
+  return newParagraph;
+>>>>>>> 164796902-feature: complete article total read time feature
 };

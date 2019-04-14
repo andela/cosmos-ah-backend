@@ -1,5 +1,6 @@
 import Validator from 'validatorjs';
 import slugify from 'slugify';
+import { readingTime } from 'reading-time-estimator';
 
 /**
  * @description This is the method for validating articles before inserting
@@ -34,3 +35,15 @@ export const validateArticle = async (payload) => {
  * @returns {string} Returns string
  */
 export const slug = payload => `${slugify(payload, '-')}-${new Date().getTime()}`;
+
+/**
+ * @func computeArticleReadingTime
+ * @param {string} words the words for estimating read time
+ * @param {*} opts an hash of wordsPerMinute and locale options
+ * @returns {number} Returns the total time (rounded to the nearest greater whole number)
+ * it takes to read the article
+ */
+export const computeArticleReadingTime = (words, { wordsPerMinute = 250, locale = 'en' } = {}) => {
+  const totalTime = readingTime(words, { wordsPerMinute, locale });
+  return Math.ceil(totalTime.minutes);
+};

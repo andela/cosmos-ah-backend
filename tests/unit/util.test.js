@@ -1,7 +1,6 @@
 import { expect } from 'chai';
 import {
-  parseErrorResponse, errorResponseFormat,
-  calcTimeToRead
+  parseErrorResponse, errorResponseFormat, generateDummyWords
 } from '../../src/utils';
 
 describe('Util test', () => {
@@ -28,14 +27,14 @@ describe('Util test', () => {
       expect(response.message).to.equal('server is down at the moment');
     });
   });
-});
 
-describe.only('calcReadTime', () => {
-  it('should return the total time (mins) to read an article', () => {
-    calcTimeToRead(230).should.equal(1);
-  });
+  describe('generateDummyWords()', () => {
+    it('should generate same word multiple times', () => {
+      generateDummyWords('word', 20).split(' ').length.should.equal(20);
+    });
 
-  it('should return the total time (mins) to read an article', () => {
-    calcTimeToRead(210).should.equal(1);
+    it('should generate same word multiple times', () => {
+      generateDummyWords('word').split(' ').length.should.equal(10);
+    });
   });
 });
