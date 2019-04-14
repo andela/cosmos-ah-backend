@@ -1,7 +1,8 @@
 import { Router } from 'express';
 import passport from 'passport';
 import passportAuth from '../middlewares/passport';
-import { addArticle, editArticle, deleteArticle } from '../controllers/article';
+import { addArticle, editArticle, deleteArticle, bookmarkArticle } from '../controllers/article';
+import bookmarkValidation from '../middlewares/bookmark';
 import checkFields from '../middlewares/auth/loginValidator';
 import Auth from '../middlewares/authenticator';
 import socialRedirect from '../controllers/authentication/socialRedirect';
@@ -78,5 +79,7 @@ router.get('/auth/twitter/callback', passport.authenticate('twitter', { failureR
 
 
 router.post('/login', checkFields, passportAuth, login);
+
+router.post('/article/bookmark', bookmarkValidation, bookmarkArticle);
 
 export default router;

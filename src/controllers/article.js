@@ -1,6 +1,6 @@
 import { slug } from '../utils/article';
-import { Article } from '../models';
-import { responseHandler } from '../utils';
+import { responseHandler, responseFormat, errorResponseFormat } from '../utils';
+import { Article, Bookmark } from '../models';
 
 /**
  * @name addArticle
@@ -59,5 +59,34 @@ export const deleteArticle = async (req, res) => {
     if (destroyArticle >= deleted) { return responseHandler(res, 202, { status: 'success', message: 'Your article has been removed.' }); }
   } catch (error) {
     return responseHandler(res, 500, { status: 'error', message: 'We are responsible for failing to update your article, please try again!' });
+  }
+};
+export const DeleteArticle = async () => true;
+
+export const bookmarkArticle = async (req, res) => {
+  const { body } = req;
+
+  try {
+    const bookmark = await Bookmark.create({ ...body });
+    return res.status(201).json(responseFormat({
+      status: 'success',
+      data: bookmark
+    }));
+  } catch (error) {
+    if (error.parent.constraint === 'bookmarks_userId_fkey') {
+      return res.status(409).json(errorResponseFormat({
+        message: 'invalid user id'
+      }));
+    }
+    if (error.parent.constraint === 'bookmarks_articleId_fkey') {
+      return res.status(409).json(errorResponseFormat({
+        message: 'invalid article id'
+      }));
+    }
+    if (error.parent.file === 'uuid.c') {
+      return res.status(409).json(errorResponseFormat({
+        message: 'invalid id of type UUID'
+      }));
+    }
   }
 };
