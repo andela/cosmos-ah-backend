@@ -44,25 +44,18 @@ export const DeleteArticle = async () => true;
 /**
    *
    * @name commentOnHighlight
-   * @static
    * @param {req} req - Request object
    * @param {res} res - Response object
-   * @description Redirect
-   * @memberof socialController
-   * @returns {function} res
+   * @description This method add comment for highlighted text of an article
+   * @returns {int} Returns the comment after success
    */
 export const commentOnHighlight = async (req, res) => {
   try {
     const { userId, articleId, highlightedText, comment } = req.body;
     const highlightComment = await Highlight.create({ userId, articleId, highlightedText, comment,
     });
-    return res.status(201).json(responseFormat({
-      status: 'success',
-      data: { highlightComment },
-    }));
+    return res.status(201).json(responseFormat({ status: 'success', message: 'Your comment was sucessfully submitted', data: highlightComment, }));
   } catch (error) {
-    return res.status(500).json(errorResponseFormat({
-      message: 'Something Went Wrong',
-    }));
+    return res.status(500).json(errorResponseFormat({ status: 'error', message: 'Something Went Wrong' }));
   }
 };
