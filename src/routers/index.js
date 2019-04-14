@@ -47,6 +47,7 @@ import { forgotPassword, resetPassword } from '../controllers/authentication/pas
 import resetFieldValidation from '../middlewares/auth/resetPassword';
 import { trimBody } from '../middlewares';
 
+import search from '../controllers/search';
 
 const router = Router();
 
@@ -142,20 +143,10 @@ router.get('/followings', Auth.authenticateUser, getFollowing);
 router.get('/followers', Auth.authenticateUser, getFollowers);
 
 
-/**
- * Resource handling signup
- * @name router:/signup
- * @function
- * @memberof module:Express.Router
- * @inner
- * @param {function} CreateUser - Express path
- * @returns Response Object
- */
-
 // Route for editing a profile
 router.put('/profile/edit', Auth.authenticateUser, checkEditBody, editUser);
 
-// Route for viewing a profile details
+// Route for viewing a profile
 router.get('/profile/view/:id', Auth.authenticateUser, viewUser);
 
 // route for twitter authentication
@@ -177,6 +168,7 @@ router.get(
 router.get('/authors', Auth.authenticateUser, getAuthors);
 
 router.post('/articles/:articleId/ratings', Auth.authenticateUser, articleRatingValidation, rateArticle);
+router.get('/search/:search', search);
 
 router.patch(
   '/articles/:articleId/publish',
