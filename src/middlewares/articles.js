@@ -20,14 +20,41 @@ const articleValidation = async (req, res, next) => {
   return next();
 };
 
+
+/**
+ *@name verifyArticle
+ *@description Middleware for verifying that article exists
+ * @param {object} req Request object
+ * @param {object} res Response object
+ * @param {function} next Calls the necxt function/action
+ * @returns {object} Returns status code of 404 where article is not found
+ * @returns {function} Calls next function/action
+ */
 export const verifyArticle = async (req, res, next) => {
   const { id } = req.params;
-  const { id: userId } = req.user;
   const article = await findById(Article, id);
   if (!article) { return responseHandler(res, 404, { status: 'fail', message: 'Article not found!', }); }
   const { dataValues: { userId: authorId } } = article;
-  const { role } = req.user;
-  if (authorId !== userId && role !== 'author') { return responseHandler(res, 403, { status: 'error', message: 'You are don\'t have access to manage this article!', }); }
+  req.authorId = authorId;
+  next();
+};
+
+
+/**
+ *@name isAuthor
+ *@description Middleware for checking if an author has the privilege to edit an article
+ * @param {object} req Request object
+ * @param {object} res Response object
+ * @param {function} next Calls the necxt function/action
+ * @returns {object} Returns status code of 403 if author doesn't have permission
+ * @returns {function} Calls next function/action
+ */
+export const isAuthor = async (req, res, next) => {
+  const { id: userId, role } = req.user;
+  const { authorId } = req;
+  console.log(`author${authorId}`);
+  console.log(`user${userId}`);
+  if (authorId !== userId && role !== 'admin') { return responseHandler(res, 403, { status: 'error', message: 'You don\'t have access to manage this article!', }); }
   next();
 };
 

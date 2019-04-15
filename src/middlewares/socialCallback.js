@@ -16,7 +16,7 @@ const strategyCallback = async (accessToken, refreshToken, profile, done) => {
     });
     return done(null, user.dataValues);
   } catch (error) {
-    return done(null, error);
+    throw new Error(error);
   }
 };
 

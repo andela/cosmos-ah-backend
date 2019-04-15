@@ -3,7 +3,7 @@ import chai from 'chai';
 import chaiHttp from 'chai-http';
 import { startServer } from '../../src/server';
 import { UPDATED_ARTICLE, ARTICLE, MALFORMED_ARTICLE } from '../mock/article';
-import { JWT_TOKEN } from '../mock/user';
+import { JWT_TOKEN, JWT_TOKEN_AUTHOR } from '../mock/user';
 
 const { expect } = chai;
 let app = null;
@@ -92,9 +92,9 @@ describe('PUT /api/v1/articles/:id', () => {
   });
 
   it('Should return status 403 when user attempts to update an article that doesn\'t belong to him/her', (done) => {
-    agent.put('/api/v1/articles/afa7ac4d-ca41-4d9f-a55d-3ba9f9c06602')
+    agent.put('/api/v1/articles/979eaa2e-5b8f-4103-8192-4639afae2ba8')
       .send(UPDATED_ARTICLE)
-      .set('Authorization', JWT_TOKEN)
+      .set('Authorization', JWT_TOKEN_AUTHOR)
       .end((_err, res) => {
         const { body } = res;
         expect(res).to.have.status(403);
@@ -130,8 +130,8 @@ describe('DELETE /api/v1/articles/:id', () => {
   });
 
   it('Should return status: 403 when user is not the owner of the article', (done) => {
-    agent.delete('/api/v1/articles/afa7ac4d-ca41-4d9f-a55d-3ba9f9c06602')
-      .set('Authorization', JWT_TOKEN)
+    agent.delete('/api/v1/articles/979eaa2e-5b8f-4103-8192-4639afae2ba4')
+      .set('Authorization', JWT_TOKEN_AUTHOR)
       .end((_err, res) => {
         const { body } = res;
         expect(res).to.have.status(403);
