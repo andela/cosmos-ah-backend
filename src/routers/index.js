@@ -41,6 +41,7 @@ import { editUser } from '../controllers/editUser';
 import { followUser } from '../controllers/follower';
 import getAuthors from '../controllers/authors';
 
+
 const router = Router();
 
 router.get('/', (req, res) => res.status(200).json({
