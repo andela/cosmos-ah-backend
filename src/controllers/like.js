@@ -19,7 +19,7 @@ const likeArticle = async (req, res) => {
         return res.status(200).json(
           responseFormat({
             status: 'success',
-            data: { message: 'you successfully liked the Article', Like: articleLikeCount },
+            data: { message: 'you successfully unliked the Article', Like: articleLikeCount },
           }),
         );
       }
