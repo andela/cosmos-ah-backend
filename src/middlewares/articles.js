@@ -6,8 +6,9 @@ import {
 } from '../utils/article';
 import { findById } from '../utils/query';
 import { Article } from '../models';
-import { responseHandler, parseErrorResponse, checkIDParamType } from '../utils';
+import { responseHandler, parseErrorResponse, checkIDParamType, errorResponseFormat } from '../utils';
 import { getAllArticles, getAnArticleByID } from '../controllers/article';
+import { validateComment } from '../utils/comment';
 
 /**
  *@name articleValidation
@@ -128,3 +129,16 @@ export const articleRatingValidation = async (req, res, next) => {
 };
 
 export default articleValidation;
+
+export const commentValidation = async (req, res, next) => {
+  const validate = await validateComment(req.body);
+  if (validate.fails()) {
+    const validationErrors = validate.errors.all();
+    const errorMessages = parseErrorResponse(validationErrors);
+    return res.status(400).json(errorResponseFormat({
+      status: 'fail',
+      message: errorMessages
+    }));
+  }
+  return next();
+};

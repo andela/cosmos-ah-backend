@@ -11,6 +11,7 @@ import {
   editArticleTag,
   rateArticle
 } from '../controllers/article';
+import { addComment } from '../controllers/comment';
 import checkFields from '../middlewares/auth/loginValidator';
 import Auth from '../middlewares/authenticator';
 import socialRedirect from '../controllers/authentication/socialRedirect';
@@ -31,7 +32,8 @@ import {
   getArticleHandler,
   articleReportValidation,
   articleTagValidation,
-  articleRatingValidation
+  articleRatingValidation,
+  commentValidation
 } from '../middlewares/articles';
 import { checkParam } from '../middlewares/checkParam';
 import checkEditBody from '../middlewares/editProfileValidator';
@@ -110,6 +112,7 @@ router.get(
 
 router.get('/auth/linkedin/callback', linkedinCallback);
 router.get('/auth/linkedin', linkedinUser);
+router.post('/article/comment', Auth.verifyToken, commentValidation, addComment);
 
 // Route for user following and unfollowing
 router.post('/followers/:id/follow', checkParam, Auth.authenticateUser, followUser);
