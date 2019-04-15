@@ -53,6 +53,12 @@ export default {
       type: Sequelize.ENUM('admin', 'author', 'user'),
       defaultValue: 'user',
     },
+    passwordResetToken: {
+      type: Sequelize.STRING,
+    },
+    resetTokenExpires: {
+      type: Sequelize.DATE,
+    },
     createdAt: {
       type: Sequelize.DATE,
     },

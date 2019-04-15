@@ -50,6 +50,12 @@ export default (sequelize, DataTypes) => {
       verificationToken: {
         type: DataTypes.STRING,
       },
+      passwordResetToken: {
+        type: DataTypes.STRING,
+      },
+      resetTokenExpires: {
+        type: DataTypes.DATE,
+      },
       notification: DataTypes.BOOLEAN,
       role: {
         type: DataTypes.ENUM('admin', 'author'),
