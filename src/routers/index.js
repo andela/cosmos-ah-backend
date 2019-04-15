@@ -8,8 +8,8 @@ import socialRedirect from '../controllers/authentication/socialRedirect';
 import { login, createUser, linkedinUser, linkedinCallback } from '../controllers/authentication/user';
 import checkBody from '../middlewares/signUpValidator';
 import likeArticle from '../controllers/like';
-
 import articleValidation, { verifyArticle } from '../middlewares/articles';
+import { checkParam } from '../middlewares/checkParam';
 
 const router = Router();
 
@@ -17,7 +17,7 @@ router.get('/', (req, res) => res.status(200).json({
   message: 'Welcome to the Authors Haven API',
 }));
 
-router.route('/articles/:articleid/like').patch(Auth.authenticateUser, likeArticle);
+router.route('/articles/:id/like').patch(Auth.authenticateUser, checkParam, verifyArticle, likeArticle);
 
 /**
  * Resource handling articles

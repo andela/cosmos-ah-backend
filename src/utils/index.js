@@ -1,4 +1,5 @@
 import Validator from 'validatorjs';
+import isUUID from 'validator/lib/isUUID';
 
 export const responseFormat = (response) => {
   const { data, status, message } = response;
@@ -75,4 +76,14 @@ export const parseErrorResponse = (responses) => {
   });
 
   return errorMessages;
+};
+
+/**
+ * @function checkIDParamType
+ * @param {void|string} param
+ * @returns {object} Returns an hash of each field name to response messages
+ */
+export const checkIDParamType = (param) => {
+  if (!isUUID(param, '4')) { return false; }
+  return true;
 };
