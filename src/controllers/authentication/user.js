@@ -51,6 +51,54 @@ export const verifyUser = async (req, res) => {
     return res.redirect('/api/v1');
   } catch (error) {
     if (error) { return res.status(500).json(errorResponseFormat({ status: 'error', message: 'We could not verify you at the moment, please try again', })); }
+    return res.status(500).json(errorResponseFormat({
+      status: 'error',
+      message: 'Something Went Wrong',
+    }));
+  }
+};
+
+export const viewUser = async (req, res) => {
+  try {
+    const user = await User.findByPk(req.params.id, {
+      attributes: {
+        exclude: [
+          'password',
+          'createdAt',
+          'updatedAt',
+          'id',
+          'notification',
+          'role',
+        ],
+      },
+    });
+
+    if (user) {
+      return res.status(200).json(responseFormat({
+        status: 'success',
+        data: {
+          user,
+        },
+      }));
+    }
+
+    return res.status(404).json(errorResponseFormat({
+      status: 'error',
+      message: 'This profile does not exist',
+    }));
+  } catch (error) {
+    if (error.name === 'SequelizeDatabaseError') {
+      if (error.parent.file === 'uuid.c') {
+        return res.status(400).json(errorResponseFormat({
+          status: 'error',
+          message: 'Invalid userId supplied',
+        }));
+      }
+    }
+    return res.status(500).json(errorResponseFormat({
+      status: 'error',
+      message: 'Something Went Wrong',
+    }));
   }
 };
 
