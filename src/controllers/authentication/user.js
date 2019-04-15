@@ -112,6 +112,8 @@ export const linkedinCallback = async (req, res) => {
 
     res.redirect('/api/v1');
   } catch (error) {
-    console.log(error);
+    return res.status(500).json(errorResponseFormat({
+      message: 'Something Went Wrong',
+    }));
   }
 };
