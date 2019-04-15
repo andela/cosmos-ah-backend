@@ -5,7 +5,7 @@ import { addArticle, editArticle, deleteArticle } from '../controllers/article';
 import checkFields from '../middlewares/auth/loginValidator';
 import Auth from '../middlewares/authenticator';
 import socialRedirect from '../controllers/authentication/socialRedirect';
-import { login, createUser, verifyUser } from '../controllers/authentication/user';
+import { login, createUser, verifyUser, linkedinUser, linkedinCallback } from '../controllers/authentication/user';
 import checkBody from '../middlewares/signUpValidator';
 import likeArticle from '../controllers/like';
 import articleValidation, { verifyArticle, isAuthor } from '../middlewares/articles';
