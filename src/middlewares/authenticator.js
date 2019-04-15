@@ -15,7 +15,7 @@ class Authenticator {
    * @memberOf Authenticator
    */
   static generateToken(user) { // { id, full_name, email , username , role }
-    return jwt.sign(user, process.env.JWTKEY, { expiresIn: '365 days' });
+    return jwt.sign(user, process.env.JWTKEY, { expiresIn: '1 day' });
   }
 
   /**

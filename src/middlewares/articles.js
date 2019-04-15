@@ -52,8 +52,6 @@ export const verifyArticle = async (req, res, next) => {
 export const isAuthor = async (req, res, next) => {
   const { id: userId, role } = req.user;
   const { authorId } = req;
-  console.log(`author${authorId}`);
-  console.log(`user${userId}`);
   if (authorId !== userId && role !== 'admin') { return responseHandler(res, 403, { status: 'error', message: 'You don\'t have access to manage this article!', }); }
   next();
 };
