@@ -1,4 +1,4 @@
-import { errorResponseFormat, validateParameters, } from '../utils';
+import { errorResponseFormat, validateParameters, parseErrorResponse } from '../utils';
 
 const checkBody = async (req, res, next) => {
   const validate = await validateParameters(req.body);

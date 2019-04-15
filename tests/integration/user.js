@@ -1,12 +1,11 @@
 import chai from 'chai';
 import chaiHttp from 'chai-http';
 import jwt from 'jsonwebtoken';
-import { startServer } from '../../src/server';
-import { createUser, createUserEmailError, createUserOtherError, editPayload, createUserError, createEditUser } from '../mock/user';
+import { createUser, createUserEmailError, editPayload, createUserError, createEditUser } from '../mock/user';
 import Auth from '../../src/middlewares/authenticator';
+import { startServer } from '../../src/server';
 
 const { expect } = chai;
-
 chai.use(chaiHttp);
 
 describe('Signup Authentication Test', () => {
@@ -68,21 +67,6 @@ describe('Signup Authentication Test', () => {
           .eql('error');
         expect(res.body).to.have.property('message')
           .eql('This Username Already Exist');
-        done();
-      });
-  });
-
-  it('Should return error for other errors', (done) => {
-    agent
-      .post('/api/v1/signup')
-      .send(createUserOtherError)
-      .end((err, res) => {
-        expect(res).to.have.status(500);
-        expect(res.body)
-          .to.have.property('status')
-          .eql('error');
-        expect(res.body).to.have.property('message')
-          .eql('Something Went Wrong');
         done();
       });
   });
