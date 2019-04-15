@@ -76,13 +76,12 @@ router.get('/auth/linkedin', linkedinUser);
 // Route for editing a profile
 router.put('/profile/edit', Auth.authenticateUser, checkEditBody, editUser);
 
+router.get('/profile/view/:id', Auth.authenticateUser, viewUser);
+
 // route for twitter authentication
 router.get('/auth/twitter', passport.authenticate('twitter'));
 
 router.get('/auth/twitter/callback', passport.authenticate('twitter', { failureRedirect: '/api/v1/auth/login' }), socialRedirect);
 
-
-router
-  .get('/profile/view/:id', Auth.authenticateUser, viewUser);
 
 export default router;
