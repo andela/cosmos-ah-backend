@@ -16,6 +16,8 @@ export const addArticle = async (req, res) => {
     const article = await Article.create({ userId, slug: slug(body.title), ...body, });
     return responseHandler(res, 201, { status: 'success', message: 'Your article was successfully created!', data: article });
   } catch (error) {
+    const { name: errorName } = error;
+    if (errorName === 'SequelizeForeignKeyConstraintError') { return responseHandler(res, 401, { status: 'fail', message: 'You are unauthorized!' }); }
     return responseHandler(res, 500, { status: 'error', message: 'For some reason, We can\'t save your article, please try again!' });
   }
 };
@@ -49,4 +51,13 @@ export const editArticle = async (req, res) => {
  * @returns {int} Returns true after deleting an article
  * @returns {object} Returns boolean
  */
-export const deleteArticle = async () => true;
+export const deleteArticle = async (req, res) => {
+  const { id } = req.params;
+  try {
+    const deleted = 1;
+    const destroyArticle = await Article.destroy({ where: { id } });
+    if (destroyArticle >= deleted) { return responseHandler(res, 202, { status: 'success', message: 'Your article has been removed.' }); }
+  } catch (error) {
+    return responseHandler(res, 500, { status: 'error', message: 'We are responsible for failing to update your article, please try again!' });
+  }
+};

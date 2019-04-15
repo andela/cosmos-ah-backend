@@ -12,6 +12,7 @@ const profile = {
   emails: [{ value: 'cosmos@email.com' }],
   displayName: 'cosmos cosmos',
   provider: 'facebook',
+  username: 'facebook',
   photos: [{ value: 'image' }],
 };
 

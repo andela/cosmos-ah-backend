@@ -8,7 +8,7 @@ import socialRedirect from '../controllers/authentication/socialRedirect';
 import { login, createUser, linkedinUser, linkedinCallback } from '../controllers/authentication/user';
 import checkBody from '../middlewares/signUpValidator';
 import likeArticle from '../controllers/like';
-import articleValidation, { verifyArticle } from '../middlewares/articles';
+import articleValidation, { verifyArticle, isAuthor } from '../middlewares/articles';
 import { checkParam } from '../middlewares/checkParam';
 
 const router = Router();
@@ -17,7 +17,7 @@ router.get('/', (req, res) => res.status(200).json({
   message: 'Welcome to the Authors Haven API',
 }));
 
-router.route('/articles/:id/like').patch(Auth.authenticateUser, checkParam, verifyArticle, likeArticle);
+router.route('/articles/:id/like').patch(checkParam, Auth.authenticateUser, verifyArticle, likeArticle);
 
 /**
  * Resource handling articles
@@ -33,8 +33,8 @@ router.route('/articles/:id/like').patch(Auth.authenticateUser, checkParam, veri
 router
   .route('/articles/:id?')
   .post(Auth.authenticateUser, articleValidation, addArticle)
-  .delete(deleteArticle)
-  .put(Auth.authenticateUser, articleValidation, verifyArticle, editArticle);
+  .delete(checkParam, Auth.authenticateUser, verifyArticle, isAuthor, deleteArticle)
+  .put(checkParam, Auth.authenticateUser, articleValidation, verifyArticle, isAuthor, editArticle);
 
 router.post('/login', checkFields, passportAuth, login);
 

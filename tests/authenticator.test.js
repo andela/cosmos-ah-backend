@@ -15,7 +15,7 @@ describe('Authenticator', () => {
     agent = chai.request(app);
   });
   it('should return 401, Unauthorized error', (done) => {
-    agent.get('/api/v1/users/articles')
+    agent.get('/api/v1/articles')
       .set('authorization', 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9')
       .end((err, res) => {
         expect(res).to.have.status(401);

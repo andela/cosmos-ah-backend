@@ -70,19 +70,4 @@ describe('Signup Authentication Test', () => {
         done();
       });
   });
-
-  // it('Should return error for other errors', (done) => {
-  //   agent
-  //     .post('/api/v1/signup')
-  //     .send(createUserOtherError)
-  //     .end((err, res) => {
-  //       expect(res).to.have.status(500);
-  //       expect(res.body)
-  //         .to.have.property('status')
-  //         .eql('error');
-  //       expect(res.body).to.have.property('message')
-  //         .eql('Something Went Wrong');
-  //       done();
-  //     });
-  // });
 });
