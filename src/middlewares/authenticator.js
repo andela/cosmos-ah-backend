@@ -1,5 +1,5 @@
 import jwt from 'jsonwebtoken';
-import { responseFormat } from '../utils/index';
+import { responseFormat } from '../utils';
 
 /**
  * @class AuthenticateUser
@@ -19,18 +19,20 @@ class Authenticator {
   }
 
   /**
-   * @method verifyToken
+   * @method authenticateUser
    * @description Verifies that user is authenticated
    * @param {object} req - The Request Object
    * @param {object} res - The Response Object
    * @param {object} next - The next function
    * @returns {object} - JSON response object
    */
-  static async verifyToken(req, res, next) {
+  static async authenticateUser(req, res, next) {
     let token = '';
     /* eslint-disable no-unused-vars */
     let str = '';
-    if (req.get('Authorization').startsWith('Bearer')) {
+    const authorizationHeader = req.get('Authorization');
+    if (!authorizationHeader) return res.status(400).json(responseFormat({ status: 'error', message: 'No authorization token present in header', }));
+    if (authorizationHeader.startsWith('Bearer')) {
       [str, token] = req.get('Authorization').split(' ');
     } else {
       token = req.get('Authorization') ? req.get('Authorization') : req.headers.token;
@@ -38,14 +40,14 @@ class Authenticator {
     if (!token) {
       return res.status(401)
         .json(responseFormat({
-          success: false,
-          data: 'No token supplied',
+          success: 'error',
+          message: 'No token supplied',
         }));
     }
     jwt.verify(token, process.env.JWTKEY, (error, decodedToken) => {
       if (error) {
         return res.status(401)
-          .json(responseFormat({ success: false, data: 'Invalid token supplied' }));
+          .json(responseFormat({ success: 'error', message: 'Invalid token supplied' }));
       }
       req.user = decodedToken;
     });
@@ -63,26 +65,6 @@ class Authenticator {
   static isAdmin(req, res, next) {
     const { role } = req.user;
     if (role === 'admin') {
-      next();
-    } else {
-      return res.status(403).json(responseFormat({
-        success: false,
-        data: 'you are not authorised to access this route'
-      }));
-    }
-  }
-
-  /**
-   * @method isAuthor
-   * @description Verifies that user is an author
-   * @param {object} req - The Request Object
-   * @param {object} res - The Response Object
-   * @param {object} next - The next function
-   * @returns {object} - JSON response object
-   */
-  static isAuthor(req, res, next) {
-    const { role } = req.decoded;
-    if (role === 'author') {
       next();
     } else {
       return res.status(403).json(responseFormat({

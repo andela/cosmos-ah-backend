@@ -35,11 +35,11 @@ describe('Auth', () => {
 
     const next = sinon.spy();
 
-    Authenticator.verifyToken(req, res, next);
+    Authenticator.authenticateUser(req, res, next);
 
     expect(next.called).to.equal(false);
     expect(res.json.called).to.equal(true);
-    expect(res.json.firstCall.args[0].data).to.equal('No token supplied');
+    expect(res.json.firstCall.args[0].message).to.equal('No token supplied');
   });
 
   it('should verify a valid token', () => {
@@ -56,7 +56,7 @@ describe('Auth', () => {
 
     const next = sinon.spy();
 
-    Authenticator.verifyToken(req, res, next);
+    Authenticator.authenticateUser(req, res, next);
 
     expect(next.called).to.equal(true);
     expect(res.json.called).to.equal(false);
@@ -76,25 +76,6 @@ describe('Auth', () => {
     const next = sinon.spy();
 
     Authenticator.isAdmin(req, res, next);
-
-    expect(next.called).to.equal(true);
-    expect(res.json.called).to.equal(false);
-  });
-
-  it('should check if author', () => {
-    const req = {
-      decoded: {
-        role: 'author'
-      }
-    };
-
-    const res = {};
-    res.json = sinon.fake.returns(res);
-    res.status = sinon.fake.returns(res);
-
-    const next = sinon.spy();
-
-    Authenticator.isAuthor(req, res, next);
 
     expect(next.called).to.equal(true);
     expect(res.json.called).to.equal(false);

@@ -19,8 +19,8 @@ describe('Users Login', () => {
   it('should login user', (done) => {
     agent.post('/api/v1/login')
       .send({
-        email: 'martins@gmail.com',
-        password: '%RYYT&^UTB*UYT*IUYIU',
+        email: 'chike@gmail.com',
+        password: 'God1993$',
       })
       .end((err, res) => {
         expect(res).to.have.status(200);
@@ -29,8 +29,8 @@ describe('Users Login', () => {
   });
   it('should return true for valid token', (done) => {
     const payload = {
-      email: 'martins@gmail.com',
-      password: '%RYYT&^UTB*UYT*IUYIU',
+      email: 'chike@gmail.com',
+      password: 'God1993$',
     };
     agent.post('/api/v1/login')
       .send(payload)
