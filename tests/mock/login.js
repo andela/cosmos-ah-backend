@@ -1,11 +1,11 @@
 export const successLogin = {
   email: 'chike@gmail.com',
-  password: '%RYYT&^UTB*UYT*IUYIU',
+  password: 'God1993$',
 };
 
 export const failedVerificationLogin = {
   email: 'martins@gmail.com',
-  password: '%RYYT&^UTB*UYT*IUYIU',
+  password: 'God1993$',
 };
 
 export const invalidLoginEmail = {

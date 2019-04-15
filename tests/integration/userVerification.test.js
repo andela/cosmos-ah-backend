@@ -22,9 +22,7 @@ describe('Users Login Verification', () => {
   it('should verify account that has the right credentials', (done) => {
     agent.get(url)
       .end((err, res) => {
-        expect(res).to.have.status(202);
-        const { body } = res;
-        expect(body.data).to.be.equal('Your account was successfully verified!');
+        expect(res).to.have.status(200);
         done();
       });
   });

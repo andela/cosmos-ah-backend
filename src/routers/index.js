@@ -11,6 +11,7 @@ import likeArticle from '../controllers/like';
 import articleValidation, { verifyArticle, isAuthor } from '../middlewares/articles';
 import { checkParam } from '../middlewares/checkParam';
 
+
 const router = Router();
 
 router.get('/', (req, res) => res.status(200).json({
