@@ -83,5 +83,4 @@ router.get('/auth/twitter', passport.authenticate('twitter'));
 
 router.get('/auth/twitter/callback', passport.authenticate('twitter', { failureRedirect: '/api/v1/auth/login' }), socialRedirect);
 
-
 export default router;
