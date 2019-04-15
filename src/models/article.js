@@ -70,6 +70,11 @@ export default (sequelize, DataTypes) => {
       as: 'articleUser',
       onDelete: 'CASCADE',
     });
+    Article.hasMany(models.Like, {
+      foreignKey: 'userId',
+      as: 'userLikes',
+      onDelete: 'CASCADE',
+    });
   };
   return Article;
 };

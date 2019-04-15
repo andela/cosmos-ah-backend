@@ -10,7 +10,6 @@ import docs from '../swagger.json';
 import router from './routers/index';
 import passportConfig from './middlewares/localStrategy';
 
-
 let httpServer;
 
 /**
@@ -57,7 +56,6 @@ export const startServer = port => new Promise((resolve, reject) => {
     error.status = 404;
     next(error);
   });
-
 
   app.use((error, res, next) => {
     res.status(error.status || 500).json({

@@ -6,15 +6,17 @@ import checkFields from '../middlewares/auth/loginValidator';
 import socialRedirect from '../controllers/authentication/socialRedirect';
 import { login, createUser, linkedinUser, linkedinCallback } from '../controllers/authentication/user';
 import checkBody from '../middlewares/signUpValidator';
+import likeArticle from '../controllers/like';
+import Authenticator from '../middlewares/authenticator';
 
 
 const router = Router();
 
-router.get('/', (req, res) => {
-  res.status(200).json({
-    message: 'welcome to the base url',
-  });
-});
+router.get('/', (req, res) => res.status(200).json({
+  message: 'Welcome to the Authors Haven API',
+}));
+
+router.route('/articles/:articleid/like').patch(Authenticator.verifyToken, likeArticle);
 
 /**
  * Resource handling articles
@@ -36,10 +38,16 @@ router
 router.post('/login', checkFields, passportAuth, login);
 
 // Route for facebook Authentication
-router.get('/auth/facebook', passport.authenticate('facebook', { authType: 'rerequest', scope: ['email'] }));
+router.get(
+  '/auth/facebook',
+  passport.authenticate('facebook', { authType: 'rerequest', scope: ['email'] }),
+);
 
-router.get('/auth/facebook/callback', passport.authenticate('facebook', { failureRedirect: '/api/v1/auth/login' }), socialRedirect);
-
+router.get(
+  '/auth/facebook/callback',
+  passport.authenticate('facebook', { failureRedirect: '/api/v1/auth/login' }),
+  socialRedirect,
+);
 
 // Route for google Authentication
 router.get('/auth/google', passport.authenticate('google', { scope: ['email profile'] }));

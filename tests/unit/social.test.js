@@ -28,13 +28,16 @@ describe('SocialStrategy', () => {
     app = await startServer(5000);
     agent = chai.request(app);
   });
-  it('Should be A function', async () => {
+  it('Should be A function', (done) => {
     strategyCallback(accessToken, refreshToken, profile);
     expect(strategyCallback).to.be.a('function');
+    done();
   });
-  it('should call the social route', async () => {
-    const response = await agent.get('/api/v1/auth/facebook');
-    expect(response).to.have.status(200);
-    expect(response.text).to.be.deep.equal('facebook callback route called');
+  it('should call the social route', (done) => {
+    agent.get('/api/v1/auth/facebook').end((err, res) => {
+      expect(res).to.have.status(200);
+      expect(res.text).to.be.deep.equal('facebook callback route called');
+      done();
+    });
   });
 });
