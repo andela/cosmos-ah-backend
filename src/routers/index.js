@@ -5,11 +5,15 @@ import { addArticle, editArticle, deleteArticle } from '../controllers/article';
 import checkFields from '../middlewares/auth/loginValidator';
 import Auth from '../middlewares/authenticator';
 import socialRedirect from '../controllers/authentication/socialRedirect';
-import { login, createUser, verifyUser, linkedinUser, linkedinCallback } from '../controllers/authentication/user';
+import { login, createUser, linkedinUser, linkedinCallback } from '../controllers/authentication/user';
+import { editUser } from '../controllers/editUser';
 import checkBody from '../middlewares/signUpValidator';
 import likeArticle from '../controllers/like';
 import articleValidation, { verifyArticle, isAuthor } from '../middlewares/articles';
 import { checkParam } from '../middlewares/checkParam';
+import Authenticator from '../middlewares/authenticator';
+import checkEditBody from '../middlewares/editProfileValidator';
+
 
 
 const router = Router();
@@ -69,8 +73,11 @@ router.get('/auth/linkedin', linkedinUser);
  * @returns Response Object
  */
 
-router
-  .post('/signup', checkBody, createUser);
+// Router for Signup
+router.post('/signup', checkBody, createUser);
+
+// Route for editing a profile
+router.put('/profile/edit', Authenticator.verifyToken, checkEditBody, editUser);
 
 // route for twitter authentication
 router.get('/auth/twitter', passport.authenticate('twitter'));
