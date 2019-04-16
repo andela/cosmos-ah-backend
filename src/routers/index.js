@@ -5,11 +5,12 @@ import { addArticle, editArticle, deleteArticle } from '../controllers/article';
 import checkFields from '../middlewares/auth/loginValidator';
 import Auth from '../middlewares/authenticator';
 import socialRedirect from '../controllers/authentication/socialRedirect';
-import { login, createUser, linkedinUser, linkedinCallback } from '../controllers/authentication/user';
+import { login, createUser, verifyUser, linkedinUser, linkedinCallback } from '../controllers/authentication/user';
 import checkBody from '../middlewares/signUpValidator';
 import likeArticle from '../controllers/like';
 import articleValidation, { verifyArticle, isAuthor } from '../middlewares/articles';
 import { checkParam } from '../middlewares/checkParam';
+
 
 const router = Router();
 
@@ -77,6 +78,8 @@ router.get('/auth/twitter', passport.authenticate('twitter'));
 router.get('/auth/twitter/callback', passport.authenticate('twitter', { failureRedirect: '/api/v1/auth/login' }), socialRedirect);
 
 
-router.post('/login', checkFields, passportAuth, login);
+router.post('/login', checkFields, passportAuth, login)
+  .post('/signup', checkBody, createUser)
+  .get('/verify/:id/:verificationToken', verifyUser);
 
 export default router;

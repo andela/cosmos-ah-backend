@@ -43,6 +43,13 @@ export default (sequelize, DataTypes) => {
         type: DataTypes.TEXT,
         allowNull: false,
       },
+      verified: {
+        type: DataTypes.BOOLEAN,
+        defaultValue: false
+      },
+      verificationToken: {
+        type: DataTypes.STRING,
+      },
       notification: DataTypes.BOOLEAN,
       role: {
         type: DataTypes.ENUM('admin', 'author'),

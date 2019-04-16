@@ -14,7 +14,6 @@ describe('LIKE ARTICLE', () => {
     app = await startServer(6600);
     agent = chai.request(app);
   });
-
   it('should like an article', (done) => {
     agent
       .patch('/api/v1/articles/979eaa2e-5b8f-4103-8192-4639afae2ba8/like')
