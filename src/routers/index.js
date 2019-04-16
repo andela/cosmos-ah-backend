@@ -113,7 +113,7 @@ router.get(
 
 router.get('/auth/linkedin/callback', linkedinCallback);
 router.get('/auth/linkedin', linkedinUser);
-router.post('/article/comment', Auth.verifyToken, commentValidation, addComment);
+router.post('/article/comment', Auth.authenticateUser, commentValidation, addComment);
 
 // Route for user following and unfollowing
 router.post('/followers/:id/follow', checkParam, Auth.authenticateUser, followUser);
