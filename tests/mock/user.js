@@ -1,14 +1,14 @@
 export const createUser = {
   fullName: 'Tolulope Olaniyan',
   email: 'tolulope@gmail.com',
-  username: 'tolulope1',
+  username: 'tolulopeone',
   password: 'Tolu2019&',
   bio: 'I Love Javascript',
   imageUrl: 'http://waterease.herokuapp.com/images/board/comfort.com'
 };
 export const createUserError = {
   email: 'tolulope@gmail.com',
-  username: 'tolulope2',
+  username: 'tolulopetwo',
   password: 'Tolu2019&',
   bio: 'I Love Javascript',
   imageUrl: 'http://waterease.herokuapp.com/images/board/comfort.com'
@@ -16,7 +16,7 @@ export const createUserError = {
 export const createUserEmailError = {
   fullName: 'Tolulope Olaniyan',
   email: 'tolulope3@gmail.com',
-  username: 'tolulope1',
+  username: 'chikeozulumba',
   password: 'Tolu2019&',
   bio: 'I Love Javascript',
   imageUrl: 'http://waterease.herokuapp.com/images/board/comfort.com'
@@ -25,7 +25,7 @@ export const createUserEmailError = {
 export const createUserOtherError = {
   fullName: 'Tolulope Olaniyan',
   email: 'tolulope3gmail.com',
-  username: 'tolulope4',
+  username: 'tolulopefour',
   password: 'Tolu2019&',
   bio: 'I Love Javascript',
   imageUrl: 'http://waterease.herokuapp.com/images/board/comfort.com'
