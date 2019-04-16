@@ -10,7 +10,8 @@ import checkBody from '../middlewares/signUpValidator';
 import likeArticle from '../controllers/like';
 import articleValidation, { verifyArticle, isAuthor } from '../middlewares/articles';
 import { checkParam } from '../middlewares/checkParam';
-
+import checkEditBody from '../middlewares/editProfileValidator';
+import { editUser } from '../controllers/editUser';
 
 const router = Router();
 
@@ -69,8 +70,11 @@ router.get('/auth/linkedin', linkedinUser);
  * @returns Response Object
  */
 
-router
-  .post('/signup', checkBody, createUser);
+// Router for Signup
+router.post('/signup', checkBody, createUser);
+
+// Route for editing a profile
+router.put('/profile/edit', Auth.authenticateUser, checkEditBody, editUser);
 
 // route for twitter authentication
 router.get('/auth/twitter', passport.authenticate('twitter'));

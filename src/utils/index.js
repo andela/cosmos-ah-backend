@@ -55,9 +55,9 @@ export const responseHandler = (res, code, payload) => {
  * @returns {object} Returns an error response object
  */
 export const errorResponseFormat = (response) => {
-  const { message } = response;
+  const { message, status } = response;
   return {
-    status: 'error',
+    status,
     message
   };
 };
@@ -76,6 +76,16 @@ export const parseErrorResponse = (responses) => {
   });
 
   return errorMessages;
+};
+
+export const validateEditParameters = async (body) => {
+  const rules = {
+    fullName: 'required',
+    notification: 'required',
+    bio: 'required',
+    imageUrl: 'required'
+  };
+  return new Validator(body, rules);
 };
 
 /**

@@ -22,7 +22,6 @@ describe('Util test', () => {
   describe('errorResponseFormat()', () => {
     it('should return error response', () => {
       const response = errorResponseFormat({ message: 'server is down at the moment' });
-      expect(response.status).to.equal('error');
       expect(response.message).to.equal('server is down at the moment');
     });
   });
