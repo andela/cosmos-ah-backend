@@ -20,7 +20,7 @@
     "db-seed": "./node_modules/.bin/babel-node ./node_modules/.bin/sequelize db:seed:all",
     "db-seed:test": "NODE_ENV=test ./node_modules/.bin/babel-node ./node_modules/.bin/sequelize db:seed:all",
     "dev": "nodemon --exec babel-node src/index.js",
-    "heroku-prebuild": "npm run prod",
+    "heroku-prebuild": "if test \"$PRODUCTION_STAGE\" = false ; then npm run db-refresh ; fi; npm run prod",
     "lint": "eslint ./src",
     "lint-fix": "eslint ./src --fix",
     "prod": "npm run clean && npm run build",

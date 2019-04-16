@@ -20,7 +20,7 @@ export const validateParameters = async (body) => {
     fullName: 'required|string',
     email: 'required|email',
     password: ['required', 'regex:/^(?=.*[a-z])(?=.*[A-Z])(?=.*[0-9])(?=.*[!@#\\$%\\^&\\*])(?=.{8,})/i'],
-    username: 'required|string',
+    username: ['required', 'string', 'regex:/^[a-z]+$/'],
   };
   const errorMessages = {
     'string.fullName': 'The:attribute must be a string!',

@@ -21,7 +21,7 @@ export const validateArticle = async (payload) => {
     'string.body': 'Your :attribute field must be of string format!',
     'min.description': 'If your :attribute is less than 3 characters, it may not be taken to seriously',
     'max.description': 'If your :attribute exceeds 255 characters, it becomes too much to handle',
-    'required.body': 'Your article needs a :body for people to read',
+    'required.body': 'Your article needs a body field for it to be valid',
     'max.body': 'If your :attribute exceeds 10000 characters, it becomes too much to handle',
     'regex.imageUrl': 'The :attribute field requires a valid URL',
   };
