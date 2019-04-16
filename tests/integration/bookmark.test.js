@@ -12,8 +12,8 @@ let agent = null;
 chai.use(chaiHttp);
 
 describe('POST /api/v1/:articleId/bookmark', () => {
-  before(async () => {
-    app = await startServer(5000);
+  beforeEach(async () => {
+    app = await startServer(5500);
     agent = chai.request(app);
   });
 
