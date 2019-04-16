@@ -49,7 +49,7 @@ describe('Signup Authentication Test', () => {
         expect(res).to.have.status(409);
         expect(res.body)
           .to.have.property('status')
-          .eql('error');
+          .eql('fail');
         expect(res.body).to.have.property('message')
           .eql('This Email Already Exist');
         done();
@@ -64,7 +64,7 @@ describe('Signup Authentication Test', () => {
         expect(res).to.have.status(409);
         expect(res.body)
           .to.have.property('status')
-          .eql('error');
+          .eql('fail');
         expect(res.body).to.have.property('message')
           .eql('This Username Already Exist');
         done();
