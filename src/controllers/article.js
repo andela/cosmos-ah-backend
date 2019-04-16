@@ -2,6 +2,7 @@ import { slug } from '../utils/article';
 import { responseHandler, responseFormat, errorResponseFormat } from '../utils';
 import { Article, Bookmark } from '../models';
 
+
 /**
  * @name addArticle
  * @description This is the method for inserting articles

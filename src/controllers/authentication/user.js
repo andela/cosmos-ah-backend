@@ -1,7 +1,11 @@
 import fetch from 'node-fetch';
+import uuid from 'uuid/v4';
 import { User } from '../../models';
 import Auth from '../../middlewares/authenticator';
 import { responseFormat, errorResponseFormat } from '../../utils/index';
+import sendMail from '../../utils/email';
+import { subject, content } from '../../utils/mailContent/verificationMail';
+
 /**
  * @description user will be able to create their profile.
  * @param {object} req
@@ -10,51 +14,89 @@ import { responseFormat, errorResponseFormat } from '../../utils/index';
  * @returns {object|void} response object
  */
 export const login = (req, res) => {
-  const {
-    id, fullName, bio, email, username, role
-  } = req.user;
-  return res.status(200).json(responseFormat({
-    status: 'success',
-    data: {
-      token: Auth.generateToken({
-        id, fullName, bio, email, username, role
-      })
-    },
-  }));
+  const { id, fullName, bio, email, username, role } = req.user;
+  return res.status(200).json(responseFormat({ status: 'success', data: { token: Auth.generateToken({ id, fullName, bio, email, username, role }) }, }));
 };
 
 export const createUser = async (req, res) => {
   try {
     const { body } = req;
-    const user = await User.create({ ...body });
+    const verificationToken = uuid();
+    const user = await User.create({ ...body, verificationToken });
     const { id, username, email, role, fullName, bio } = user;
-
+    const message = content(fullName, id, verificationToken);
     if (user) {
-      return res.status(201).json(responseFormat({
-        status: 'success',
-        data: {
-          token: Auth.generateToken({
-            id, fullName, bio, email, username, role
-          })
-        },
+      const welcomeMessage = { email, subject, message };
+      sendMail(welcomeMessage);
+      return res.status(201).json(responseFormat({ status: 'success',
+        data: { token: Auth.generateToken({ id, fullName, bio, email, username, role }) },
       }));
     }
   } catch (error) {
     if (error.name === 'SequelizeUniqueConstraintError') {
-      if (error.fields.email) {
-        return res.status(409).json(errorResponseFormat({
-          message: 'This Email Already Exist',
-        }));
-      }
+      if (error.fields.email) { return res.status(409).json(errorResponseFormat({ status: 'fail', message: 'This Email Already Exist' })); }
 
-      if (error.fields.username) {
-        return res.status(409).json(errorResponseFormat({
-          message: 'This Username Already Exist',
+      if (error.fields.username) { return res.status(409).json(errorResponseFormat({ status: 'fail', message: 'This Username Already Exist' })); }
+    }
+    return res.status(500).json(errorResponseFormat({ status: 'fail', message: 'Something Went Wrong', }));
+  }
+};
+
+export const verifyUser = async (req, res) => {
+  try {
+    const { id, verificationToken } = req.params;
+    let user = await User.findOne({ where: { id, verificationToken } });
+    if (!user) { return res.status(403).json(errorResponseFormat({ status: 'fail', message: 'Invalid token supplied, kindly reauthenticate!', })); }
+    user = await user.update({ verified: true, verificationToken: null });
+    return res.redirect('/api/v1');
+  } catch (error) {
+    if (error) { return res.status(500).json(errorResponseFormat({ status: 'error', message: 'We could not verify you at the moment, please try again', })); }
+    return res.status(500).json(errorResponseFormat({
+      status: 'error',
+      message: 'Something Went Wrong',
+    }));
+  }
+};
+
+export const viewUser = async (req, res) => {
+  try {
+    const user = await User.findByPk(req.params.id, {
+      attributes: {
+        exclude: [
+          'password',
+          'createdAt',
+          'updatedAt',
+          'id',
+          'notification',
+          'role',
+        ],
+      },
+    });
+
+    if (user) {
+      return res.status(200).json(responseFormat({
+        status: 'success',
+        data: {
+          user,
+        },
+      }));
+    }
+
+    return res.status(404).json(errorResponseFormat({
+      status: 'error',
+      message: 'This profile does not exist',
+    }));
+  } catch (error) {
+    if (error.name === 'SequelizeDatabaseError') {
+      if (error.parent.file === 'uuid.c') {
+        return res.status(400).json(errorResponseFormat({
+          status: 'error',
+          message: 'Invalid userId supplied',
         }));
       }
     }
-
     return res.status(500).json(errorResponseFormat({
+      status: 'error',
       message: 'Something Went Wrong',
     }));
   }
@@ -113,6 +155,7 @@ export const linkedinCallback = async (req, res) => {
     res.redirect('/api/v1');
   } catch (error) {
     return res.status(500).json(errorResponseFormat({
+      status: 'error',
       message: 'Something Went Wrong',
     }));
   }

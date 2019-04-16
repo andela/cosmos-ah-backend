@@ -36,6 +36,7 @@ describe('POST /api/v1/articles', () => {
         expect(body.data).to.have.property('slug');
         expect(body.data.title).to.be.equal(ARTICLE.title);
         expect(body.data.body).to.be.equal(ARTICLE.body);
+        expect(body.data.totalReadTime).to.equal(2);
         done();
       });
   });

@@ -24,7 +24,7 @@ describe('Signup Authentication Test', () => {
         expect(res).to.have.status(400);
         expect(res.body)
           .to.have.property('status')
-          .eql('error');
+          .eql('fail');
         done();
       });
   });
