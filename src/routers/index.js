@@ -7,8 +7,6 @@ import {
   editArticle,
   deleteArticle,
   reportArticle,
-  getAllArticleReports,
-  getASingleArticleReport,
   bookmarkArticle,
 } from '../controllers/article';
 import checkFields from '../middlewares/auth/loginValidator';
@@ -68,11 +66,8 @@ router
   .get('/verify/:id/:verificationToken', verifyUser);
 
 router
-  .route('/articles/:articleId/reports')
-  .post(articleReportValidation, Auth.verifyToken, reportArticle)
-  .get(getAllArticleReports);
-
-router.route('/api/v1/articles/:articleId/reports/:reportId').get(getASingleArticleReport);
+  .route('/articles/:articleId/escalate')
+  .post(articleReportValidation, Auth.authenticateUser, reportArticle);
 
 // Route for facebook Authentication
 router.get(

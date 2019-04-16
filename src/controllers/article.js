@@ -168,7 +168,3 @@ export const reportArticle = async (req, res) => {
     });
   }
 };
-
-export const getAllArticleReports = async (req, res) => res.status(404).send('Not yet implemented');
-
-export const getASingleArticleReport = async (req, res) => res.status(404).send('Not yet implemented');

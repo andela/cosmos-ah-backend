@@ -4,44 +4,45 @@ import chaiHttp from 'chai-http';
 import { startServer } from '../../src/server';
 import Auth from '../../src/middlewares/authenticator';
 
-const user = {
-  id: '979eaa2e-5b8f-4103-8192-4639afae2ba8',
-  fullName: 'Martins Aloba',
-  role: 'admin',
-  username: 'martinsaloba'
-};
-
 chai.use(chaiHttp);
 
 describe('Article Report API test', () => {
+  const user = {
+    id: '979eaa2e-5b8f-4103-8192-4639afae2ba8',
+    fullName: 'Martins Aloba',
+    role: 'admin',
+    username: 'martinsaloba'
+  };
+
   let app = null;
   let agent = null;
+
   beforeEach(async () => {
-    app = await startServer(6000);
+    app = await startServer(8000);
     agent = chai.request(app);
   });
+
   afterEach(async () => {
-    app = null;
+    await app.close();
     agent = null;
   });
   it('should report an article', (done) => {
     agent
-      .post('/api/v1/articles/979eaa2e-5b8f-4103-8192-4639afae2ba8/reports')
+      .post('/api/v1/articles/979eaa2e-5b8f-4103-8192-4639afae2ba8/escalate')
       .set({ Authorization: Auth.generateToken(user) })
       .send({ description: 'article contains plagiarized content', category: 'plagiarism' })
       .end((err, res) => {
         if (err) return done(err);
         res.should.have.status(200);
         res.body.status.should.equal('success');
-        res.body.data.description.should.equal('article contains plagiarized content');
-        res.body.data.reportCategory.should.equal('plagiarism');
+        res.body.data.should.have.property('message');
         done();
       });
   });
 
   it('should return a database error for an article that doesn\'t exist', (done) => {
     agent
-      .post('/api/v1/articles/979eaa2e-5b8f-4103-8192-4639afae2ba/reports')
+      .post('/api/v1/articles/979eaa2e-5b8f-4103-8192-4639afae2ba/escalate')
       .set({ Authorization: Auth.generateToken(user) })
       .send({ description: 'article contains plagiarized content', category: 'plagiarism' })
       .end((err, res) => {
@@ -55,7 +56,7 @@ describe('Article Report API test', () => {
 
   it('should return an error for an invalid request body', (done) => {
     agent
-      .post('/api/v1/articles/979eaa2e-5b8f-4103-8192-4639afae2ba/reports')
+      .post('/api/v1/articles/979eaa2e-5b8f-4103-8192-4639afae2ba/escalate')
       .set({ Authorization: Auth.generateToken(user) })
       .send({ category: 'plagiarism' })
       .end((err, res) => {
