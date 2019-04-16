@@ -1,18 +1,13 @@
+export const JWT_TOKEN = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6Ijk3OWVhYTJlLTViOGYtNDEwMy04MTkyLTQ2MzlhZmFlMmJhOSIsImZ1bGxOYW1lIjoiQ2hpa2UgT3p1bHVtYmEiLCJiaW8iOiJIb2xkIG9uIG5vdywgYXJlbid0IHRoZXJlIGFscmVhZHkgc3BlY3MgZm9yIHRoaXMga2luZCBvZiB0aGluZz8gLSBXZWxsLi4uIG5vLiBXaGlsZSB0aGVyZSBhcmUgYSBmZXcgaGFuZHkgc3BlY2lmaWNhdGlvbnMgZm9yIGRlYWxpbmcgd2l0aCBKU09OIGRhdGEsIG1vc3Qgbm90YWJseSBEb3VnbGFzIENyb2NrZm9yZCdzIEpTT05SZXF1ZXN0IHByb3Bvc2FsLCB0aGVyZSdzIG5vdGhpbmcgdG8gYWRkcmVzcyB0aGUgcHJvYmxlbXMgb2YgZ2VuZXJhbCBhcHBsaWNhdGlvbi1sZXZlbCBtZXNzYWdpbmcuIE1vcmUgb24gdGhpcyBsYXRlci4iLCJlbWFpbCI6ImNoaWtlQGdtYWlsLmNvbSIsInVzZXJuYW1lIjoiY2hpa2VvenVsdW1iYSIsInJvbGUiOiJhZG1pbiIsImlhdCI6MTU1NTA4MTE3NCwiZXhwIjoxNTg2NjE3MTc0fQ.0jcdr45n6BGKM2nZ_C9_XMYw3vBq5V3XMbpeZm86Rfo';
+
 const bookmark = {
-  userId: '979eaa2e-5b8f-4103-8192-4639afae2ba8',
-  articleId: '979eaa2e-5b8f-4103-8192-4639afae2ba7'
+  articleId: '1839374c-53ea-438c-815d-1fe301422830'
 };
 
-const invalidUserIdBookmark = {
-  userId: '979eaa2e-5b8f-4103-8192-4639afae2239',
-  articleId: '979eaa2e-5b8f-4103-8192-4639afae2ba7'
-};
 const invalidArticleIdBookmark = {
-  userId: '979eaa2e-5b8f-4103-8192-4639afae2ba8',
   articleId: '979eaa2e-5b8f-4103-8192-4639afae2777'
 };
 const invalidUUIDBookmark = {
-  userId: 'XXXXXXX--XXXX',
-  articleId: '979eaa2e-5b8f-4103-8192-4639afae2777'
+  articleId: '979eaa2e-5b8f-4103-8192-4639afxxxxx'
 };
-export { bookmark, invalidUserIdBookmark, invalidArticleIdBookmark, invalidUUIDBookmark };
+export { bookmark, invalidArticleIdBookmark, invalidUUIDBookmark };

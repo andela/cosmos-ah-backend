@@ -1,7 +1,7 @@
 import 'chai/register-should';
 import chai from 'chai';
 import chaiHttp from 'chai-http';
-import startServer from '../../src/server';
+import { startServer } from '../../src/server';
 import { UPDATED_ARTICLE, ARTICLE, MALFORMED_ARTICLE } from '../mock/article';
 import { JWT_TOKEN, JWT_TOKEN_AUTHOR } from '../mock/user';
 

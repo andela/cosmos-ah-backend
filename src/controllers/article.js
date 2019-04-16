@@ -64,10 +64,11 @@ export const deleteArticle = async (req, res) => {
 export const DeleteArticle = async () => true;
 
 export const bookmarkArticle = async (req, res) => {
+  const { id } = req.user;
   const { body } = req;
 
   try {
-    const bookmark = await Bookmark.create({ ...body });
+    const bookmark = await Bookmark.create({ ...body, userId: id });
     return res.status(201).json(responseFormat({
       status: 'success',
       data: bookmark

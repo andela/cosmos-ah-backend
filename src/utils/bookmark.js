@@ -8,12 +8,10 @@ import Validator from 'validatorjs';
 
 export const validateBookmark = async (payload) => {
   const rules = {
-    userId: 'required',
     articleId: 'required'
   };
 
   const errorMessage = {
-    'required.userId': 'user id is required',
     'required.articleId': 'article id is required'
   };
   return new Validator(payload, rules, errorMessage);

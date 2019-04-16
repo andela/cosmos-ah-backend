@@ -17,7 +17,7 @@ const bookmarkValidation = async (req, res, next) => {
     const errorMessages = parseErrorResponse(validationErrors);
     return res.status(400).json(responseFormat({
       status: 'fail',
-      data: errorMessages
+      message: errorMessages
     }));
   }
   return next();
