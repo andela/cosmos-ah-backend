@@ -32,19 +32,6 @@ describe('POST /api/v1/article/bookmark', () => {
       });
   });
 
-  // it('invalid bookmark user id', (done) => {
-  //   agent.post('/api/v1/article/bookmark')
-  //     .send(invalidUserIdBookmark)
-  //     .end((_err, res) => {
-  //       assert.equal(res.status, 409);
-  //       const { body } = res;
-  //       assert.isObject(body);
-  //       assert.equal(body.status, 'error');
-  //       assert.equal(body.message, 'invalid user id');
-  //       done();
-  //     });
-  // });
-
   it('invalid bookmark article id', (done) => {
     agent.post('/api/v1/article/bookmark')
       .set('Authorization', JWT_TOKEN)
