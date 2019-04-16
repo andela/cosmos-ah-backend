@@ -36,8 +36,8 @@ export const JWT_TOKEN = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6Ijk3OWVhY
 
 export const JWT_TOKEN_AUTHOR = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjdlODI0ZWJhLTJhOWUtNDkzMy1hZmZhLTZhM2RhOTM3ZTQ3YyIsImZ1bGxOYW1lIjoiU2hleWkgU2F5IiwiYmlvIjoiSG9sZCBvbiBub3csIGFyZW4ndCB0aGVyZSBhbHJlYWR5IHNwZWNzIGZvciB0aGlzIGtpbmQgb2YgdGhpbmc_IC0gV2VsbC4uLiBuby4gV2hpbGUgdGhlcmUgYXJlIGEgZmV3IGhhbmR5IHNwZWNpZmljYXRpb25zIGZvciBkZWFsaW5nIHdpdGggSlNPTiBkYXRhLCBtb3N0IG5vdGFibHkgRG91Z2xhcyBDcm9ja2ZvcmQncyBKU09OUmVxdWVzdCBwcm9wb3NhbCwgdGhlcmUncyBub3RoaW5nIHRvIGFkZHJlc3MgdGhlIHByb2JsZW1zIG9mIGdlbmVyYWwgYXBwbGljYXRpb24tbGV2ZWwgbWVzc2FnaW5nLiBNb3JlIG9uIHRoaXMgbGF0ZXIuIiwiZW1haWwiOiJzZXlpQGdtYWlsLmNvbSIsInVzZXJuYW1lIjoic2V5aXNoYXkiLCJyb2xlIjoiYXV0aG9yIiwiaWF0IjoxNTU1MzUyMDI0LCJleHAiOjE1ODY4ODgwMjR9.qTt47wWVkUHFAiU4OBx4y8sZ0L1QnQYpALynpHiHy9Q';
 
-export const editPayload = {
-  id: '979eaa2e-5b8f-4103-8192-4639afae2ba9',
+export const payload = {
+  id: '979eaa2e-5b8f-4103-8192-4639afae2ba8',
   fullName: 'Tolulope Olaniyan',
   email: 'tolulope3gmail.com',
   username: 'tolulope',
@@ -53,4 +53,12 @@ export const createEditUser = {
   bio: 'I Love Javascript',
   imageUrl: 'http://waterease.herokuapp.com/images/board/comfort.com',
   notification: 'true'
+};
+
+export const editPayload = {
+  id: '979eaa2e-5b8f-4103-8192-4639afae2ba9',
+  email: 'tolulope3gmail.com',
+  username: 'tolulope',
+  bio: 'I Love Javascript',
+  imageUrl: 'http://waterease.herokuapp.com/images/board/comfort.com'
 };
