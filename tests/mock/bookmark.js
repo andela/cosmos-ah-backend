@@ -8,6 +8,6 @@ const invalidArticleIdBookmark = {
   articleId: '979eaa2e-5b8f-4103-8192-4639afae2777'
 };
 const invalidUUIDBookmark = {
-  articleId: '979eaa2e-5b8f-4103-8192-4639afxxxxx'
+  articleId: '979eaa2e-5b8f-4103-8192-4639afxxxxxx'
 };
 export { bookmark, invalidArticleIdBookmark, invalidUUIDBookmark };

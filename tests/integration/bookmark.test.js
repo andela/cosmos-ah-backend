@@ -2,7 +2,7 @@ import 'chai/register-should';
 import chai from 'chai';
 import chaiHttp from 'chai-http';
 import { startServer } from '../../src/server';
-import { JWT_TOKEN, bookmark, invalidArticleIdBookmark, invalidUUIDBookmark } from '../mock/bookmark';
+import { JWT_TOKEN, bookmark, invalidUUIDBookmark } from '../mock/bookmark';
 
 const { assert } = chai;
 let app = null;
@@ -28,19 +28,6 @@ describe('POST /api/v1/article/bookmark', () => {
         assert.property(body.data, 'id');
         assert.property(body.data, 'userId');
         assert.property(body.data, 'articleId');
-        done();
-      });
-  });
-
-  it('invalid bookmark article id', (done) => {
-    agent.post('/api/v1/article/bookmark')
-      .set('Authorization', JWT_TOKEN)
-      .send(invalidArticleIdBookmark)
-      .end((_err, res) => {
-        const { body } = res;
-        assert.isObject(body);
-        assert.equal(body.status, 'error');
-        assert.equal(body.message, 'invalid article id');
         done();
       });
   });
