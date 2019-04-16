@@ -2,7 +2,7 @@ import 'chai/register-should';
 import { expect } from 'chai';
 import { generateDummyWords } from '../../src/utils';
 import { validateArticle, computeArticleReadingTime } from '../../src/utils/article';
-import {ARTICLE} from '../mock/article';
+import { ARTICLE } from '../mock/article';
 
 
 describe('Article Utils test', () => {

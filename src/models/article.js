@@ -76,10 +76,6 @@ export default (sequelize, DataTypes) => {
         beforeUpdate(article) {
           const totalReadTime = computeArticleReadingTime(article.get('body'));
           article.set('totalReadTime', totalReadTime);
-        },
-        beforeSave(article) {
-          const totalReadTime = computeArticleReadingTime(article.get('body'));
-          article.set('totalReadTime', totalReadTime);
         }
       }
     }
