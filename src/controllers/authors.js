@@ -1,4 +1,5 @@
 import { User } from '../models';
+import { responseFormat, errorResponseFormat } from '../utils';
 
 const getAuthors = async (req, res) => {
   try {
@@ -7,14 +8,10 @@ const getAuthors = async (req, res) => {
     });
 
     if (authors) {
-      res.status(200).json({ status: 'success', data: authors });
-    }
-
-    if (authors.length === 0) {
-      res.status(200).json({ status: 'success', message: 'The is no Author on the database' });
+      return res.status(200).json(responseFormat({ status: 'success', data: authors }));
     }
   } catch (error) {
-    console.log(error);
+    return res.status(500).json(errorResponseFormat({ status: 'error', message: 'Something went wrong' }));
   }
 };
 export default getAuthors;

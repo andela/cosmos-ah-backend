@@ -131,6 +131,6 @@ router.get(
   bookmarkArticle,
 );
 
-router.get('/authors', Auth.verifyToken, getAuthors);
+router.get('/authors', Auth.authenticateUser, getAuthors);
 
 export default router;
