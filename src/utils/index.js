@@ -78,7 +78,6 @@ export const parseErrorResponse = (responses) => {
   return errorMessages;
 };
 
-<<<<<<< HEAD
 export const validateEditParameters = async (body) => {
   const rules = {
     fullName: 'required',
@@ -97,7 +96,7 @@ export const validateEditParameters = async (body) => {
 export const checkIDParamType = (param) => {
   if (!isUUID(param, '4')) { return false; }
   return true;
-=======
+};
 /**
  * @function generateDummyWords
  * @param {string} word
@@ -112,5 +111,4 @@ export const generateDummyWords = (word, number = 10) => {
     count += 1;
   }
   return newParagraph;
->>>>>>> 164796902-feature: complete article total read time feature
 };
