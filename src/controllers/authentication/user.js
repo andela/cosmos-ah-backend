@@ -33,6 +33,7 @@ export const createUser = async (req, res) => {
       }));
     }
   } catch (error) {
+    console.log(error);
     if (error.name === 'SequelizeUniqueConstraintError') {
       if (error.fields.email) { return res.status(409).json(errorResponseFormat({ status: 'fail', message: 'This Email Already Exist' })); }
 
