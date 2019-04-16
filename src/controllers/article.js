@@ -98,7 +98,7 @@ export const bookmarkArticle = async (req, res) => {
     }
     if (error.parent.file === 'uuid.c') {
       return res.status(409).json(errorResponseFormat({
-        message: 'invalid id of type UUID'
+        message: 'invalid artcile id of type UUID'
       }));
     }
   }

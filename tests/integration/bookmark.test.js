@@ -43,7 +43,6 @@ describe('POST /api/v1/:articleId/bookmark', () => {
       });
   });
 
-
   it('invalid UUID', (done) => {
     agent.get(`/api/v1/article/${invalidArticleUUID}/bookmark`)
       .set('Authorization', JWT_TOKEN)
@@ -51,8 +50,7 @@ describe('POST /api/v1/:articleId/bookmark', () => {
         assert.equal(res.status, 409);
         const { body } = res;
         assert.isObject(body);
-        assert.equal(body.status, 'error');
-        assert.equal(body.message, 'invalid id of type UUID');
+        assert.equal(body.message, 'invalid artcile id of type UUID');
         done();
       });
   });
