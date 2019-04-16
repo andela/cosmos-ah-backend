@@ -80,6 +80,6 @@ router.get('/auth/twitter/callback', passport.authenticate('twitter', { failureR
 
 router.post('/login', checkFields, passportAuth, login);
 
-router.post('/article/bookmark', Auth.authenticateUser, bookmarkValidation, bookmarkArticle);
+router.get('/article/:articleId/bookmark', Auth.authenticateUser, bookmarkValidation, bookmarkArticle);
 
 export default router;

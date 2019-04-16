@@ -63,22 +63,33 @@ export const deleteArticle = async (req, res) => {
 };
 export const DeleteArticle = async () => true;
 
+
 export const bookmarkArticle = async (req, res) => {
   const { id } = req.user;
-  const { body } = req;
+  const { articleId } = req.params;
 
   try {
-    const bookmark = await Bookmark.create({ ...body, userId: id });
-    return res.status(201).json(responseFormat({
-      status: 'success',
-      data: bookmark
-    }));
-  } catch (error) {
-    if (error.parent.constraint === 'bookmarks_userId_fkey') {
-      return res.status(409).json(errorResponseFormat({
-        message: 'invalid user id'
+    const [, isNewRecord] = await Bookmark.findOrCreate({
+      where: { articleId, userId: id }
+    });
+
+    if (!isNewRecord) {
+      const unbookmarked = await Bookmark.destroy({ where: { articleId, userId: id } });
+      if (unbookmarked) {
+        return res.status(200).json(responseFormat({
+          status: 'success',
+          message: 'Your article has been unbookmarked'
+        }));
+      }
+    } else {
+      return res.status(201).json(responseFormat({
+
+        status: 'success',
+        message: 'Your article has been bookmarked',
+
       }));
     }
+  } catch (error) {
     if (error.parent.constraint === 'bookmarks_articleId_fkey') {
       return res.status(409).json(errorResponseFormat({
         message: 'invalid article id'

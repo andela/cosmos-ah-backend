@@ -11,7 +11,7 @@ import { responseFormat, parseErrorResponse } from '../utils';
  */
 
 const bookmarkValidation = async (req, res, next) => {
-  const validate = await validateBookmark(req.body);
+  const validate = await validateBookmark({ ...req.body, articleId: req.params.articleId });
   if (validate.fails()) {
     const validationErrors = validate.errors.all();
     const errorMessages = parseErrorResponse(validationErrors);
