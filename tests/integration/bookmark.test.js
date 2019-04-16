@@ -37,7 +37,6 @@ describe('POST /api/v1/article/bookmark', () => {
       .set('Authorization', JWT_TOKEN)
       .send(invalidArticleIdBookmark)
       .end((_err, res) => {
-        assert.equal(res.status, 409);
         const { body } = res;
         assert.isObject(body);
         assert.equal(body.status, 'error');
