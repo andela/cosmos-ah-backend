@@ -10,12 +10,11 @@ chai.use(chaiHttp);
 let app = null;
 let agent = null;
 
-before(async () => {
-  app = await startServer(2000);
-  agent = chai.request(app);
-});
-
 describe('Article Tag Test', () => {
+  beforeEach(async () => {
+    app = await startServer(9000);
+    agent = chai.request(app);
+  });
   it('Should return error for adding tags to an article', () => {
     agent
       .put('/api/v1/articles/tags/979eaa2e-5b8f-4103-8192-4639afae2ba2')

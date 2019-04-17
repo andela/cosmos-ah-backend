@@ -65,7 +65,7 @@ describe('Article Report API test', () => {
         res.body.status.should.equal('fail');
         res.body.should.have.property('data');
         res.body.data.should.be.an('object');
-        res.body.data.description.should.equal('Please supply a description of your report');
+        res.body.data.description.should.eql(['Please supply a description of your report']);
         done();
       });
   });
