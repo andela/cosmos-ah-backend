@@ -13,6 +13,7 @@ import articleValidation, { verifyArticle, isAuthor } from '../middlewares/artic
 import { checkParam } from '../middlewares/checkParam';
 import checkEditBody from '../middlewares/editProfileValidator';
 import { editUser } from '../controllers/editUser';
+import { followUser } from '../controllers/follower';
 
 const router = Router();
 
@@ -63,6 +64,9 @@ router.get('/auth/google/callback', passport.authenticate('google', { failureRed
 
 router.get('/auth/linkedin/callback', linkedinCallback);
 router.get('/auth/linkedin', linkedinUser);
+
+// Route for user following and unfollowing
+router.post('/followers/:id/follow', checkParam, Auth.authenticateUser, followUser);
 
 /**
  * Resource handling signup
