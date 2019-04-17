@@ -2,6 +2,7 @@ import Validator from 'validatorjs';
 import slugify from 'slugify';
 import { readingTime } from 'reading-time-estimator';
 
+
 /**
  * @description This is the method for validating articles before inserting
  * @param {object} payload The request object
@@ -71,4 +72,35 @@ export const validateArticleTag = async (payload) => {
     tags: ['array'],
   };
   return new Validator(payload, rules);
+};
+
+/**
+ * @function validateArticleRating
+ * @param {*} payload
+ * @returns {Validator} Returns a validator for validating
+ * article ratings
+ */
+export const validateArticleRating = async (payload) => {
+  const rules = { rating: 'integer|min:1|max:5' };
+  const errorMessages = {
+    'min.rating': 'You cannot rate an article below 1',
+    'max.rating': 'You cannot rate an article above 5',
+  };
+  return new Validator(payload, rules, errorMessages);
+};
+
+/**
+ * @function userAuthoredThisArticle
+ * @param {*} Article
+ * @param {*} criteria An hash with `articleId` and `userId` props
+ * @returns {Promise<Boolean>} Returns true if article with id: `articleId`
+ * was authored by this user
+ */
+export const userAuthoredThisArticle = async (Article, { articleId, userId } = {}) => {
+  try {
+    const article = await Article.findOne({ where: { id: articleId, userId } });
+    return article !== null;
+  } catch (error) {
+    return false;
+  }
 };

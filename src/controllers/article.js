@@ -1,7 +1,14 @@
 import sequelize from 'sequelize';
-import { slug } from '../utils/article';
-import { responseHandler, responseFormat, errorResponseFormat } from '../utils';
-import { Article, Comment, Bookmark, Report, Sequelize } from '../models';
+import { Article, Comment, Bookmark, Report, Rating, Sequelize } from '../models';
+import { slug, userAuthoredThisArticle } from '../utils/article';
+import {
+  responseHandler,
+  responseFormat,
+  errorResponseFormat,
+  omitProps,
+  sendResponse,
+  handleDBErrors
+} from '../utils';
 
 /**
  * @name addArticle
@@ -186,16 +193,57 @@ export const reportArticle = async (req, res) => {
       },
     });
   } catch (error) {
-    if (error instanceof Sequelize.ForeignKeyConstraintError) {
-      return res.status(500).json({
-        status: 'error',
-        message: error.parent.detail,
+    handleDBErrors(error, { req, Sequelize }, message => sendResponse(res, 500, {
+      responseType: 'error',
+      data: message
+    }));
+  }
+};
+
+
+/**
+ * @function rateArticle
+ * @param {Request} req
+ * @param {Response} res
+ * @returns {Response} Returns server response to user
+ */
+export const rateArticle = async (req, res) => {
+  try {
+    const { rating: userRating } = req.body;
+    const { articleId } = req.params;
+    const { id: userId } = req.user;
+    const articleBelongsToUser = await userAuthoredThisArticle(Article, { articleId, userId });
+    if (articleBelongsToUser) {
+      return sendResponse(res, 409, {
+        responseType: 'fail',
+        data: 'You cannot rate your article'
       });
     }
-    return res.status(500).json({
-      status: 'error',
-      message: 'Invalid request. Please check and try again',
+    const [rating, created] = await Rating.findOrCreate({
+      where: { userId, articleId },
+      defaults: {
+        userId,
+        articleId,
+        value: userRating
+      },
     });
+
+    if (!created) {
+      const updatedRating = await rating.update({ value: userRating }, { returning: true });
+      return sendResponse(res, 200, {
+        responseType: 'success',
+        data: omitProps(updatedRating.dataValues, ['createdAt', 'updatedAt']),
+      });
+    }
+    return sendResponse(res, 201, {
+      responseType: 'success',
+      data: omitProps(rating.dataValues, ['createdAt', 'updatedAt']),
+    });
+  } catch (error) {
+    handleDBErrors(error, { req, Sequelize }, message => sendResponse(res, 500, {
+      responseType: 'error',
+      data: message
+    }));
   }
 };
 

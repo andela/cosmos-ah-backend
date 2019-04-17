@@ -114,3 +114,56 @@ export const generateDummyWords = (word, number = 10) => {
   }
   return newParagraph;
 };
+
+/*
+ * @function parseResponse
+ * @param {*} payload
+ * @returns {*} parses and returns new response
+*/
+const parseResponse = (payload) => {
+  const { data, responseType } = payload;
+  return {
+    status: responseType,
+    [`${responseType === 'error' ? 'message' : 'data'}`]: data
+  };
+};
+
+/**
+ * @function sendResponse
+ * @param {Response} res
+ * @param {Number} statusCode
+ * @param {*} payload  A hash of data and responseType.
+ * ResponseType is an enum of strings [fail, success, error]
+ * @returns {Response} Returns a response from the server
+ * based on the `responseType` property in `payload`
+ */
+export const sendResponse = (res, statusCode, payload) => {
+  const parsedResponse = parseResponse(payload);
+  return res.status(statusCode).json(parsedResponse);
+};
+
+/**
+ * @function omitProps
+ * @param {*} obj A hash of props and values from which to omit props from
+ * @param {Array<String>} props An array of props to omit
+ * @returns {*} A hash of the omitted props
+ */
+export const omitProps = (obj, props) => {
+  const filtered = {};
+  const filteredKeys = Object.keys(obj).filter(key => !props.includes(key));
+  /* eslint-disable no-restricted-syntax */
+  for (const key of filteredKeys) {
+    filtered[key] = obj[key];
+  }
+  return filtered;
+};
+
+export const handleDBErrors = (error, { req, Sequelize }, cb) => {
+  let errorResponseMessage = '';
+  if (error instanceof Sequelize.ForeignKeyConstraintError) {
+    errorResponseMessage = `userId:${req.user.id} is not present in table "users" or article:${req.params.articleId} is not present in table "articles"`;
+  } else {
+    errorResponseMessage = error.message;
+  }
+  return cb(errorResponseMessage);
+};

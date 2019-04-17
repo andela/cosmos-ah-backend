@@ -1,10 +1,15 @@
 import { expect } from 'chai';
 import {
-  parseErrorResponse, errorResponseFormat, generateDummyWords, checkIDParamType,
+  parseErrorResponse,
+  errorResponseFormat,
+  generateDummyWords,
+  handleDBErrors,
+  checkIDParamType
 } from '../../src/utils';
-import {
-  invalidArticleUUID
-} from '../mock/bookmark';
+import { invalidArticleUUID } from '../mock/bookmark';
+
+import Sequelize from '../mock/errors';
+
 
 describe('Util test', () => {
   describe('parseErrorResponse()', () => {
@@ -55,6 +60,33 @@ describe('Util test', () => {
     it('should return false if uuid value is invalid as an uuid format', () => {
       const paramsCheck = checkIDParamType(invalidArticleUUID);
       expect(paramsCheck).to.equal(false);
+    });
+  });
+
+  describe('handle db errors', () => {
+    const {
+      ForeignKeyConstraintError,
+      DatabaseError
+    } = Sequelize;
+
+    const fkError = new ForeignKeyConstraintError();
+    const dbError = new DatabaseError('Database error: table "articles" is not present');
+
+    const req = {
+      user: { id: '979eaa2e-5b8f-4103-8192-4639afae2ba' },
+      params: { articleId: '979eaa2e-5b8f-4103-8192-4639afae2ba5' }
+    };
+
+    it('should return error', () => {
+      handleDBErrors(fkError, { req, Sequelize }, (message) => {
+        message.should.equal(`userId:${req.user.id} is not present in table "users" or article:${req.params.articleId} is not present in table "articles"`);
+      });
+    });
+
+    it('should return error 2', () => {
+      handleDBErrors(dbError, { req, Sequelize }, (message) => {
+        message.should.equal('Database error: table "articles" is not present');
+      });
     });
   });
 });

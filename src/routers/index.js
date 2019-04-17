@@ -8,7 +8,8 @@ import {
   deleteArticle,
   reportArticle,
   bookmarkArticle,
-  editArticleTag
+  editArticleTag,
+  rateArticle
 } from '../controllers/article';
 import checkFields from '../middlewares/auth/loginValidator';
 import Auth from '../middlewares/authenticator';
@@ -29,7 +30,8 @@ import {
   isAuthor,
   getArticleHandler,
   articleReportValidation,
-  articleTagValidation
+  articleTagValidation,
+  articleRatingValidation
 } from '../middlewares/articles';
 import { checkParam } from '../middlewares/checkParam';
 import checkEditBody from '../middlewares/editProfileValidator';
@@ -145,5 +147,7 @@ router.get(
 );
 
 router.get('/authors', Auth.authenticateUser, getAuthors);
+
+router.post('/articles/:articleId/ratings', Auth.authenticateUser, articleRatingValidation, rateArticle);
 
 export default router;
