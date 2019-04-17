@@ -21,8 +21,8 @@ describe('POST /api/v1/:articleId/bookmark', () => {
     agent.get(`/api/v1/article/${articleId}/bookmark`)
       .set('Authorization', JWT_TOKEN)
       .end((_err, res) => {
-        assert.equal(res.status, 201);
-        const { body } = res;
+        const { status, body } = res;
+        assert.equal(status, 201);
         assert.isObject(body);
         assert.equal(body.status, 'success');
         assert.equal(body.message, 'Your article has been bookmarked');
@@ -34,8 +34,8 @@ describe('POST /api/v1/:articleId/bookmark', () => {
     agent.get(`/api/v1/article/${articleId}/bookmark`)
       .set('Authorization', JWT_TOKEN)
       .end((_err, res) => {
-        assert.equal(res.status, 200);
-        const { body } = res;
+        const { status, body } = res;
+        assert.equal(status, 200);
         assert.isObject(body);
         assert.equal(body.status, 'success');
         assert.equal(body.message, 'Your article has been unbookmarked');
@@ -43,12 +43,12 @@ describe('POST /api/v1/:articleId/bookmark', () => {
       });
   });
 
-  it('invalid UUID', (done) => {
+  it('invalid article UUID', (done) => {
     agent.get(`/api/v1/article/${invalidArticleUUID}/bookmark`)
       .set('Authorization', JWT_TOKEN)
       .end((_err, res) => {
-        assert.equal(res.status, 409);
-        const { body } = res;
+        const { status, body } = res;
+        assert.equal(status, 404);
         assert.isObject(body);
         assert.equal(body.message, 'invalid artcile id of type UUID');
         done();

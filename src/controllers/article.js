@@ -92,12 +92,12 @@ export const bookmarkArticle = async (req, res) => {
     }
   } catch (error) {
     if (error.parent.constraint === 'bookmarks_articleId_fkey') {
-      return res.status(409).json(errorResponseFormat({
+      return res.status(404).json(errorResponseFormat({
         message: 'invalid article id'
       }));
     }
     if (error.parent.file === 'uuid.c') {
-      return res.status(409).json(errorResponseFormat({
+      return res.status(404).json(errorResponseFormat({
         message: 'invalid artcile id of type UUID'
       }));
     }
