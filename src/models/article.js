@@ -45,16 +45,8 @@ export default (sequelize, DataTypes) => {
         type: DataTypes.BOOLEAN,
         defaultValue: false,
       },
-      tagList: {
-        type: DataTypes.STRING,
-        allowNull: true,
-      },
       tags: {
         type: DataTypes.ARRAY(DataTypes.TEXT),
-        defaultValue: [],
-      },
-      likes: {
-        type: DataTypes.ARRAY(DataTypes.STRING),
         defaultValue: [],
       },
       favouritesCount: {

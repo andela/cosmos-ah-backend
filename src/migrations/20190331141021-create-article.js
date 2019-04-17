@@ -40,16 +40,8 @@ export default {
       type: Sequelize.BOOLEAN,
       defaultValue: false,
     },
-    tagList: {
-      type: Sequelize.STRING,
-      allowNull: true,
-    },
     tags: {
       type: Sequelize.ARRAY(Sequelize.TEXT),
-      defaultValue: [],
-    },
-    likes: {
-      type: Sequelize.ARRAY(Sequelize.STRING),
       defaultValue: [],
     },
     favouritesCount: {
