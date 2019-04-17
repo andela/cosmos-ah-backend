@@ -27,6 +27,7 @@ import articleValidation, {
   verifyArticle,
   isAuthor,
   articleReportValidation,
+  articleTagValidation
 } from '../middlewares/articles';
 import { checkParam } from '../middlewares/checkParam';
 import checkEditBody from '../middlewares/editProfileValidator';
@@ -71,6 +72,10 @@ router
 router
   .route('/articles/:articleId/escalate')
   .post(articleReportValidation, Auth.authenticateUser, reportArticle);
+
+//  Route for adding tags to an article
+router.put('/articles/tags/:id', Auth.authenticateUser, articleTagValidation, editArticleTag);
+
 
 // Route for facebook Authentication
 router.get(

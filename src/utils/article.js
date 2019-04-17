@@ -61,3 +61,14 @@ export const getArticleReportValidator = (payload) => {
   };
   return new Validator(payload, rules, errorMessages);
 };
+/**
+ * @description This is the method for validating article Tags before inserting
+ * @param {object} payload The request object
+ * @returns {function} Returns validation object
+ */
+export const validateArticleTag = async (payload) => {
+  const rules = {
+    tags: ['array'],
+  };
+  return new Validator(payload, rules);
+};
