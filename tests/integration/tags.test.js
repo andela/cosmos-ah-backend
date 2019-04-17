@@ -11,7 +11,7 @@ let app = null;
 let agent = null;
 
 before(async () => {
-  app = await startServer(4000);
+  app = await startServer(5100);
   agent = chai.request(app);
 });
 

@@ -14,25 +14,19 @@ export const addComment = async (req, res) => {
 
   try {
     const comment = await Comment.create({ ...body, userId: id });
+
     return res.status(201).json(responseFormat({
-      data: { comment },
-      status: 'success'
+      data: comment,
+      status: 'success',
     }));
   } catch (error) {
-    console.log(error);
-
-    if (error.parent.constraint === 'comments_userId_fkey') {
-      return res.status(409).json(errorResponseFormat({
-        message: 'invalid user id'
-      }));
-    }
     if (error.parent.constraint === 'comments_articleId_fkey') {
-      return res.status(409).json(errorResponseFormat({
+      return res.status(404).json(errorResponseFormat({
         message: 'invalid article id'
       }));
     }
     if (error.parent.file === 'uuid.c') {
-      return res.status(409).json(errorResponseFormat({
+      return res.status(404).json(errorResponseFormat({
         message: 'invalid id of type UUID'
       }));
     }
