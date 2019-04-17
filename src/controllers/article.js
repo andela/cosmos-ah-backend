@@ -60,6 +60,35 @@ export const editArticle = async (req, res) => {
 };
 
 /**
+ * @name editArticleTag
+ * @description This is the method for updating Tags of an article
+ * @param {object} req The request object
+ * @param {object} res The response object
+ * @returns {object} Returns the updated Tags.
+ */
+export const editArticleTag = async (req, res) => {
+  const success = 1;
+  try {
+    const { id } = req.params;
+    const { tags } = req.body;
+    const { id: userId } = req.user;
+    const articleTag = await Article.update({ tags }, { where: { id, userId }, returning: true });
+    if (success === articleTag[0]) {
+      const [, [updatedArticleTag]] = articleTag;
+      return responseHandler(res, 200, { status: 'success', message: 'Article Tags Updated Successfully!', data: { tags: updatedArticleTag.tags } });
+    }
+    return responseHandler(res, 404, { status: 'error', message: 'This Article does not exist' });
+  } catch (error) {
+    if (error.name === 'SequelizeDatabaseError') {
+      if (error.parent.file === 'uuid.c') {
+        return responseHandler(res, 400, { status: 'error', message: 'Invalid articleId supplied' });
+      }
+    }
+    return responseHandler(res, 500, { status: 'error', message: 'Something Went Wrong. Please Retry later.' });
+  }
+};
+
+/**
  * @name deleteArticle
  * @description This is the method for deleting an article
  * @param {object} req The request object

@@ -8,6 +8,7 @@ import {
   deleteArticle,
   reportArticle,
   bookmarkArticle,
+  editArticleTag
 } from '../controllers/article';
 import checkFields from '../middlewares/auth/loginValidator';
 import Auth from '../middlewares/authenticator';
@@ -26,6 +27,7 @@ import articleValidation, {
   verifyArticle,
   isAuthor,
   articleReportValidation,
+  articleTagValidation
 } from '../middlewares/articles';
 import { checkParam } from '../middlewares/checkParam';
 import checkEditBody from '../middlewares/editProfileValidator';
@@ -70,6 +72,10 @@ router
   .route('/articles/:articleId/escalate')
   .post(articleReportValidation, Auth.authenticateUser, reportArticle);
 
+//  Route for adding tags to an article
+router.put('/articles/tags/:id', Auth.authenticateUser, articleTagValidation, editArticleTag);
+
+
 // Route for facebook Authentication
 router.get(
   '/auth/facebook',
@@ -78,6 +84,9 @@ router.get(
     scope: ['email'],
   }),
 );
+
+//  Route for adding tags to an article
+router.put('/articles/tags/:id', Auth.authenticateUser, editArticleTag);
 
 router.get(
   '/auth/facebook/callback',
@@ -113,6 +122,7 @@ router.post('/followers/:id/follow', checkParam, Auth.authenticateUser, followUs
 // Route for editing a profile
 router.put('/profile/edit', Auth.authenticateUser, checkEditBody, editUser);
 
+// Route for viewing a profile details
 router.get('/profile/view/:id', Auth.authenticateUser, viewUser);
 
 // route for twitter authentication

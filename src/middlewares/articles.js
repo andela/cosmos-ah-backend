@@ -1,4 +1,4 @@
-import { validateArticle, getArticleReportValidator } from '../utils/article';
+import { validateArticle, getArticleReportValidator, validateArticleTag } from '../utils/article';
 import { findById } from '../utils/query';
 import { Article } from '../models';
 import { responseHandler, parseErrorResponse } from '../utils';
@@ -69,6 +69,23 @@ export const articleReportValidation = (req, res, next) => {
     return res.status(400).json({ status: 'fail', data: parseErrorResponse(validator.errors.all()) });
   }
   next();
+};
+
+/**
+ *@name articleTagValidation
+ *@description Middleware for validating article payload
+ * @param {object} req Request object
+ * @param {object} res Response object
+ * @param {function} next Calls the next function
+ * @returns {object} Returns status code of 400 where validation fails
+ * @returns {function} Calls next function/action
+ */
+export const articleTagValidation = async (req, res, next) => {
+  const validate = await validateArticleTag(req.body);
+  if (validate.fails()) {
+    return res.status(400).json({ status: 'fail', error: validate.errors.all() });
+  }
+  return next();
 };
 
 export default articleValidation;

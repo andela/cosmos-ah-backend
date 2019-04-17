@@ -16,7 +16,7 @@ describe('Signup Authentication Test', () => {
     agent = chai.request(app);
   });
 
-  it('Should return success for signup route', (done) => {
+  it('Should return success for signup route', () => {
     agent
       .post('/api/v1/signup')
       .send(createUserError)
@@ -25,7 +25,6 @@ describe('Signup Authentication Test', () => {
         expect(res.body)
           .to.have.property('status')
           .eql('fail');
-        done();
       });
   });
 });
