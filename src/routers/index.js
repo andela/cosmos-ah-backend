@@ -61,8 +61,7 @@ router
   .route('/articles/:id?')
   .post(Auth.authenticateUser, articleValidation, addArticle)
   .delete(checkParam, Auth.authenticateUser, verifyArticle, isAuthor, deleteArticle)
-  .put(checkParam, Auth.authenticateUser, articleValidation, verifyArticle, isAuthor, editArticle)
-  .put(checkParam, Auth.authenticateUser, isAuthor, editArticleTag);
+  .put(checkParam, Auth.authenticateUser, articleValidation, verifyArticle, isAuthor, editArticle);
 
 router
   .post('/login', checkFields, passportAuth, login)
