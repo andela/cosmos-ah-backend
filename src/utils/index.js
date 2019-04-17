@@ -113,7 +113,7 @@ export const generateDummyWords = (word, number = 10) => {
     count += 1;
   }
   return newParagraph;
-}
+};
 
 /*
  * @function parseResponse

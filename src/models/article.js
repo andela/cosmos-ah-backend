@@ -77,8 +77,7 @@ export default (sequelize, DataTypes) => {
           article.set('totalReadTime', totalReadTime);
         }
       }
-    }
-  );
+    });
   Article.associate = (models) => {
     Article.belongsTo(models.User, {
       foreignKey: 'userId',
