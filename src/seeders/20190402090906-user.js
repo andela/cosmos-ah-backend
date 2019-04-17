@@ -48,6 +48,20 @@ export default {
         updatedAt: new Date(),
       },
       {
+        id: '979eaa2e-5b8f-4103-8192-4639afae2ba7',
+        fullName: 'Raymond Akalonu',
+        email: 'raymond@gmail.com',
+        username: 'Raymond',
+        password: '$2a$10$vZU/3YSDac3JTh53Ti0SPugEi2.6cfl2iBmN/guxiXOAKnxoprcVC',
+        bio:
+            "Hold on now, aren't there already specs for this kind of thing? - Well... no. While there are a few handy specifications for dealing with JSON data, most notably Douglas Crockford's JSONRequest proposal, there's nothing to address the problems of general application-level messaging. More on this later.",
+        imageUrl: 'http://waterease.herokuapp.com/images/board/comfort.jpg',
+        notification: true,
+        role: 'admin',
+        createdAt: new Date(),
+        updatedAt: new Date(),
+      },
+      {
         id: '7e824eba-2a9e-4933-affa-6a3da937e47c',
         fullName: 'Sheyi Say',
         email: 'seyi@gmail.com',
