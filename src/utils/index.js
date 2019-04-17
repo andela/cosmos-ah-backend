@@ -20,7 +20,7 @@ export const validateParameters = async (body) => {
     fullName: 'required|string',
     email: 'required|email',
     password: ['required', 'regex:/^(?=.*[a-z])(?=.*[A-Z])(?=.*[0-9])(?=.*[!@#\\$%\\^&\\*])(?=.{8,})/i'],
-    username: 'required|string',
+    username: ['required', 'string', 'regex:/^[a-z]+$/'],
   };
   const errorMessages = {
     'string.fullName': 'The:attribute must be a string!',
@@ -55,9 +55,9 @@ export const responseHandler = (res, code, payload) => {
  * @returns {object} Returns an error response object
  */
 export const errorResponseFormat = (response) => {
-  const { message } = response;
+  const { message, status } = response;
   return {
-    status: 'error',
+    status,
     message
   };
 };
@@ -78,6 +78,16 @@ export const parseErrorResponse = (responses) => {
   return errorMessages;
 };
 
+export const validateEditParameters = async (body) => {
+  const rules = {
+    fullName: 'required',
+    notification: 'required',
+    bio: 'required',
+    imageUrl: 'required'
+  };
+  return new Validator(body, rules);
+};
+
 /**
  * @function checkIDParamType
  * @param {void|string} param
@@ -86,4 +96,19 @@ export const parseErrorResponse = (responses) => {
 export const checkIDParamType = (param) => {
   if (!isUUID(param, '4')) { return false; }
   return true;
+};
+/**
+ * @function generateDummyWords
+ * @param {string} word
+ * @param {number} number
+ * @returns {string} Returns `word` duplicated `number` times
+ */
+export const generateDummyWords = (word, number = 10) => {
+  let newParagraph = '';
+  let count = 1;
+  while (count < number) {
+    newParagraph += ` ${word}`;
+    count += 1;
+  }
+  return newParagraph;
 };

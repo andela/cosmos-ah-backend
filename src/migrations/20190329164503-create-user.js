@@ -42,6 +42,13 @@ export default {
       type: Sequelize.BOOLEAN,
       defaultValue: false,
     },
+    verified: {
+      type: Sequelize.BOOLEAN,
+      defaultValue: false,
+    },
+    verificationToken: {
+      type: Sequelize.STRING,
+    },
     role: {
       type: Sequelize.ENUM('admin', 'author', 'user'),
       defaultValue: 'user',

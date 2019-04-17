@@ -28,11 +28,6 @@ export default (sequelize, DataTypes) => {
     }
   );
   Follower.associate = (models) => {
-    Follower.belongsTo(models.Article, {
-      foreignKey: 'articleId',
-      as: 'article',
-      onDelete: 'CASCADE',
-    });
     Follower.belongsTo(models.User, {
       foreignKey: 'userId',
       as: 'user',

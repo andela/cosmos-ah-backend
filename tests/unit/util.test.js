@@ -1,5 +1,7 @@
 import { expect } from 'chai';
-import { parseErrorResponse, errorResponseFormat } from '../../src/utils';
+import {
+  parseErrorResponse, errorResponseFormat, generateDummyWords
+} from '../../src/utils';
 
 describe('Util test', () => {
   describe('parseErrorResponse()', () => {
@@ -22,8 +24,17 @@ describe('Util test', () => {
   describe('errorResponseFormat()', () => {
     it('should return error response', () => {
       const response = errorResponseFormat({ message: 'server is down at the moment' });
-      expect(response.status).to.equal('error');
       expect(response.message).to.equal('server is down at the moment');
+    });
+  });
+
+  describe('generateDummyWords()', () => {
+    it('should generate same word multiple times', () => {
+      generateDummyWords('word', 20).split(' ').length.should.equal(20);
+    });
+
+    it('should generate same word multiple times', () => {
+      generateDummyWords('word').split(' ').length.should.equal(10);
     });
   });
 });

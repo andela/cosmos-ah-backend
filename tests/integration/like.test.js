@@ -14,10 +14,9 @@ describe('LIKE ARTICLE', () => {
     app = await startServer(6600);
     agent = chai.request(app);
   });
-
   it('should like an article', (done) => {
     agent
-      .patch('/api/v1/articles/979eaa2e-5b8f-4103-8192-4639afae2ba7/like')
+      .patch('/api/v1/articles/979eaa2e-5b8f-4103-8192-4639afae2ba8/like')
       .set('Authorization', JWT_TOKEN)
       .end((err, res) => {
         expect(res.statusCode).to.equal(200);
@@ -28,7 +27,7 @@ describe('LIKE ARTICLE', () => {
 
   it('should unlike an article', (done) => {
     agent
-      .patch('/api/v1/articles/979eaa2e-5b8f-4103-8192-4639afae2ba7/like')
+      .patch('/api/v1/articles/979eaa2e-5b8f-4103-8192-4639afae2ba8/like')
       .set('Authorization', JWT_TOKEN)
       .end((err, res) => {
         expect(res.statusCode).to.equal(200);

@@ -1,3 +1,5 @@
+import { computeArticleReadingTime } from '../utils/article';
+
 /**
  * @name init
  * @param {sequelize} sequelize
@@ -59,9 +61,23 @@ export default (sequelize, DataTypes) => {
         type: DataTypes.INTEGER,
         defaultValue: 0,
       },
+      totalReadTime: {
+        type: DataTypes.INTEGER,
+        defaultValue: 1,
+      },
     },
     {
       tableName: 'articles',
+      hooks: {
+        beforeCreate(article) {
+          const totalReadTime = computeArticleReadingTime(article.get('body'));
+          article.set('totalReadTime', totalReadTime);
+        },
+        beforeUpdate(article) {
+          const totalReadTime = computeArticleReadingTime(article.get('body'));
+          article.set('totalReadTime', totalReadTime);
+        }
+      }
     }
   );
   Article.associate = (models) => {

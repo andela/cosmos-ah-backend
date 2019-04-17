@@ -1,11 +1,11 @@
 import chai from 'chai';
 import chaiHttp from 'chai-http';
 import jwt from 'jsonwebtoken';
+import { createUser, createUserEmailError, editPayload, createUserError, createEditUser } from '../mock/user';
+import Auth from '../../src/middlewares/authenticator';
 import { startServer } from '../../src/server';
-import { createUser, createUserEmailError, /* createUserOtherError */ } from '../mock/user';
 
 const { expect } = chai;
-
 chai.use(chaiHttp);
 
 describe('Signup Authentication Test', () => {
@@ -49,7 +49,7 @@ describe('Signup Authentication Test', () => {
         expect(res).to.have.status(409);
         expect(res.body)
           .to.have.property('status')
-          .eql('error');
+          .eql('fail');
         expect(res.body).to.have.property('message')
           .eql('This Email Already Exist');
         done();
@@ -64,25 +64,42 @@ describe('Signup Authentication Test', () => {
         expect(res).to.have.status(409);
         expect(res.body)
           .to.have.property('status')
-          .eql('error');
+          .eql('fail');
         expect(res.body).to.have.property('message')
           .eql('This Username Already Exist');
         done();
       });
   });
 
-  // it('Should return error for other errors', (done) => {
-  //   agent
-  //     .post('/api/v1/signup')
-  //     .send(createUserOtherError)
-  //     .end((err, res) => {
-  //       expect(res).to.have.status(500);
-  //       expect(res.body)
-  //         .to.have.property('status')
-  //         .eql('error');
-  //       expect(res.body).to.have.property('message')
-  //         .eql('Something Went Wrong');
-  //       done();
-  //     });
-  // });
+  it('Should return success for editing a profile', (done) => {
+    agent
+      .put('/api/v1/profile/edit')
+      .set({ Authorization: Auth.generateToken(editPayload) })
+      .send(createEditUser)
+      .end((err, res) => {
+        expect(res).to.have.status(200);
+        expect(res.body)
+          .to.have.property('status')
+          .eql('success');
+        expect(res.body.data).to.have.property('message')
+          .eql('User Profile Updated Successfully');
+        done();
+      });
+  });
+
+  it('Should return error for editing a profile', (done) => {
+    agent
+      .put('/api/v1/profile/edit')
+      .set({ Authorization: Auth.generateToken(editPayload) })
+      .send(createUserError)
+      .end((err, res) => {
+        expect(res).to.have.status(400);
+        expect(res.body)
+          .to.have.property('status')
+          .eql('fail');
+        expect(res.body.message).to.have.property('notification')
+          .eql('The notification field is required.');
+        done();
+      });
+  });
 });

@@ -5,11 +5,15 @@ import { addArticle, editArticle, deleteArticle } from '../controllers/article';
 import checkFields from '../middlewares/auth/loginValidator';
 import Auth from '../middlewares/authenticator';
 import socialRedirect from '../controllers/authentication/socialRedirect';
-import { login, createUser, linkedinUser, linkedinCallback } from '../controllers/authentication/user';
+import { login, createUser, verifyUser, linkedinUser, linkedinCallback, viewUser } from '../controllers/authentication/user';
 import checkBody from '../middlewares/signUpValidator';
 import likeArticle from '../controllers/like';
-import articleValidation, { verifyArticle } from '../middlewares/articles';
+import articleValidation, { verifyArticle, isAuthor } from '../middlewares/articles';
 import { checkParam } from '../middlewares/checkParam';
+import checkEditBody from '../middlewares/editProfileValidator';
+import { editUser } from '../controllers/editUser';
+import { followUser } from '../controllers/follower';
+
 
 const router = Router();
 
@@ -17,7 +21,7 @@ router.get('/', (req, res) => res.status(200).json({
   message: 'Welcome to the Authors Haven API',
 }));
 
-router.route('/articles/:id/like').patch(Auth.authenticateUser, checkParam, verifyArticle, likeArticle);
+router.route('/articles/:id/like').patch(checkParam, Auth.authenticateUser, verifyArticle, likeArticle);
 
 /**
  * Resource handling articles
@@ -33,10 +37,13 @@ router.route('/articles/:id/like').patch(Auth.authenticateUser, checkParam, veri
 router
   .route('/articles/:id?')
   .post(Auth.authenticateUser, articleValidation, addArticle)
-  .delete(deleteArticle)
-  .put(Auth.authenticateUser, articleValidation, verifyArticle, editArticle);
+  .delete(checkParam, Auth.authenticateUser, verifyArticle, isAuthor, deleteArticle)
+  .put(checkParam, Auth.authenticateUser, articleValidation, verifyArticle, isAuthor, editArticle);
 
-router.post('/login', checkFields, passportAuth, login);
+router.post('/login', checkFields, passportAuth, login)
+  .post('/signup', checkBody, createUser)
+  .get('/verify/:id/:verificationToken', verifyUser);
+
 
 // Route for facebook Authentication
 router.get(
@@ -68,15 +75,22 @@ router.get('/auth/linkedin', linkedinUser);
  * @returns Response Object
  */
 
+// Route for editing a profile
+router.put('/profile/edit', Auth.authenticateUser, checkEditBody, editUser);
+
+router.get('/profile/view/:id', Auth.authenticateUser, viewUser);
+
 router
   .post('/signup', checkBody, createUser);
+router.post('/login', checkFields, login);
+
+// Route for user following and unfollowing
+router.post('/followers/:id/follow', checkParam, Auth.authenticateUser, followUser);
+
 
 // route for twitter authentication
 router.get('/auth/twitter', passport.authenticate('twitter'));
 
 router.get('/auth/twitter/callback', passport.authenticate('twitter', { failureRedirect: '/api/v1/auth/login' }), socialRedirect);
-
-
-router.post('/login', checkFields, passportAuth, login);
 
 export default router;
