@@ -66,7 +66,7 @@ export const getArticleReportValidator = (payload) => {
  * @param {object} payload The request object
  * @returns {function} Returns validation object
  */
-export const validateArticleTag = async (payload) => {
+export const validateArticleTag = (payload) => {
   const rules = {
     tags: ['array'],
   };
