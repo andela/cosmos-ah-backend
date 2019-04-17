@@ -8,6 +8,7 @@ import {
   deleteArticle,
   reportArticle,
   bookmarkArticle,
+  editArticleTag
 } from '../controllers/article';
 import checkFields from '../middlewares/auth/loginValidator';
 import Auth from '../middlewares/authenticator';
@@ -59,7 +60,8 @@ router
   .route('/articles/:id?')
   .post(Auth.authenticateUser, articleValidation, addArticle)
   .delete(checkParam, Auth.authenticateUser, verifyArticle, isAuthor, deleteArticle)
-  .put(checkParam, Auth.authenticateUser, articleValidation, verifyArticle, isAuthor, editArticle);
+  .put(checkParam, Auth.authenticateUser, articleValidation, verifyArticle, isAuthor, editArticle)
+  .put(checkParam, Auth.authenticateUser, isAuthor, editArticleTag);
 
 router
   .post('/login', checkFields, passportAuth, login)
@@ -78,6 +80,9 @@ router.get(
     scope: ['email'],
   }),
 );
+
+//  Route for adding tags to an article
+router.put('/articles/tags/:id', Auth.authenticateUser, editArticleTag);
 
 router.get(
   '/auth/facebook/callback',
@@ -113,6 +118,7 @@ router.post('/followers/:id/follow', checkParam, Auth.authenticateUser, followUs
 // Route for editing a profile
 router.put('/profile/edit', Auth.authenticateUser, checkEditBody, editUser);
 
+// Route for viewing a profile details
 router.get('/profile/view/:id', Auth.authenticateUser, viewUser);
 
 // route for twitter authentication

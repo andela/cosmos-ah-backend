@@ -26,3 +26,7 @@ export const MALFORMED_ARTICLE = {
   imageUrl: 'https://picsum.photos/200/300',
   tags: 'jh3rfbjhf4jfhrfjh4j'
 };
+
+export const articleTag = {
+  tags: ['java', 'ruby']
+};
