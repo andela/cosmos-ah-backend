@@ -47,7 +47,6 @@ describe('POST /api/v1/:articleId/bookmark', () => {
     agent.get(`/api/v1/article/${invalidArticleId}/bookmark`)
       .set('Authorization', JWT_TOKEN)
       .end((_err, res) => {
-        assert.equal(res.status, 409);
         const { body } = res;
         assert.isObject(body);
         assert.equal(body.message, 'invalid article id');
