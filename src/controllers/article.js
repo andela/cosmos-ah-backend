@@ -1,6 +1,6 @@
 import { slug } from '../utils/article';
-import { Article } from '../models';
-import { responseHandler } from '../utils';
+import { responseHandler, responseFormat, errorResponseFormat } from '../utils';
+import { Article, Bookmark } from '../models';
 
 
 /**
@@ -60,5 +60,46 @@ export const deleteArticle = async (req, res) => {
     if (destroyArticle >= deleted) { return responseHandler(res, 202, { status: 'success', message: 'Your article has been removed.' }); }
   } catch (error) {
     return responseHandler(res, 500, { status: 'error', message: 'We are responsible for failing to update your article, please try again!' });
+  }
+};
+export const DeleteArticle = async () => true;
+
+
+export const bookmarkArticle = async (req, res) => {
+  const { id } = req.user;
+  const { articleId } = req.params;
+
+  try {
+    const [, isNewRecord] = await Bookmark.findOrCreate({
+      where: { articleId, userId: id }
+    });
+
+    if (!isNewRecord) {
+      const unbookmarked = await Bookmark.destroy({ where: { articleId, userId: id } });
+      if (unbookmarked) {
+        return res.status(200).json(responseFormat({
+          status: 'success',
+          message: 'Your article has been unbookmarked'
+        }));
+      }
+    } else {
+      return res.status(201).json(responseFormat({
+
+        status: 'success',
+        message: 'Your article has been bookmarked',
+
+      }));
+    }
+  } catch (error) {
+    if (error.parent.constraint === 'bookmarks_articleId_fkey') {
+      return res.status(404).json(errorResponseFormat({
+        message: 'invalid article id'
+      }));
+    }
+    if (error.parent.file === 'uuid.c') {
+      return res.status(404).json(errorResponseFormat({
+        message: 'invalid artcile id of type UUID'
+      }));
+    }
   }
 };
