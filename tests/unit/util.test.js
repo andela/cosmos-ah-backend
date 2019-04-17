@@ -1,7 +1,10 @@
 import { expect } from 'chai';
 import {
-  parseErrorResponse, errorResponseFormat, generateDummyWords
+  parseErrorResponse, errorResponseFormat, generateDummyWords, checkIDParamType,
 } from '../../src/utils';
+import {
+  invalidArticleUUID
+} from '../mock/bookmark';
 
 describe('Util test', () => {
   describe('parseErrorResponse()', () => {
@@ -35,6 +38,23 @@ describe('Util test', () => {
 
     it('should generate same word multiple times', () => {
       generateDummyWords('word').split(' ').length.should.equal(10);
+    });
+  });
+
+  describe('checkIDParamType()', () => {
+    it('should return true if uuid value is valid', () => {
+      const paramsCheck = checkIDParamType('979eaa2e-5b8f-4103-8192-4639afae2ba7');
+      expect(paramsCheck).to.equal(true);
+    });
+
+    it('should return false if uuid value is invalid as a string', () => {
+      const paramsCheck = checkIDParamType('9nme wfkf ekn efknemfkr fekrm fekfm lefm ekwf erfkwerm k');
+      expect(paramsCheck).to.equal(false);
+    });
+
+    it('should return false if uuid value is invalid as an uuid format', () => {
+      const paramsCheck = checkIDParamType(invalidArticleUUID);
+      expect(paramsCheck).to.equal(false);
     });
   });
 });

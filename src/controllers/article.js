@@ -222,7 +222,7 @@ export const getAllArticles = async (req, res) => {
         group: 'comments.id',
       }]
     });
-    return responseHandler(res, 202, { status: 'success', data: articles });
+    return responseHandler(res, 200, { status: 'success', data: articles });
   } catch (error) {
     return responseHandler(res, 500, { status: 'error', message: 'An internal server error occured!' });
   }
@@ -250,7 +250,7 @@ export const getAnArticleByID = async (req, res) => {
       }]
     });
     if (!article) { return responseHandler(res, 404, { status: 'fail', message: 'Article not found!' }); }
-    return responseHandler(res, 202, { status: 'success', data: article });
+    return responseHandler(res, 200, { status: 'success', data: article });
   } catch (error) {
     return responseHandler(res, 500, { status: 'error', message: 'An internal server error occured!' });
   }
