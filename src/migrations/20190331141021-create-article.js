@@ -36,6 +36,10 @@ export default {
       type: Sequelize.STRING,
       allowNull: true,
     },
+    published: {
+      type: Sequelize.BOOLEAN,
+      defaultValue: false,
+    },
     tagList: {
       type: Sequelize.STRING,
       allowNull: true,

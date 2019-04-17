@@ -1,6 +1,7 @@
+import sequelize from 'sequelize';
 import { slug } from '../utils/article';
 import { responseHandler, responseFormat, errorResponseFormat } from '../utils';
-import { Article, Bookmark, Report, Sequelize } from '../models';
+import { Article, Comment, Bookmark, Report, Sequelize } from '../models';
 
 /**
  * @name addArticle
@@ -195,5 +196,62 @@ export const reportArticle = async (req, res) => {
       status: 'error',
       message: 'Invalid request. Please check and try again',
     });
+  }
+};
+
+/**
+ * @name getAllArticles
+ * @description This is the method for deleting an article
+ * @param {object} req The request object
+ * @param {object} res The response object
+ * @returns {int} Returns true after deleting an article
+ * @returns {object} Returns response object
+ */
+export const getAllArticles = async (req, res) => {
+  try {
+    const articles = await Article.findAll({
+      where: { published: true },
+      order: [['createdAt', 'ASC']],
+      group: ['Article.id', 'comments.id'],
+      include: [{
+        model: Comment,
+        as: 'comments',
+        attributes: [
+          [sequelize.fn('COUNT', sequelize.col('comments.id')), 'all'],
+        ],
+        group: 'comments.id',
+      }]
+    });
+    return responseHandler(res, 202, { status: 'success', data: articles });
+  } catch (error) {
+    return responseHandler(res, 500, { status: 'error', message: 'An internal server error occured!' });
+  }
+};
+
+/**
+ * @name getArticle
+ * @description This is the method for deleting an article
+ * @param {object} req The request object
+ * @param {object} res The response object
+ * @returns {int} Returns true after deleting an article
+ * @returns {object} Returns response object
+ */
+export const getAnArticleByID = async (req, res) => {
+  const { id } = req.params;
+  try {
+    const article = await Article.findOne({
+      where: { id, published: true },
+      group: ['Article.id'],
+      include: [{
+        model: Comment,
+        as: 'comments',
+        limit: 10,
+        offset: 0,
+      }]
+    });
+    if (!article) { return responseHandler(res, 404, { status: 'fail', message: 'Article not found!' }); }
+    return responseHandler(res, 202, { status: 'success', data: article });
+  } catch (error) {
+    return responseHandler(res, 500, { status: 'error', message: 'An internal server error occured!' });
   }
 };
