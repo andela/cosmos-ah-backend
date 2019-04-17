@@ -1,5 +1,5 @@
 export default {
-  up: (queryInterface, Sequelize) => queryInterface.createTable('rating', {
+  up: (queryInterface, Sequelize) => queryInterface.createTable('article_ratings', {
     id: {
       allowNull: false,
       primaryKey: true,
@@ -38,5 +38,5 @@ export default {
       type: Sequelize.DATE,
     },
   }),
-  down: queryInterface => queryInterface.dropTable('rating'),
+  down: queryInterface => queryInterface.dropTable('article_ratings'),
 };

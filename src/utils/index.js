@@ -66,6 +66,8 @@ export const errorResponseFormat = (response) => {
  * @function parseErrorResponse
  * @param {object} responses
  * @returns {object} Returns an hash of each field name to response messages
+ * @description This util function parses validation errors and returns them
+ * in a neater and more usable format
  */
 export const parseErrorResponse = (responses) => {
   const errorMessages = {};
