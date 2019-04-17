@@ -31,8 +31,7 @@ export default (sequelize, DataTypes) => {
     },
     {
       tableName: 'article_reports',
-    }
-  );
+    });
   Report.associate = (models) => {
     Report.belongsTo(models.Article, {
       foreignKey: 'articleId',

@@ -1,18 +1,18 @@
 import Sequelize from 'sequelize';
-import { 
-  validateArticle, 
+import {
+  validateArticle,
   getArticleReportValidator,
   validateArticleTag,
   validateArticleRating,
-  isOwnArticle, 
+  isOwnArticle,
 } from '../utils/article';
 import { findById } from '../utils/query';
 import { Article } from '../models';
 import {
   parseErrorResponse,
-  sendResponse, 
-  createErrorResponse, 
-  responseHandler 
+  sendResponse,
+  createErrorResponse,
+  responseHandler
 } from '../utils';
 
 /**

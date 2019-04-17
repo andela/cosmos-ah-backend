@@ -29,7 +29,7 @@ import articleValidation, {
   isAuthor,
   articleReportValidation,
   articleTagValidation,
-  validateRating, 
+  validateRating,
   checkIfAuthoredBySameUser
 } from '../middlewares/articles';
 import { checkParam } from '../middlewares/checkParam';
