@@ -23,7 +23,6 @@ describe('Root directory Test', () => {
   });
   it('incorrect API endpoint', (done) => {
     agent.get('/api/v1/incorrect').end((_err, res) => {
-      console.log(res);
       assert.equal(res.status, 404);
       assert.equal(res.body.error, 'Incorrect API endpoint');
       done();
