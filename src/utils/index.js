@@ -40,14 +40,9 @@ export const validateParameters = async (body) => {
  * @param {object} payload The response data to the user
  * @returns {object} Returns the response object
  */
-export const responseHandler = (res, code, payload) => {
-  const { data, status, message } = payload;
-  return res.status(code).json({
-    status,
-    message,
-    data,
-  });
-};
+export const responseHandler = (res, code, payload) => res.status(code).json({
+  ...payload,
+});
 
 /**
  * @function errorResponseFormat

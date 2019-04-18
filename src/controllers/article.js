@@ -9,6 +9,7 @@ import {
   sendResponse,
   handleDBErrors
 } from '../utils';
+import { findAndCount } from '../utils/query';
 
 /**
  * @name addArticle
@@ -257,21 +258,31 @@ export const rateArticle = async (req, res) => {
  */
 export const getAllArticles = async (req, res) => {
   try {
+    let { query: { page, limit } } = req;
+    const regex = new RegExp('^\\d+$');
+    page = regex.test(page) ? parseInt(page, 10) : 1;
+    limit = regex.test(limit) ? parseInt(limit, 10) : 10;
+    const { count } = await findAndCount(Article, { where: {} });
+    const pages = Math.ceil(count / limit);
+    const offset = limit * (page - 1);
+    const paginate = { limit, offset, subQuery: false };
+
     const articles = await Article.findAll({
       where: { published: true },
       order: [['createdAt', 'ASC']],
       group: ['Article.id', 'comments.id'],
+      ...paginate,
       include: [{
         model: Comment,
         as: 'comments',
         attributes: [
           [sequelize.fn('COUNT', sequelize.col('comments.id')), 'all'],
         ],
-        group: 'comments.id',
-      }]
+      }],
     });
-    return responseHandler(res, 200, { status: 'success', data: articles });
+    return responseHandler(res, 200, { status: 'success', data: articles, pages, });
   } catch (error) {
+    console.log(error);
     return responseHandler(res, 500, { status: 'error', message: 'An internal server error occured!' });
   }
 };

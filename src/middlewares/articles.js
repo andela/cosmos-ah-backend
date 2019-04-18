@@ -27,7 +27,6 @@ export const articleValidation = async (req, res, next) => {
   next();
 };
 
-
 /**
  *@name verifyArticle
  *@description Middleware for verifying that article exists
@@ -46,7 +45,6 @@ export const verifyArticle = async (req, res, next) => {
   next();
 };
 
-
 /**
  *@name isAuthor
  *@description Middleware for checking if an author has the privilege to edit an article
@@ -62,6 +60,7 @@ export const isAuthor = async (req, res, next) => {
   if (authorId !== userId && role !== 'admin') { return responseHandler(res, 403, { status: 'error', message: 'You don\'t have access to manage this article!', }); }
   next();
 };
+
 /**
  * @function articleReportValidation
  * @param {Request} req
@@ -128,8 +127,6 @@ export const articleRatingValidation = async (req, res, next) => {
   next();
 };
 
-export default articleValidation;
-
 export const commentValidation = async (req, res, next) => {
   const validate = await validateComment(req.body);
   if (validate.fails()) {
@@ -139,6 +136,36 @@ export const commentValidation = async (req, res, next) => {
       status: 'fail',
       data: errorMessages
     });
+  }
+  next();
+};
+
+/**
+ *@name getArticleHandler
+ *@description Middleware for handling requests for an article
+ * @param {object} req Request object
+ * @param {object} res Response object
+ * @param {function} next Calls the necxt function/action
+ * @returns {function} Calls next function/action
+ */
+export const checkQueryParams = async (req, res, next) => {
+  const queryParams = req.query;
+  const allowedQueryFields = ['page', 'limit'];
+  if (typeof queryParams !== 'object') { return next(); }
+  // eslint-disable-next-line no-restricted-syntax
+  for (const query in queryParams) {
+    // eslint-disable-next-line no-prototype-builtins
+    if (queryParams.hasOwnProperty(query)) {
+      if (!allowedQueryFields.includes(query)) {
+        return responseHandler(res, 400, { status: 'fail', message: 'Invalid request parameter supplied!' });
+      }
+      if (query === 'page' || query === 'limit') {
+        const param = parseInt(queryParams[query], 10);
+        if (param < 1) {
+          return responseHandler(res, 400, { status: 'fail', message: `${query.toUpperCase()} should not be less than 1!` });
+        }
+      }
+    }
   }
   return next();
 };
