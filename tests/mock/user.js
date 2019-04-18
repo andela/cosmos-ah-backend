@@ -64,3 +64,10 @@ export const editPayload = {
 };
 
 export const FAKE_USER = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6Ijg4ZDkwOGQwLTdmYWYtNDZiNC1hZTQ2LWNhZWE0MzVlY2I4MiIsImZ1bGxOYW1lIjoiY2hpa2UgYXJ0aHVyIiwiYmlvIjpudWxsLCJlbWFpbCI6ImFuZGVsYVV0b2JpbGlibGl5YUBnbWFpbC5jb20iLCJ1c2VybmFtZSI6ImFydGh1cnRvIiwicm9sZSI6ImF1dGhvciIsImlhdCI6MTU1NTYwMDg3MywiZXhwIjoxNTU1Njg3MjczfQ.YrQFpEPJP4fqLSALXwdwQZtDAogruEdH9EtoLz1qZPA';
+export const search = {
+  search: 'cosmos'
+};
+
+export const searchError = {
+  search: 'error'
+};

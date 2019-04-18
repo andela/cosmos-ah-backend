@@ -75,7 +75,7 @@ export const parseErrorResponse = (responses) => {
   return errorMessages;
 };
 
-export const validateEditParameters = async (body) => {
+export const validateEditParameters = (body) => {
   const rules = {
     fullName: 'required',
     notification: 'required',
@@ -161,4 +161,11 @@ export const handleDBErrors = (error, { req, Sequelize }, cb) => {
     errorResponseMessage = error.message;
   }
   return cb(errorResponseMessage);
+};
+
+export const validateSearchParams = (body) => {
+  const rules = {
+    search: 'required'
+  };
+  return new Validator(body, rules);
 };

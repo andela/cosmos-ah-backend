@@ -48,6 +48,7 @@ import resetFieldValidation from '../middlewares/auth/resetPassword';
 import { trimBody } from '../middlewares';
 
 import search from '../controllers/search';
+import checkSearchBody from '../middlewares/search';
 
 const router = Router();
 
@@ -168,7 +169,8 @@ router.get(
 router.get('/authors', Auth.authenticateUser, getAuthors);
 
 router.post('/articles/:articleId/ratings', Auth.authenticateUser, articleRatingValidation, rateArticle);
-router.get('/search/:search', search);
+
+router.post('/search/articles', checkSearchBody, search);
 
 router.patch(
   '/articles/:articleId/publish',
