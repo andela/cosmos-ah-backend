@@ -29,7 +29,7 @@ export const addComment = async (req, res) => {
     }
     if (error.parent.file === 'uuid.c') {
       return res.status(404).json(errorResponseFormat({
-        status: 'error',
+        status: 'fail',
         message: 'invalid id of type UUID'
       }));
     }

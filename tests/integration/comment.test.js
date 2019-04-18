@@ -19,7 +19,7 @@ describe('POST comment on article', () => {
   });
 
   it('comment added successfully', (done) => {
-    agent.post(`/api/v1/articles/${articleId}/comment`)
+    agent.post(`/api/v1/articles/${articleId}/comments`)
       .set('Authorization', JWT_TOKEN)
       .send(comment)
       .end((_err, res) => {
@@ -33,7 +33,7 @@ describe('POST comment on article', () => {
   });
 
   it('empty body content  ', (done) => {
-    agent.post(`/api/v1/articles/${articleId}/comment`)
+    agent.post(`/api/v1/articles/${articleId}/comments`)
       .set('Authorization', JWT_TOKEN)
       .end((_err, res) => {
         const { status, body } = res;
