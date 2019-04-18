@@ -1,4 +1,9 @@
-import { validateArticle, getArticleReportValidator, validateArticleTag } from '../utils/article';
+import {
+  validateArticle,
+  getArticleReportValidator,
+  validateArticleTag,
+  validateArticleRating
+} from '../utils/article';
 import { findById } from '../utils/query';
 import { Article } from '../models';
 import { responseHandler, parseErrorResponse, checkIDParamType } from '../utils';
@@ -107,3 +112,19 @@ export const getArticleHandler = async (req, res, next) => {
     default: return getAllArticles(req, res, next);
   }
 };
+/**
+ * @function articleRatingValidation
+ * @param {Request} req Request object
+ * @param {Response} res Response object
+ * @param {Function} next Calls the next middleware function
+ * @returns {Response} Returns a server response
+ */
+export const articleRatingValidation = async (req, res, next) => {
+  const validate = await validateArticleRating(req.body);
+  if (validate.fails()) {
+    return res.status(400).json({ status: 'fail', data: validate.errors.all() });
+  }
+  next();
+};
+
+export default articleValidation;
