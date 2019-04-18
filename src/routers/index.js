@@ -38,6 +38,7 @@ import checkEditBody from '../middlewares/editProfileValidator';
 import { editUser } from '../controllers/editUser';
 import { followUser } from '../controllers/follower';
 import getAuthors from '../controllers/authors';
+import highlightArticle from '../controllers/highlight';
 
 const router = Router();
 
@@ -46,9 +47,8 @@ router.get('/', (req, res) => res.status(200).json({
 }),
 );
 
-router
-  .route('/articles/:id/like')
-  .patch(checkParam, Auth.authenticateUser, verifyArticle, likeArticle);
+router.route('/articles/:id/like').patch(Auth.authenticateUser, checkParam, verifyArticle, likeArticle);
+router.route('/articles/:id/highlight').post(Auth.authenticateUser, checkParam, highlightArticle);
 
 /**
  * Resource handling articles
@@ -82,31 +82,12 @@ router.put('/articles/tags/:id', Auth.authenticateUser, articleTagValidation, ed
 
 
 // Route for facebook Authentication
-router.get(
-  '/auth/facebook',
-  passport.authenticate('facebook', {
-    authType: 'rerequest',
-    scope: ['email'],
-  }),
-);
-
-//  Route for adding tags to an article
-router.put('/articles/tags/:id', Auth.authenticateUser, editArticleTag);
-
-router.get(
-  '/auth/facebook/callback',
-  passport.authenticate('facebook', { failureRedirect: '/api/v1/auth/login' }),
-  socialRedirect,
-);
+router.get('/auth/facebook', passport.authenticate('facebook', { authType: 'rerequest', scope: ['email'] }));
+router.get('/auth/facebook/callback', passport.authenticate('facebook', { failureRedirect: '/api/v1/auth/login' }), socialRedirect);
 
 // Route for google Authentication
 router.get('/auth/google', passport.authenticate('google', { scope: ['email profile'] }));
-
-router.get(
-  '/auth/google/callback',
-  passport.authenticate('google', { failureRedirect: '/api/v1/auth/login' }),
-  socialRedirect,
-);
+router.get('/auth/google/callback', passport.authenticate('google', { failureRedirect: '/api/v1/auth/login' }), socialRedirect);
 
 router.get('/auth/linkedin/callback', linkedinCallback);
 router.get('/auth/linkedin', linkedinUser);
@@ -126,28 +107,10 @@ router.post('/followers/:id/follow', checkParam, Auth.authenticateUser, followUs
 
 // Route for editing a profile
 router.put('/profile/edit', Auth.authenticateUser, checkEditBody, editUser);
-
-// Route for viewing a profile details
 router.get('/profile/view/:id', Auth.authenticateUser, viewUser);
 
 // route for twitter authentication
 router.get('/auth/twitter', passport.authenticate('twitter'));
-
-router.get(
-  '/auth/twitter/callback',
-  passport.authenticate('twitter', { failureRedirect: '/api/v1/auth/login' }),
-  socialRedirect,
-);
-
-router.get(
-  '/article/:articleId/bookmark',
-  Auth.authenticateUser,
-  bookmarkValidation,
-  bookmarkArticle,
-);
-
-router.get('/authors', Auth.authenticateUser, getAuthors);
-
-router.post('/articles/:articleId/ratings', Auth.authenticateUser, articleRatingValidation, rateArticle);
+router.get('/auth/twitter/callback', passport.authenticate('twitter', { failureRedirect: '/api/v1/auth/login' }), socialRedirect);
 
 export default router;

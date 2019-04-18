@@ -9,7 +9,6 @@ const { expect } = chai;
 let app = null;
 let agent = null;
 
-
 chai.use(chaiHttp);
 
 describe('GET /api/v1/articles/:id?', () => {
@@ -52,7 +51,8 @@ describe('POST /api/v1/articles', () => {
   });
 
   it('Should return status: 201', (done) => {
-    agent.post('/api/v1/articles')
+    agent
+      .post('/api/v1/articles')
       .set('Authorization', JWT_TOKEN)
       .send(ARTICLE)
       .end((_err, res) => {
@@ -87,7 +87,8 @@ describe('PUT /api/v1/articles/:id', () => {
   });
 
   it('Should return status: 202', (done) => {
-    agent.put('/api/v1/articles/979eaa2e-5b8f-4103-8192-4639afae2ba7')
+    agent
+      .put('/api/v1/articles/979eaa2e-5b8f-4103-8192-4639afae2ba7')
       .send(UPDATED_ARTICLE)
       .set('Authorization', JWT_TOKEN)
       .end((_err, res) => {
@@ -101,7 +102,8 @@ describe('PUT /api/v1/articles/:id', () => {
   });
 
   it('Should return status 400 when the article to be updated is malformed or contains invalid field', (done) => {
-    agent.put('/api/v1/articles/979eaa2e-5b8f-4103-8192-4639afae2ba7')
+    agent
+      .put('/api/v1/articles/979eaa2e-5b8f-4103-8192-4639afae2ba7')
       .send(MALFORMED_ARTICLE)
       .set('Authorization', JWT_TOKEN)
       .end((_err, res) => {
@@ -113,7 +115,8 @@ describe('PUT /api/v1/articles/:id', () => {
   });
 
   it('Should return status 404 when article id is not found on the database', (done) => {
-    agent.put('/api/v1/articles/979eaa2e-5b8f-4103-8192-4639afae2ba1')
+    agent
+      .put('/api/v1/articles/979eaa2e-5b8f-4103-8192-4639afae2ba1')
       .send(UPDATED_ARTICLE)
       .set('Authorization', JWT_TOKEN)
       .end((_err, res) => {
@@ -124,8 +127,9 @@ describe('PUT /api/v1/articles/:id', () => {
       });
   });
 
-  it('Should return status 403 when user attempts to update an article that doesn\'t belong to him/her', (done) => {
-    agent.put('/api/v1/articles/979eaa2e-5b8f-4103-8192-4639afae2ba8')
+  it("Should return status 403 when user attempts to update an article that doesn't belong to him/her", (done) => {
+    agent
+      .put('/api/v1/articles/979eaa2e-5b8f-4103-8192-4639afae2ba8')
       .send(UPDATED_ARTICLE)
       .set('Authorization', JWT_TOKEN_AUTHOR)
       .end((_err, res) => {
@@ -150,7 +154,8 @@ describe('DELETE /api/v1/articles/:id', () => {
   });
 
   it('Should return status: 202', (done) => {
-    agent.delete('/api/v1/articles/979eaa2e-5b8f-4103-8192-4639afae2ba7')
+    agent
+      .delete('/api/v1/articles/979eaa2e-5b8f-4103-8192-4639afae2ba7')
       .set('Authorization', JWT_TOKEN)
       .end((_err, res) => {
         const { body } = res;
@@ -163,7 +168,8 @@ describe('DELETE /api/v1/articles/:id', () => {
   });
 
   it('Should return status: 403 when user is not the owner of the article', (done) => {
-    agent.delete('/api/v1/articles/979eaa2e-5b8f-4103-8192-4639afae2ba4')
+    agent
+      .delete('/api/v1/articles/979eaa2e-5b8f-4103-8192-4639afae2ba4')
       .set('Authorization', JWT_TOKEN_AUTHOR)
       .end((_err, res) => {
         const { body } = res;
@@ -175,6 +181,89 @@ describe('DELETE /api/v1/articles/:id', () => {
       });
   });
 
+  after(async (done) => {
+    app.close();
+    app = null;
+    done();
+  });
+});
+
+describe('POST /api/v1/articles/:id/highlight', () => {
+  beforeEach(async () => {
+    app = await startServer(5000);
+    agent = chai.request(app);
+  });
+  it('Should return status: 201', (done) => {
+    agent
+      .post('/api/v1/articles/a7f6cbad-db13-4531-a0e2-498f1c30766e/highlight')
+      .set('Authorization', JWT_TOKEN)
+      .send({
+        startIndex: '25',
+        stopIndex: '35',
+      })
+      .end((_err, res) => {
+        const { body } = res;
+        expect(res).to.have.status(201);
+        expect(body).should.be.an('object');
+        expect(body).to.have.property('status');
+        expect(body).to.have.property('message');
+        done();
+      });
+  });
+  after(async (done) => {
+    app.close();
+    app = null;
+    done();
+  });
+});
+
+describe('POST /api/v1/articles/:id/highlight', () => {
+  beforeEach(async () => {
+    app = await startServer(5000);
+    agent = chai.request(app);
+  });
+  it('Should return status: 403 when startIndex and stopIndex is not passed', (done) => {
+    agent
+      .post('/api/v1/articles/a7f6cbad-db13-4531-a0e2-498f1c30766e/highlight')
+      .set('Authorization', JWT_TOKEN_AUTHOR)
+      .end((_err, res) => {
+        const { body } = res;
+        expect(res).to.have.status(403);
+        expect(body).should.be.an('object');
+        expect(body).to.have.property('status');
+        expect(body).to.have.property('message');
+        done();
+      });
+  });
+  after(async (done) => {
+    app.close();
+    app = null;
+    done();
+  });
+});
+
+describe('POST /api/v1/articles/:id/highlight', () => {
+  beforeEach(async () => {
+    app = await startServer(5000);
+    agent = chai.request(app);
+  });
+  it('Should return status: 400 when Article not on the table', (done) => {
+    agent
+      .post('/api/v1/articles/a7f6cbad-db13-4531-a0e2-498f1c30966e/highlight')
+      .set('Authorization', JWT_TOKEN_AUTHOR)
+      .send({
+        startIndex: '25',
+        stopIndex: '35',
+      })
+      .end((_err, res) => {
+        const { body } = res;
+        expect(res).to.have.status(400);
+        expect(body).should.be.an('object');
+        expect(body).to.have.property('status');
+        expect(body).to.have.property('message');
+        done();
+      });
+  });
   after(async (done) => {
     app.close();
     app = null;
