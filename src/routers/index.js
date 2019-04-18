@@ -39,7 +39,7 @@ import {
 import { checkParam } from '../middlewares/checkParam';
 import checkEditBody from '../middlewares/editProfileValidator';
 import { editUser } from '../controllers/editUser';
-import { followUser } from '../controllers/follower';
+import { followUser, getFollowing, } from '../controllers/follower';
 import getAuthors from '../controllers/authors';
 import highlightArticle from '../controllers/highlight';
 import { forgotPassword, resetPassword } from '../controllers/authentication/passwordReset';
@@ -127,6 +127,8 @@ router.post('/articles/:articleId/comments', Auth.authenticateUser, commentValid
 
 // Route for user following and unfollowing
 router.post('/followers/:id/follow', checkParam, Auth.authenticateUser, followUser);
+router.get('/followings', Auth.authenticateUser, getFollowing);
+
 
 /**
  * Resource handling signup

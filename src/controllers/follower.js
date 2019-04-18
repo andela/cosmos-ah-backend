@@ -1,5 +1,5 @@
 import { User, Follower } from '../models';
-import { responseFormat } from '../utils';
+import { responseFormat, errorResponseFormat } from '../utils';
 
 /**
  * @name FollowUser
@@ -34,7 +34,7 @@ export const followUser = async (req, res) => {
       }
     );
     if (!created) {
-      await Follower.destroy({ where: { userId: user.id, id } });
+      await Follower.destroy({ where: { userId: user.id, followerId: id } });
       return res.status(200).json(
         responseFormat({
           status: 'success',
@@ -49,10 +49,57 @@ export const followUser = async (req, res) => {
       })
     );
   } catch (error) {
-    return res.status(500).json(
-      responseFormat({
+    return res.status(400).json(
+      errorResponseFormat({
         status: 'error',
-        message: 'Something went wrong, please try again later!'
+        message: 'Something aint right, please try again later!'
+      })
+    );
+  }
+};
+
+/**
+ * @description Get all following users
+ * @param {object} req The request object
+ * @param {object} res The response object
+ * @param {followerId} person following a user
+ * @param {user} user to be followed
+ * @returns {int} Returns the list of followers
+ */
+export const getFollowing = async (req, res) => {
+  try {
+    const { user } = req;
+    const details = await User.findAll(
+      {
+        where: {
+          id: user.id
+        },
+        include: [{
+          model: Follower,
+          as: 'followers',
+        }]
+      }
+    );
+    if (details < 1) {
+      return res.status(200).json(
+        responseFormat({
+          status: 'fail',
+          data: 'Sorry, you are currently not following any user'
+        })
+      );
+    }
+    return res.status(200).json(
+      responseFormat({
+        status: 'fail',
+        message: details
+      })
+    );
+  } catch (error) {
+    console.log(error);
+    return res.status(400).json(
+      errorResponseFormat({
+        status: 'error',
+        message: 'Something aint right, please try again later!'
       })
     );
   }
