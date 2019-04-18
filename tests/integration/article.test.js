@@ -12,6 +12,38 @@ let agent = null;
 
 chai.use(chaiHttp);
 
+describe('GET /api/v1/articles/:id?', () => {
+  beforeEach(async () => {
+    app = await startServer(5000);
+    agent = chai.request(app);
+  });
+
+  it('Should return status: 200 for getting all articles', (done) => {
+    agent.get('/api/v1/articles')
+      .set('Authorization', JWT_TOKEN)
+      .send(ARTICLE)
+      .end((_err, res) => {
+        expect(res).to.have.status(200);
+        done();
+      });
+  });
+
+  it('Should return status: 200 for getting a single article', (done) => {
+    agent.get('/api/v1/articles/979eaa2e-5b8f-4103-8192-4639afae2ba7')
+      .set('Authorization', JWT_TOKEN)
+      .send(ARTICLE)
+      .end((_err, res) => {
+        expect(res).to.have.status(200);
+        done();
+      });
+  });
+
+  after(async (done) => {
+    app.close();
+    app = null;
+    done();
+  });
+});
 
 describe('POST /api/v1/articles', () => {
   beforeEach(async () => {

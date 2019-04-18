@@ -23,9 +23,11 @@ import {
 } from '../controllers/authentication/user';
 import checkBody from '../middlewares/signUpValidator';
 import likeArticle from '../controllers/like';
-import articleValidation, {
+import {
+  articleValidation,
   verifyArticle,
   isAuthor,
+  getArticleHandler,
   articleReportValidation,
   articleTagValidation
 } from '../middlewares/articles';
@@ -59,6 +61,7 @@ router
  */
 router
   .route('/articles/:id?')
+  .get(getArticleHandler)
   .post(Auth.authenticateUser, articleValidation, addArticle)
   .delete(checkParam, Auth.authenticateUser, verifyArticle, isAuthor, deleteArticle)
   .put(checkParam, Auth.authenticateUser, articleValidation, verifyArticle, isAuthor, editArticle);

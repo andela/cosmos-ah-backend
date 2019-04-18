@@ -1,7 +1,8 @@
 import { validateArticle, getArticleReportValidator, validateArticleTag } from '../utils/article';
 import { findById } from '../utils/query';
 import { Article } from '../models';
-import { responseHandler, parseErrorResponse } from '../utils';
+import { responseHandler, parseErrorResponse, checkIDParamType } from '../utils';
+import { getAllArticles, getAnArticleByID } from '../controllers/article';
 
 /**
  *@name articleValidation
@@ -12,7 +13,7 @@ import { responseHandler, parseErrorResponse } from '../utils';
  * @returns {object} Returns status code of 400 where validation fails
  * @returns {function} Calls next function/action
  */
-const articleValidation = async (req, res, next) => {
+export const articleValidation = async (req, res, next) => {
   const validate = await validateArticle(req.body);
   if (validate.fails()) {
     return res.status(400).json({ status: 'fail', error: validate.errors.all() });
@@ -88,4 +89,21 @@ export const articleTagValidation = async (req, res, next) => {
   return next();
 };
 
-export default articleValidation;
+/**
+ *@name getArticleHandler
+ *@description Middleware for handling requests for an article
+ * @param {object} req Request object
+ * @param {object} res Response object
+ * @param {function} next Calls the necxt function/action
+ * @returns {function} Calls next function/action
+ */
+export const getArticleHandler = async (req, res, next) => {
+  const { id } = req.params;
+  switch (typeof id) {
+    case undefined: return getAllArticles(req, res, next);
+    case 'string':
+      if (checkIDParamType(id)) { return getAnArticleByID(req, res, next); }
+      return responseHandler(res, 400, { status: 'fail', message: 'Invalid request parameter supplied!' });
+    default: return getAllArticles(req, res, next);
+  }
+};

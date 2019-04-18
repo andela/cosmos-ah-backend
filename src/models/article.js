@@ -41,16 +41,12 @@ export default (sequelize, DataTypes) => {
         type: DataTypes.STRING,
         allowNull: true,
       },
-      tagList: {
-        type: DataTypes.STRING,
-        allowNull: true,
+      published: {
+        type: DataTypes.BOOLEAN,
+        defaultValue: false,
       },
       tags: {
         type: DataTypes.ARRAY(DataTypes.TEXT),
-        defaultValue: [],
-      },
-      likes: {
-        type: DataTypes.ARRAY(DataTypes.STRING),
         defaultValue: [],
       },
       favouritesCount: {
@@ -81,15 +77,21 @@ export default (sequelize, DataTypes) => {
     }
   );
   Article.associate = (models) => {
-    Article.belongsTo(models.User, {
+    Article.belongsToMany(models.User, {
       foreignKey: 'userId',
       as: 'articleUser',
+      through: 'article_user',
       onDelete: 'CASCADE',
     });
     Article.hasMany(models.Like, {
       foreignKey: 'userId',
       as: 'userLikes',
       onDelete: 'CASCADE',
+    });
+    Article.hasMany(models.Comment, {
+      foreignKey: 'articleId',
+      onDelete: 'CASCADE',
+      as: 'comments',
     });
   };
   return Article;
