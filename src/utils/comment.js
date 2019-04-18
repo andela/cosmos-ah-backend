@@ -8,12 +8,10 @@ import Validator from 'validatorjs';
 
 export const validateComment = (payload) => {
   const rules = {
-    articleId: 'required',
     body: 'required',
   };
 
   const errorMessages = {
-    'required.articleId': 'article id of the comment required',
     'required.body': 'comment body is required'
 
   };

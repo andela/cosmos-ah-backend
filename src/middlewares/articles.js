@@ -6,7 +6,7 @@ import {
 } from '../utils/article';
 import { findById } from '../utils/query';
 import { Article } from '../models';
-import { responseHandler, parseErrorResponse, checkIDParamType, errorResponseFormat } from '../utils';
+import { responseHandler, parseErrorResponse, checkIDParamType } from '../utils';
 import { getAllArticles, getAnArticleByID } from '../controllers/article';
 import { validateComment } from '../utils/comment';
 
@@ -135,10 +135,10 @@ export const commentValidation = async (req, res, next) => {
   if (validate.fails()) {
     const validationErrors = validate.errors.all();
     const errorMessages = parseErrorResponse(validationErrors);
-    return res.status(400).json(errorResponseFormat({
+    return res.status(400).json({
       status: 'fail',
-      message: errorMessages
-    }));
+      data: errorMessages
+    });
   }
   return next();
 };
