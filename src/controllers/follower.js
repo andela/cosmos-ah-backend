@@ -49,7 +49,7 @@ export const followUser = async (req, res) => {
       })
     );
   } catch (error) {
-    return res.status(400).json(
+    return res.status(500).json(
       errorResponseFormat({
         status: 'error',
         message: 'Something aint right, please try again later!'
@@ -80,8 +80,8 @@ export const getFollowing = async (req, res) => {
         }]
       }
     );
-    if (details < 1) {
-      return res.status(200).json(
+    if (details[0].dataValues.followers < 1) {
+      return res.status(404).json(
         responseFormat({
           status: 'fail',
           data: 'Sorry, you are currently not following any user'
@@ -90,16 +90,15 @@ export const getFollowing = async (req, res) => {
     }
     return res.status(200).json(
       responseFormat({
-        status: 'fail',
-        message: details
+        status: 'success',
+        data: details
       })
     );
   } catch (error) {
-    console.log(error);
-    return res.status(400).json(
+    return res.status(500).json(
       errorResponseFormat({
         status: 'error',
-        message: 'Something aint right, please try again later!'
+        message: 'Something went wrong, please try again later!'
       })
     );
   }

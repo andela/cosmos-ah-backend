@@ -1,7 +1,7 @@
 import chai from 'chai';
 import chaiHttp from 'chai-http';
 import { startServer } from '../../src/server';
-import { testUser } from '../mock/follower';
+import { testUser, testUser1 } from '../mock/follower';
 import Auth from '../../src/middlewares/authenticator';
 
 
@@ -23,6 +23,7 @@ describe('User Following API test', () => {
   });
 
   const token = Auth.generateToken(testUser);
+  const token1 = Auth.generateToken(testUser1);
 
   it('Should follow a user successfully', (done) => {
     agent
@@ -32,6 +33,17 @@ describe('User Following API test', () => {
         expect(res).to.have.status(200);
         expect(res.body).to.have.property('status').eql('success');
         expect(res.body).to.have.property('data').to.be.a('string');
+        done();
+      });
+  });
+  it('Should return a success if all followings are returned', (done) => {
+    agent
+      .get('/api/v1/followings')
+      .set('Authorization', token)
+      .end((err, res) => {
+        expect(res).to.have.status(200);
+        expect(res.body).to.have.property('status').eql('success');
+        expect(res.body).to.have.property('data').to.be.an('array');
         done();
       });
   });
@@ -65,6 +77,17 @@ describe('User Following API test', () => {
         expect(res).to.have.status(404);
         expect(res.body).to.have.property('status').eql('fail');
         expect(res.body).to.have.property('data').to.equal('This user does not exist');
+        done();
+      });
+  });
+  it('Should return an error if user not found in follower table', (done) => {
+    agent
+      .get('/api/v1/followings')
+      .set('Authorization', token1)
+      .end((err, res) => {
+        expect(res).to.have.status(404);
+        expect(res.body).to.have.property('status').eql('fail');
+        expect(res.body).to.have.property('data').to.equal('Sorry, you are currently not following any user');
         done();
       });
   });
