@@ -2,7 +2,7 @@ import 'chai/register-should';
 import chai from 'chai';
 import chaiHttp from 'chai-http';
 import { startServer } from '../../src/server';
-import { articleId, invalidArticleId } from '../mock/bookmark';
+import { articleId } from '../mock/bookmark';
 import { comment } from '../mock/comment';
 import { JWT_TOKEN } from '../mock/user';
 
@@ -32,19 +32,6 @@ describe('POST comment on article', () => {
       });
   });
 
-
-  it('invalid article Id  ', (done) => {
-    agent.post(`/api/v1/articles/${invalidArticleId}/comment`)
-      .set('Authorization', JWT_TOKEN)
-      .send(comment)
-      .end((_err, res) => {
-        const { status, body } = res;
-        assert.equal(status, 404);
-        assert.isObject(body);
-        assert.equal(body.message, 'invalid article id');
-        done();
-      });
-  });
   it('empty body content  ', (done) => {
     agent.post(`/api/v1/articles/${articleId}/comment`)
       .set('Authorization', JWT_TOKEN)
