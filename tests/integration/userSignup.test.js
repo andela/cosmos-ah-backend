@@ -81,7 +81,7 @@ describe('Signup Authentication Test', () => {
         expect(res.body)
           .to.have.property('status')
           .eql('success');
-        expect(res.body.data).to.have.property('message')
+        expect(res.body).to.have.property('message')
           .eql('User Profile Updated Successfully');
         done();
       });
