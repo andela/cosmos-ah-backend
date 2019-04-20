@@ -1,5 +1,6 @@
 import Validator from 'validatorjs';
 import isUUID from 'validator/lib/isUUID';
+import { ArticleReadHistory } from '../models';
 
 export const responseFormat = (response) => {
   const { data, status, message } = response;
@@ -154,6 +155,14 @@ export const omitProps = (obj, props) => {
   return filtered;
 };
 
+/**
+ * @description Handles Database errors thrown during a DB operation
+ * @function handleDBErrors
+ * @param {object} error A Database error instance
+ * @param {object} opts An hash of request and Sequelize object
+ * @param {function} cb callback function that sends back the error response
+ * @returns {*} Returns the result of calling the `cb` function
+ */
 export const handleDBErrors = (error, { req, Sequelize }, cb) => {
   let errorResponseMessage = '';
   if (error instanceof Sequelize.ForeignKeyConstraintError) {
@@ -162,4 +171,23 @@ export const handleDBErrors = (error, { req, Sequelize }, cb) => {
     errorResponseMessage = error.message;
   }
   return cb(errorResponseMessage);
+};
+
+/**
+ * @function addToReadHistory
+ * @param {string} articleId id of the article to be added
+ * @param {string} userId id of the user read stats to be added
+ * @returns {ArticleReadHistory} returns a the newly created article read history
+ */
+export const addArticleToReadHistory = async (articleId, userId) => {
+  try {
+    let articleReadHistory = await ArticleReadHistory.findOne({ where: { articleId, userId } });
+    if (!articleReadHistory) {
+      articleReadHistory = await ArticleReadHistory.create({ articleId, userId });
+      return articleReadHistory;
+    }
+    return articleReadHistory;
+  } catch (error) {
+    throw error;
+  }
 };
