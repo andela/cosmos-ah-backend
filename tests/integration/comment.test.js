@@ -14,7 +14,7 @@ chai.use(chaiHttp);
 
 describe('POST comment on article', () => {
   beforeEach(async () => {
-    app = await startServer(5500);
+    app = await startServer(5000);
     agent = chai.request(app);
   });
 

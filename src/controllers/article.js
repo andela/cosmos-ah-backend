@@ -1,6 +1,7 @@
 import sequelize from 'sequelize';
 import { Article, Comment, Bookmark, Report, Rating, Sequelize } from '../models';
 import { slug, userAuthoredThisArticle } from '../utils/article';
+import { trigger } from '../utils/notification/brodcast';
 import {
   responseHandler,
   responseFormat,
@@ -24,6 +25,7 @@ export const addArticle = async (req, res) => {
   delete body.isDeletedByAuthor;
   try {
     const article = await Article.create({ userId, slug: slug(body.title), ...body });
+    trigger(userId, 'create-article', { message: 'Your article was successfully created!' });
     return responseHandler(res, 201, {
       status: 'success',
       message: 'Your article was successfully created!',
