@@ -9,6 +9,13 @@ import socialStrategy from './middlewares/socialStrategy';
 import docs from '../swagger.json';
 import router from './routers/index';
 import passportConfig from './middlewares/localStrategy';
+import { sequelize } from './models';
+
+const SequelizeStore = require('connect-session-sequelize')(session.Store);
+
+const Store = new SequelizeStore({
+  db: sequelize,
+});
 
 let httpServer;
 
@@ -31,7 +38,16 @@ export const startServer = port => new Promise((resolve, reject) => {
   app.use(bodyParser.urlencoded({ extended: false }));
   app.use(cors());
 
-  app.use(session({ secret: 'this is', resave: true, saveUninitialized: true }));
+  app.use(session({
+    secret: 'this is',
+    resave: true,
+    saveUninitialized: true,
+    store: Store,
+    checkExpirationInterval: 15 * 60 * 1000, // Every 15 minutes
+    expiration: 24 * 60 * 60 * 1000 // Every 24 hours
+  }));
+
+  Store.sync();
   app.use(passport.initialize());
   app.use(passport.session());
   passport.serializeUser((user, cb) => {
