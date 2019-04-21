@@ -5,18 +5,17 @@ export const editUser = async (req, res) => {
   try {
     const { fullName, bio, imageUrl, notification } = req.body;
     const { id } = req.user;
-    const updateUser = await User.update({
+    const [update, [updatedUser]] = await User.update({
       fullName,
       bio,
       imageUrl,
       notification }, { returning: true, where: { id } });
 
-    if (updateUser) {
+    if (update >= 1) {
       return res.status(200).json(responseFormat({
         status: 'success',
-        data: {
-          message: 'User Profile Updated Successfully'
-        },
+        message: 'User Profile Updated Successfully',
+        data: updatedUser,
       }));
     }
 

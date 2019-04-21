@@ -33,7 +33,8 @@ import {
   articleReportValidation,
   articleTagValidation,
   articleRatingValidation,
-  commentValidation
+  commentValidation,
+  checkQueryParams,
 } from '../middlewares/articles';
 import { checkParam } from '../middlewares/checkParam';
 import checkEditBody from '../middlewares/editProfileValidator';
@@ -68,7 +69,7 @@ router.route('/articles/:id/highlight').post(Auth.authenticateUser, checkParam, 
  */
 router
   .route('/articles/:id?')
-  .get(getArticleHandler)
+  .get(checkQueryParams, getArticleHandler)
   .post(Auth.authenticateUser, articleValidation, addArticle)
   .delete(checkParam, Auth.authenticateUser, verifyArticle, isAuthor, deleteArticle)
   .put(checkParam, Auth.authenticateUser, articleValidation, verifyArticle, isAuthor, editArticle);
