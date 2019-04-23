@@ -5,6 +5,8 @@ node_js:
 
 services:
   - postgresql
+addons:
+  postgresql: "9.6"
 
 before_script:
   - psql -c 'create database cosmos_authors_haven_test;' -U postgres

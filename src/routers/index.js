@@ -41,6 +41,7 @@ import checkEditBody from '../middlewares/editProfileValidator';
 import { editUser } from '../controllers/editUser';
 import { followUser } from '../controllers/follower';
 import getAuthors from '../controllers/authors';
+import highlightArticle from '../controllers/highlight';
 
 
 const router = Router();
@@ -53,6 +54,7 @@ router.get('/', (req, res) => res.status(200).json({
 router
   .route('/articles/:id/like')
   .patch(checkParam, Auth.authenticateUser, verifyArticle, likeArticle);
+router.route('/articles/:id/highlight').post(Auth.authenticateUser, checkParam, highlightArticle);
 
 /**
  * Resource handling articles
