@@ -21,7 +21,9 @@ export default {
                 FOR EACH ROW EXECUTE PROCEDURE tsvector_update_trigger(${vectorName}, 'pg_catalog.english', ${searchObjects[table].join(', ')});
               `, { transaction: t })
       )
-      .error(console.log)
+      .error((error) => {
+        throw new Error(error);
+      })
     ))
     )
   ),
