@@ -22,13 +22,13 @@ export default (sequelize, DataTypes) => {
         allowNull: false,
         type: DataTypes.UUID,
       },
-      highlightedText: {
-        type: DataTypes.TEXT,
+      highlightedTextIndex: {
+        type: DataTypes.JSONB,
         allowNull: false,
       },
       comment: {
         type: DataTypes.TEXT,
-        allowNull: false,
+        allowNull: true,
       },
     },
     {
