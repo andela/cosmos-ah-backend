@@ -1,6 +1,7 @@
 import chai from 'chai';
 import chaiHttp from 'chai-http';
 import { startServer } from '../../src/server';
+import { validResetEmail, wrongResetEmail, emailResetForm, failedvalidation } from '../mock/passwordReset';
 
 const { expect } = chai;
 
@@ -19,20 +20,19 @@ describe('Password Reset', () => {
   const url = `/api/v1/password-reset/${resetToken}`;
 
   it('should send password reset instruction to user', (done) => {
-    const payload = { email: 'chike@gmail.com' };
     agent.post('/api/v1/forgot-password')
-      .send(payload)
+      .send(validResetEmail)
       .end((err, res) => {
         expect(res).to.have.status(200);
         const { body } = res;
-        expect(body.data).to.be.equal(`Password reset instruction was successfully sent to ${payload.email}`);
+        expect(body.data).to.be.equal(`Password reset instruction was successfully sent to ${validResetEmail.email}`);
         done();
       });
   });
 
   it('should return error for invalid email address', (done) => {
     agent.post('/api/v1/forgot-password')
-      .send({ email: 'chike2@gmail.com' })
+      .send(wrongResetEmail)
       .end((err, res) => {
         expect(res).to.have.status(404);
         const { body } = res;
@@ -43,10 +43,7 @@ describe('Password Reset', () => {
 
   it('should return error for invalid token', (done) => {
     agent.put('/api/v1/password-reset/49876jkghdfvghj-dguye89063478-efdvuk789')
-      .send({
-        password: 'tyie56H#JJJ88',
-        password_confirmation: 'tyie56H#JJJ88'
-      })
+      .send(emailResetForm)
       .end((err, res) => {
         expect(res).to.have.status(404);
         const { body } = res;
@@ -57,9 +54,7 @@ describe('Password Reset', () => {
 
   it('should return error for failed field validation', (done) => {
     agent.put(url)
-      .send({
-        password: 'newpasswword'
-      })
+      .send(failedvalidation)
       .end((err, res) => {
         expect(res).to.have.status(400);
         done();
@@ -68,10 +63,7 @@ describe('Password Reset', () => {
 
   it('should update password', (done) => {
     agent.put(url)
-      .send({
-        password: 'tyie56H#JJJ88',
-        password_confirmation: 'tyie56H#JJJ88'
-      })
+      .send(emailResetForm)
       .end((err, res) => {
         expect(res).to.have.status(200);
         const { body } = res;

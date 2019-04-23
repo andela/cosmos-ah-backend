@@ -1,4 +1,4 @@
-import bcrypt from 'bcryptjs';
+// import bcrypt from 'bcryptjs';
 import { User } from '../../models';
 import sendMail from '../../utils/email';
 import Auth from '../../middlewares/authenticator';
@@ -37,7 +37,7 @@ export const resetPassword = async (req, res) => {
     if (resetTokenExpires <= date) return res.status(401).json(errorResponseFormat({ status: 'fail', message: 'Token has expired!' }));
 
     const { password } = req.body;
-    const hashPassword = bcrypt.hashSync(password, bcrypt.genSaltSync(10));
+    const hashPassword = user.hash(password);
     await user.update({
       password: hashPassword, passwordResetToken: null, resetTokenExpires: null,
     });

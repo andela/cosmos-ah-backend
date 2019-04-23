@@ -4,7 +4,7 @@ import Validator from 'validatorjs';
  * @param {object} body The request object
  * @returns {function} Returns validation object
  */
-export const validateResetField = async (body) => {
+export const validateResetField = (body) => {
   const rules = {
     password: ['required', 'confirmed', 'string', 'regex:/^(?=.*[a-z])(?=.*[A-Z])(?=.*[0-9])(?=.*[!@#\\$%\\^&\\*])(?=.{8,})/i'],
   };
