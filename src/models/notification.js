@@ -1,8 +1,11 @@
+import randomstring from 'randomstring';
+import { slug } from '../utils/article';
+
 /**
- * @name init
+ * @name Notification
  * @param {sequelize} sequelize
  * @param {DataTypes} DataTypes
- * @returns {Model} Returns Highlight model
+ * @returns {Model} Returns Notification model
  */
 export default (sequelize, DataTypes) => {
   const Notification = sequelize.define(
@@ -25,6 +28,10 @@ export default (sequelize, DataTypes) => {
         type: DataTypes.STRING,
         allowNull: true,
       },
+      subjectUrl: {
+        type: DataTypes.STRING,
+        allowNull: true,
+      },
       notificationState: {
         type: DataTypes.ENUM('read', 'unread'),
         allowNull: false,
@@ -35,6 +42,11 @@ export default (sequelize, DataTypes) => {
       tableName: 'notifications',
     }
   );
+
+  Notification.beforeCreate((notification) => {
+    notification.url = slug(randomstring.generate({ length: 25 }));
+  });
+
   Notification.associate = (models) => {
     Notification.belongsTo(models.Article, {
       foreignKey: 'articleId',

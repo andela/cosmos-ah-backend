@@ -24,6 +24,10 @@ export default {
       type: Sequelize.STRING,
       allowNull: true,
     },
+    subjectUrl: {
+      type: Sequelize.STRING,
+      allowNull: true,
+    },
     notificationState: {
       type: Sequelize.ENUM('read', 'unread'),
       allowNull: false,

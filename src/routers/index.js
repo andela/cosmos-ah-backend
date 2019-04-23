@@ -46,7 +46,6 @@ import highlightArticle from '../controllers/highlight';
 import { forgotPassword, resetPassword } from '../controllers/authentication/passwordReset';
 import resetFieldValidation from '../middlewares/auth/resetPassword';
 
-
 const router = Router();
 
 router.get('/', (req, res) => res.status(200).json({
