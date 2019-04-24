@@ -85,7 +85,7 @@ export default (sequelize, DataTypes) => {
     },
   );
   Article.associate = (models) => {
-    Article.belongsTo(models.User, {
+    Article.belongsToMany(models.User, {
       foreignKey: 'userId',
       as: 'articleUser',
       through: 'article_user',

@@ -1,6 +1,6 @@
 import chai from 'chai';
 import chaiHttp from 'chai-http';
-import { search, searchError } from '../mock/user';
+import { search, searchError, searchValidationError } from '../mock/user';
 import { startServer } from '../../src/server';
 
 const { expect } = chai;
@@ -34,18 +34,34 @@ describe('Search Test', () => {
       });
   });
 
-  it('Should return success for cosmos search', (done) => {
+  it('Should return failure for cosmos search', (done) => {
     agent
       .post('/api/v1/search/articles')
       .send(searchError)
       .end((err, res) => {
+        const { body } = res;
         expect(res).to.have.status(404);
-        expect(res.body)
+        expect(body)
           .to.have.property('status')
           .eql('fail');
-        const { body } = res;
         expect(body).should.be.an('object');
         expect(body).to.have.property('message').to.eql('No Search Record Found');
+        done();
+      });
+  });
+
+  it('Should return validation error for cosmos search', (done) => {
+    agent
+      .post('/api/v1/search/articles')
+      .send(searchValidationError)
+      .end((err, res) => {
+        const { body } = res;
+        expect(res).to.have.status(400);
+        expect(body)
+          .to.have.property('status')
+          .eql('fail');
+        expect(body).should.be.an('object');
+        expect(body.message).to.have.property('search').to.eql('The search field is required.');
         done();
       });
   });

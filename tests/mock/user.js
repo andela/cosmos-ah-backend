@@ -79,3 +79,7 @@ export const search = {
 export const searchError = {
   search: 'error'
 };
+
+export const searchValidationError = {
+  search: ''
+};
