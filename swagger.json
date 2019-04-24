@@ -1,43 +1,1429 @@
 {
   "openapi": "3.0.1",
   "info": {
-    "title": "Authors Haven",
+    "title": "Author's Haven",
     "description": "A Social platform for the creative at heart.",
     "version": "1.0.0"
   },
   "servers": [
     {
-      "url": "https://authors-haven.herokuapp.com/api/v1"
-    }
-  ],
-  "tags": [
+      "url": "https://author-haven-stage.herokuapp.com/api/v1",
+      "description": "Staging server"
+    },
     {
-      "name": "user",
-      "description": "Users should be able to create an account"
+      "url": "https://author-haven.herokuapp.com/api/v1",
+      "description": "Production server"
+    },
+    {
+      "url": "http://localhost:4000/api/v1",
+      "description": "Development server"
     }
   ],
   "paths": {
-    "/auth/signup": {
+    "/signup": {
       "post": {
-        "tags": ["user"],
-        "summary": "This API allow user to create an account",
+        "tags": ["User"],
+        "summary": "User account creation endpoint",
         "description": "This action is needed for a user to be authenticated",
         "operationId": "createUser",
         "requestBody": {
-          "description": "Created user object",
+          "description": "A newly-registered user",
           "content": {
             "*/*": {
               "schema": {
-                "$ref": "#/components/schemas/User"
+                "type": "object",
+                "properties": {
+                  "firstName": {
+                    "description": "User first name",
+                    "type": "string"
+                  },
+                  "lastName": {
+                    "description": "User last name",
+                    "type": "string"
+                  },
+                  "email": {
+                    "description": "User email",
+                    "type": "string",
+                    "format": "email"
+                  },
+                  "password": {
+                    "description": "User password",
+                    "type": "string"
+                  }
+                }
               }
             }
           },
           "required": true
         },
         "responses": {
-          "default": {
-            "description": "Account was created successfully",
-            "content": {}
+          "201": {
+            "description": "A newly registered user",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/AuthSuccessResponse"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "sign up validation error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          },
+          "409": {
+            "description": "Auth error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/login": {
+      "post": {
+        "tags": ["User"],
+        "summary": "User login endpoint",
+        "description": "This action allow users to login",
+        "operationId": "loginUser",
+        "requestBody": {
+          "description": "The request body should contain email address and a password",
+          "content": {
+            "*/*": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "email": {
+                    "description": "User email",
+                    "type": "string",
+                    "format": "email"
+                  },
+                  "password": {
+                    "description": "User password",
+                    "type": "string"
+                  }
+                }
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "201": {
+            "description": "An authenticated user",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "items": {
+                    "$ref": "#/components/schemas/AuthSuccessResponse"
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/verify/{id}/verificationToken": {
+      "get": {
+        "tags": ["User"],
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "schema": {
+              "type": "string"
+            },
+            "description": "user id",
+            "required": true
+          }
+        ],
+        "summary": "Token verification endpoint",
+        "description": "This action can be used to verify a user's token",
+        "operationId": "verifyUser",
+        "responses": {
+          "403": {
+            "description": "error response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "error response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/forgot-password": {
+      "post": {
+        "tags": ["User"],
+        "description": "This action can be used to begin the process of resetting a user's password",
+        "operationId": "forgetPassword",
+        "requestBody": {
+          "description": "The response body should include an email field",
+          "content": {
+            "*/*": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "email": {
+                    "type": "string",
+                    "format": "email"
+                  }
+                }
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "Password reset operation was successful",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/SuccessResponse"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "forget password failure response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "forget password failure response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/password-reset/{resetToken}": {
+      "parameters": [
+        {
+          "name": "resetToken",
+          "in": "path",
+          "schema": {
+            "type": "string"
+          },
+          "description": "user reset token",
+          "required": true
+        }
+      ],
+      "put": {
+        "tags": ["User"],
+        "operationId": "resetPassword",
+        "responses": {
+          "200": {
+            "description": "successful response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/SuccessResponse"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "error response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/FailureResponse"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "error response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/FailureResponse"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "error response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/auth/facebook": {
+      "get": {
+        "tags": ["User"],
+        "summary": "User authenticatication facebook",
+        "description": "This endpoint can bne used to authenticate a user using facebook",
+        "operationId": "facebookAuth",
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/SuccessResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/auth/google": {
+      "get": {
+        "tags": ["User"],
+        "summary": "User authentication using google",
+        "description": "This endpoint can bne used to authenticate a user using google",
+        "operationId": "googleAuth",
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/SuccessResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/auth/linkedin": {
+      "get": {
+        "tags": ["User"],
+        "summary": "User authentication using linkedin",
+        "description": "This endpoint can bne used to authenticate a user using linkedin",
+        "operationId": "linkedinAuth",
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/SuccessResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/auth/twitter": {
+      "get": {
+        "tags": ["User"],
+        "summary": "User authentication using twitter",
+        "description": "This endpoint can bne used to authenticate a user using twitter",
+        "operationId": "twitterAuth",
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/SuccessResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/profile/edit": {
+      "put": {
+        "tags": ["User"],
+        "summary": "User profile update",
+        "description": "This endpoint can be used to update a user's profile",
+        "operationId": "editProfile",
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "properties": {
+                    "status": {
+                      "type": "string"
+                    },
+                    "message": {
+                      "type": "string"
+                    },
+                    "data": {
+                      "type": "object"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "404": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          },
+          "400": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          },
+          "500": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/profile/view/{id}": {
+      "parameters": [
+        {
+          "name": "id",
+          "in": "path",
+          "schema": {
+            "type": "integer"
+          },
+          "description": "numeric ID of the user",
+          "required": true
+        }
+      ],
+      "get": {
+        "tags": ["User"],
+        "summary": "User profile update",
+        "description": "This endpoint can be used to update a user's profile",
+        "operationId": "viewProfile",
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/SuccessResponse"
+                }
+              }
+            }
+          },
+          "404": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          },
+          "400": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          },
+          "500": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/authors": {
+      "get": {
+        "tags": ["User"]
+      },
+      "summary": "Authors",
+      "description": "Authors",
+      "operationId": "getAuthors",
+      "responses": {
+        "200": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/SuccessResponse"
+              }
+            }
+          }
+        },
+        "500": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/ErrorResponse"
+              }
+            }
+          }
+        }
+      }
+    },
+    "/articles": {
+      "get": {
+        "tags": ["Articles"],
+        "summary": "This endpoint retrieves all articles",
+        "description": "All articles can be obtained using this endpoint",
+        "operationId": "getArticles",
+        "responses": {
+          "200": {
+            "description": "Returns all articles",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/ArticlesSuccessResponse"
+                  }
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Article fetch error response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/ErrorResponse"
+                  }
+                }
+              }
+            }
+          }
+        }
+      },
+      "post": {
+        "tags": ["Articles"],
+        "summary": "This endpoint creates an article",
+        "description": "Use this endpoint to create an article",
+        "operationId": "createArticle",
+        "requestBody": {
+          "description": "The request body should contain a title, body and description field",
+          "content": {
+            "*/*": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "title": {
+                    "description": "Article title",
+                    "type": "string"
+                  },
+                  "body": {
+                    "description": "Article body",
+                    "type": "string"
+                  },
+                  "description": {
+                    "description": "Article description",
+                    "type": "string"
+                  }
+                }
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "201": {
+            "description": "Creates article",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/SuccessResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/articles/{articleId}": {
+      "parameters": [
+        {
+          "name": "articleId",
+          "in": "path",
+          "schema": {
+            "type": "integer"
+          },
+          "description": "numeric ID of the article",
+          "required": true
+        }
+      ],
+      "get": {
+        "tags": ["Articles"],
+        "summary": "This endpoint gets a single article",
+        "operationId": "getArticle",
+        "responses": {
+          "200": {
+            "description": "Return an article",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Article"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "article fetch error response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "article fetch error response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          }
+        }
+      },
+      "put": {
+        "tags": ["Articles"],
+        "summary": "This endpoint updates a single article",
+        "operationId": "updateArticle",
+        "responses": {
+          "202": {
+            "description": "Updated article",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ArticleUpdateSuccessResponse"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "update article error response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          }
+        }
+      },
+      "delete": {
+        "tags": ["Articles"],
+        "summary": "This endpoint deletes single article",
+        "operationId": "deleteArticle",
+        "responses": {
+          "202": {
+            "description": "successful article delete operation",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "article delete operation not successful response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/search/articles": {
+      "get": {
+        "tags": ["Articles"],
+        "summary": "Search article endpoint",
+        "description": "This action can be used to search an article",
+        "operationId": "searchArticles",
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/SuccessResponse"
+                }
+              }
+            }
+          },
+          "404": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/FailureResponse"
+                }
+              }
+            }
+          },
+          "500": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/articles/{articleId}/publish": {
+      "parameters": [
+        {
+          "name": "articleId",
+          "in": "path",
+          "schema": {
+            "type": "string"
+          },
+          "description": "numeric ID of the article",
+          "required": true
+        }
+      ],
+      "patch": {
+        "tags": ["Articles"],
+        "summary": "Article publish endpoint",
+        "description": "This action can be used to publish an article",
+        "operationId": "publishArticle",
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "properties": {
+                    "status": {
+                      "type": "string"
+                    },
+                    "message": {
+                      "type": "string"
+                    },
+                    "data": {
+                      "type": "object"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "500": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/articles/{articleId}/bookmark": {
+      "parameters": [
+        {
+          "name": "articleId",
+          "in": "path",
+          "schema": {
+            "type": "string"
+          },
+          "description": "numeric ID of the article",
+          "required": true
+        }
+      ],
+      "get": {
+        "tags": ["Bookmark"],
+        "summary": "Article bookmarking",
+        "description": "This endpoint can be used to bookmark and unbookmark an article",
+        "operationId": "bookmarkArticle",
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/SuccessResponse"
+                }
+              }
+            }
+          },
+          "201": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/SuccessResponse"
+                }
+              }
+            }
+          },
+          "404": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          },
+          "400": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          },
+          "500": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/articles/{articleId}/comments": {
+      "parameters": [
+        {
+          "name": "articleId",
+          "in": "path",
+          "schema": {
+            "type": "string"
+          },
+          "description": "numeric ID of the article",
+          "required": true
+        }
+      ],
+      "get": {
+        "tags": ["Comments"],
+        "summary": "This action retrieves all comments",
+        "description": "This action can be used to retrieve all comments",
+        "operationId": "getComments",
+        "responses": {
+          "200": {
+            "description": "A list of comments belonging to this article",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Comment"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "A server error response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Comment"
+                }
+              }
+            }
+          }
+        }
+      },
+      "post": {
+        "tags": ["Comments"],
+        "summary": "This endpoints creates article comments",
+        "operationId": "createComments",
+        "requestBody": {
+          "description": "The request body should contain a body",
+          "content": {
+            "*/*": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "body": {
+                    "description": "comment body",
+                    "type": "string"
+                  }
+                }
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "201": {
+            "description": "Creates article comments",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Comment"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/followers/{id}/follow": {
+      "parameters": [
+        {
+          "name": "id",
+          "in": "path",
+          "schema": {
+            "type": "integer",
+            "format": "uuid"
+          },
+          "description": "numeric ID of the user",
+          "required": true
+        }
+      ],
+      "get": {
+        "tags": ["Followers"],
+        "summary": "User can follow other users",
+        "description": "This endpoint can be used to enable users follow each other",
+        "operationId": "followUser",
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/SuccessResponse"
+                }
+              }
+            }
+          },
+          "403": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/FailureResponse"
+                }
+              }
+            }
+          },
+          "404": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/FailureResponse"
+                }
+              }
+            }
+          },
+          "500": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/followings": {
+      "get": {
+        "summary": "User followers endpoint",
+        "description": "This action can be used to retrieve a list of users following another user",
+        "operationId": "userFollowings",
+        "tags": ["Followers"],
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/SuccessResponse"
+                }
+              }
+            }
+          },
+          "500": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/followers": {
+      "get": {
+        "tags": ["Followers"],
+        "summary": "User followers endpoint",
+        "description": "This action can be used to get all the followers of a user",
+        "operationId": "userFollowers",
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/SuccessResponse"
+                }
+              }
+            }
+          },
+          "500": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/articles/{id}/highlight": {
+      "parameters": [
+        {
+          "name": "id",
+          "schema": {
+            "type": "number"
+          },
+          "in": "path",
+          "description": "Numeric ID of the article",
+          "required": true
+        }
+      ],
+      "post": {
+        "tags": ["Highlight"],
+        "summary": "This endpoint enables an article to be highlighted",
+        "operationId": "highlightArticle",
+        "requestBody": {
+          "description": "The request body should contain a startIndex, stopIndex and comment",
+          "content": {
+            "*/*": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "startIndex": {
+                    "description": "Article body start index",
+                    "type": "integer"
+                  },
+                  "stopIndex": {
+                    "description": "Article body stop index",
+                    "type": "integer"
+                  },
+                  "comment": {
+                    "description": "Article comment",
+                    "type": "string"
+                  }
+                }
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "201": {
+            "description": "success response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/SuccessResponse"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "failure response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "failure response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/articles/{id}/like": {
+      "parameters": [
+        {
+          "name": "id",
+          "in": "path",
+          "schema": {
+            "type": "integer",
+            "format": "uuid"
+          },
+          "description": "numeric ID of the article",
+          "required": true
+        }
+      ],
+      "patch": {
+        "tags": ["Likes"],
+        "summary": "This endpoint enables an article to be liked",
+        "operationId": "likeArticle",
+        "responses": {
+          "200": {
+            "description": "Liked article",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/SuccessResponse"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Error response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/comments/{id}/like": {
+      "parameters": [
+        {
+          "name": "id",
+          "in": "path",
+          "schema": {
+            "type": "integer",
+            "format": "uuid"
+          },
+          "description": "numeric ID of the comment",
+          "required": true
+        }
+      ],
+      "get": {
+        "tags": ["Likes"],
+        "summary": "Action for liking a comment",
+        "description": "This action can be used to like an article's comment",
+        "operationId": "likeComment",
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "properties": {
+                    "type": "object",
+                    "status": {
+                      "type": "string"
+                    },
+                    "data": {
+                      "type": "object",
+                      "properties": {
+                        "message": {
+                          "type": "string"
+                        },
+                        "Like": {
+                          "type": "integer"
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "400": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/article/{articleId}/ratings": {
+      "parameters": [
+        {
+          "name": "id",
+          "in": "path",
+          "schema": {
+            "type": "integer",
+            "format": "uuid"
+          },
+          "description": "numeric ID of the article",
+          "required": true
+        }
+      ],
+      "post": {
+        "tags": ["Ratings"],
+        "summary": "User article rating",
+        "description": "This endpoint can be used to rate an article",
+        "operationId": "rateArticle",
+        "requestBody": {
+          "description": "The request body should contain a rating field",
+          "content": {
+            "*/*": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "rating": {
+                    "description": "Article rating value",
+                    "type": "integer"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "successful article rating creation",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/SuccessResponse"
+                }
+              }
+            }
+          },
+          "200": {
+            "description": "successful article rating update",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/SuccessResponse"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Rate article",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/articles/{id}/escalate": {
+      "parameters": [
+        {
+          "name": "id",
+          "in": "path",
+          "schema": {
+            "type": "integer",
+            "format": "uuid"
+          },
+          "description": "numeric ID of the article",
+          "required": true
+        }
+      ],
+      "post": {
+        "tags": ["Reports"],
+        "summary": "This endpoint can be used to report an article",
+        "operationId": "reportArticle",
+        "requestBody": {
+          "description": "The request body should contain a description and category fields",
+          "content": {
+            "*/*": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "description": {
+                    "type": "string",
+                    "description": "Article report description"
+                  },
+                  "category": {
+                    "type": "string",
+                    "description": "Article report category"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "article report success response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/SuccessResponse"
+                  }
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "article report error response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/articles/tags/{id}": {
+      "parameters": [
+        {
+          "name": "id",
+          "in": "path",
+          "schema": {
+            "type": "integer",
+            "format": "uuid"
+          },
+          "description": "numeric ID of the article",
+          "required": true
+        }
+      ],
+      "put": {
+        "tags": ["Tags"],
+        "summary": "This endpoint can be used to add tags to an article",
+        "operationId": "tagArticle",
+        "requestBody": {
+          "description": "The request body should contain a tags field",
+          "content": {
+            "*/*": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "tags": {
+                    "type": "array"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "success response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "status": {
+                      "type": "string"
+                    },
+                    "message": {
+                      "type": "string"
+                    },
+                    "data": {
+                      "type": "object"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "error response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "error response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "items": {
+                    "$ref": "#/components/schemas/ErrorResponse"
+                  }
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "error response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "items": {
+                    "$ref": "#/components/schemas/ErrorResponse"
+                  }
+                }
+              }
+            }
           }
         }
       }
@@ -49,24 +1435,36 @@
         "type": "object",
         "properties": {
           "id": {
-            "type": "string"
+            "type": "string",
+            "format": "uuid"
           },
-          "full_name": {
+          "fullName": {
             "type": "string"
           },
           "email": {
-            "type": "string"
+            "type": "string",
+            "format": "email"
           },
           "username": {
             "type": "string"
           },
           "password": {
-            "type": "string"
+            "type": "string",
+            "format": "password"
           },
           "bio": {
             "type": "string"
           },
-          "image_url": {
+          "imageUrl": {
+            "type": "string"
+          },
+          "verified": {
+            "type": "boolean"
+          },
+          "verificationToken": {
+            "type": "string"
+          },
+          "resetTokenExpires": {
             "type": "string"
           },
           "notification": {
@@ -74,18 +1472,317 @@
           },
           "role": {
             "type": "string",
-            "enum": ["user", "author", "admin"]
+            "enum": ["author", "admin"]
+          }
+        },
+        "required": ["fullName", "email", "username", "password"]
+      },
+      "Article": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "userId": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "title": {
+            "type": "string"
+          },
+          "slug": {
+            "type": "string"
+          },
+          "description": {
+            "type": "string"
+          },
+          "body": {
+            "type": "string"
+          },
+          "imageUrl": {
+            "type": "string"
+          },
+          "published": {
+            "type": "boolean",
+            "default": "false"
+          },
+          "tags": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          },
+          "favouritesCount": {
+            "type": "integer"
+          },
+          "readCount": {
+            "type": "integer"
+          },
+          "totalReadTime": {
+            "type": "integer",
+            "default": 1
           }
         }
       },
-      "ApiResponse": {
+      "Bookmark": {
         "type": "object",
         "properties": {
-          "code": {
-            "type": "integer"
+          "id": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "userId": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "articleId": {
+            "type": "string",
+            "format": "uuid"
+          }
+        }
+      },
+      "Comment": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "userId": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "articleId": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "body": {
+            "type": "string"
+          }
+        }
+      },
+      "Rating": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "userId": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "articleId": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "value": {
+            "type": "integer",
+            "default": 1,
+            "minimum": 1,
+            "maximum": 5
+          }
+        }
+      },
+      "Report": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "articleId": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "reporterId": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "reporterCategory": {
+            "type": "string",
+            "default": "others"
+          },
+          "description": {
+            "type": "string"
+          }
+        }
+      },
+      "Follower": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "userId": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "followerId": {
+            "type": "string",
+            "format": "uuid"
+          }
+        }
+      },
+      "Like": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "userId": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "articleId": {
+            "type": "string",
+            "format": "uuid"
+          }
+        }
+      },
+      "Favourite": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "userId": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "articleId": {
+            "type": "string",
+            "format": "uuid"
+          }
+        }
+      },
+      "Highlight": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "articleId": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "reporterId": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "highlightedTextIndex": {
+            "type": "object"
+          },
+          "comment": {
+            "type": "string"
+          }
+        }
+      },
+      "Notification": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "userId": {
+            "type": "string",
+            "format": "uuid"
           },
           "message": {
             "type": "string"
+          },
+          "url": {
+            "type": "string"
+          },
+          "notificationState": {
+            "type": "string",
+            "enum": ["read", "unread"],
+            "default": "unread"
+          }
+        }
+      },
+      "SuccessResponse": {
+        "type": "object",
+        "properties": {
+          "status": {
+            "type": "string"
+          },
+          "data": {
+            "type": "object"
+          }
+        }
+      },
+      "FailureResponse": {
+        "type": "object",
+        "properties": {
+          "status": {
+            "type": "string"
+          },
+          "data": {
+            "type": "string"
+          }
+        }
+      },
+      "ErrorResponse": {
+        "type": "object",
+        "properties": {
+          "status": {
+            "type": "string"
+          },
+          "message": {
+            "type": "string"
+          }
+        }
+      },
+      "ArticlesSuccessResponse": {
+        "type": "object",
+        "properties": {
+          "status": {
+            "type": "string"
+          },
+          "data": {
+            "type": "array",
+            "$ref": "#/components/schemas/Article"
+          },
+          "page": {
+            "type": "integer"
+          }
+        }
+      },
+      "ArticleUpdateSuccessResponse": {
+        "type": "object",
+        "properties": {
+          "status": {
+            "type": "string"
+          },
+          "data": {
+            "type": "array",
+            "$ref": "#/components/schemas/Article"
+          },
+          "message": {
+            "type": "string"
+          }
+        }
+      },
+      "AuthSuccessResponse": {
+        "type": "object",
+        "properties": {
+          "status": {
+            "type": "string"
+          },
+          "data": {
+            "type": "object",
+            "properties": {
+              "token": {
+                "type": "string"
+              }
+            }
           }
         }
       }
