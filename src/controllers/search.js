@@ -11,7 +11,7 @@ export const searchArticle = async (req, res) => {
         body: { [Op.iLike]: `%${search}%` },
         description: { [Op.iLike]: `%${search}%` } } },
       raw: true,
-      attributes: ['id', 'title']
+      attributes: ['id', 'title', 'body', 'description']
     });
 
     if (articleSearch.length > 0) {
@@ -21,10 +21,12 @@ export const searchArticle = async (req, res) => {
       }));
     }
 
-    return res.status(404).json(errorResponseFormat({
+    return res.status(404).json({
       status: 'fail',
-      message: 'No Search Record Found'
-    }));
+      data: {
+        message: 'No Search Record Found'
+      }
+    });
   } catch (error) {
     return res.status(500).json(errorResponseFormat({
       status: 'error',
