@@ -1,6 +1,8 @@
 /* eslint-disable max-len */
 import bcrypt from 'bcryptjs';
 
+const hash = password => bcrypt.hashSync(password, bcrypt.genSaltSync(10));
+
 /**
  * @name init
  * @param {sequelize} sequelize
@@ -50,6 +52,12 @@ export default (sequelize, DataTypes) => {
       verificationToken: {
         type: DataTypes.STRING,
       },
+      passwordResetToken: {
+        type: DataTypes.STRING,
+      },
+      resetTokenExpires: {
+        type: DataTypes.DATE,
+      },
       notification: DataTypes.BOOLEAN,
       role: {
         type: DataTypes.ENUM('admin', 'author'),
@@ -60,9 +68,6 @@ export default (sequelize, DataTypes) => {
       tableName: 'users',
     },
   );
-
-  // eslint-disable-next-line func-names
-  const hash = password => bcrypt.hashSync(password, bcrypt.genSaltSync(10));
 
   User.beforeCreate((user) => {
     const hashedPass = hash(user.dataValues.password);
@@ -106,7 +111,7 @@ export default (sequelize, DataTypes) => {
       onDelete: 'CASCADE',
     });
   };
-
+  User.prototype.hash = hash;
   User.prototype.comparePassword = (password, hashPassword) => bcrypt.compareSync(password, hashPassword);
 
   return User;
