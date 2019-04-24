@@ -8,17 +8,10 @@ import { responseFormat, errorResponseFormat } from '../utils';
  * @param {object} res The response object
  * @returns {int} Returns the followed user
  */
-export const followUser = async (req, res) => {
+export const followAndUnfollowUser = async (req, res) => {
   try {
     const { user } = req;
     const { id } = req.params;
-    const followee = await User.findOne({ where: { id } });
-    if (!followee) {
-      return res.status(404).json(responseFormat({
-        status: 'fail',
-        data: 'This user does not exist'
-      }));
-    }
     if (id === user.id) {
       return res.status(403).json(
         responseFormat({
@@ -27,11 +20,10 @@ export const followUser = async (req, res) => {
         })
       );
     }
-    const [, created] = await Follower.findOrCreate(
-      {
-        where: { userId: user.id, followerId: id },
-        defaults: { userId: user.id, followerId: id }
-      }
+    const [, created] = await Follower.findOrCreate({
+      where: { userId: user.id, followerId: id },
+      defaults: { userId: user.id, followerId: id }
+    }
     );
     if (!created) {
       await Follower.destroy({ where: { userId: user.id, followerId: id } });
@@ -49,10 +41,16 @@ export const followUser = async (req, res) => {
       })
     );
   } catch (error) {
+    if (error.name === 'SequelizeForeignKeyConstraintError') {
+      return res.status(404).json(responseFormat({
+        status: 'fail',
+        data: 'This user does not exist'
+      }));
+    }
     return res.status(500).json(
       errorResponseFormat({
         status: 'error',
-        message: 'Something aint right, please try again later!'
+        message: 'Something went wrong, please try again later!'
       })
     );
   }
@@ -68,19 +66,13 @@ export const followUser = async (req, res) => {
  */
 export const getFollowing = async (req, res) => {
   try {
-    const { user } = req;
-    const details = await User.findAll(
+    const { user: { id } } = req;
+    const userDetails = await User.findOne(
       {
-        where: {
-          id: user.id
-        },
-        include: [{
-          model: Follower,
-          as: 'followers',
-        }]
-      }
-    );
-    if (details[0].dataValues.followers < 1) {
+        where: { id },
+        include: [{ model: Follower, as: 'following', }]
+      });
+    if (userDetails.following.length === 0) {
       return res.status(404).json(
         responseFormat({
           status: 'fail',
@@ -91,7 +83,46 @@ export const getFollowing = async (req, res) => {
     return res.status(200).json(
       responseFormat({
         status: 'success',
-        data: details
+        data: userDetails
+      })
+    );
+  } catch (error) {
+    return res.status(500).json(
+      errorResponseFormat({
+        status: 'error',
+        message: 'Something went wrong, please try again later!'
+      })
+    );
+  }
+};
+
+/**
+ * @description Get all followers of a user
+ * @param {object} req The request object
+ * @param {object} res The response object
+ * @param {followerId} person following a user
+ * @param {user} user to be followed
+ * @returns {int} Returns the list of followers
+ */
+export const getFollowers = async (req, res) => {
+  try {
+    const { user: { id } } = req;
+    const userDetails = await User.findOne({
+      where: { id },
+      include: [{ model: Follower, as: 'followers' }],
+    });
+    if (userDetails.followers.length === 0) {
+      return res.status(404).json(
+        responseFormat({
+          status: 'fail',
+          data: 'Sorry, know user is currently following you'
+        })
+      );
+    }
+    return res.status(200).json(
+      responseFormat({
+        status: 'success',
+        data: userDetails
       })
     );
   } catch (error) {

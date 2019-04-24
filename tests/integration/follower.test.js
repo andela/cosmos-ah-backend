@@ -43,7 +43,18 @@ describe('User Following API test', () => {
       .end((err, res) => {
         expect(res).to.have.status(200);
         expect(res.body).to.have.property('status').eql('success');
-        expect(res.body).to.have.property('data').to.be.an('array');
+        expect(res.body).to.have.property('data').to.be.an('object');
+        done();
+      });
+  });
+  it('Should return a success if all followers are returned', (done) => {
+    agent
+      .get('/api/v1/followers')
+      .set('Authorization', token)
+      .end((err, res) => {
+        expect(res).to.have.status(200);
+        expect(res.body).to.have.property('status').eql('success');
+        expect(res.body).to.have.property('data').to.be.an('object');
         done();
       });
   });
@@ -80,7 +91,7 @@ describe('User Following API test', () => {
         done();
       });
   });
-  it('Should return an error if user not found in follower table', (done) => {
+  it('Should return an error if user is not following anyone in the followers table', (done) => {
     agent
       .get('/api/v1/followings')
       .set('Authorization', token1)
@@ -88,6 +99,17 @@ describe('User Following API test', () => {
         expect(res).to.have.status(404);
         expect(res.body).to.have.property('status').eql('fail');
         expect(res.body).to.have.property('data').to.equal('Sorry, you are currently not following any user');
+        done();
+      });
+  });
+  it('Should return an error if user has know followers in the followers table', (done) => {
+    agent
+      .get('/api/v1/followers')
+      .set('Authorization', token1)
+      .end((err, res) => {
+        expect(res).to.have.status(404);
+        expect(res.body).to.have.property('status').eql('fail');
+        expect(res.body).to.have.property('data').to.equal('Sorry, know user is currently following you');
         done();
       });
   });
