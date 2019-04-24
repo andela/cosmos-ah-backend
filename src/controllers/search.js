@@ -1,36 +1,34 @@
-import models from '../models';
-import { responseFormat, errorResponseFormat } from '../utils/index';
+import { Op } from 'sequelize';
+import { responseFormat, errorResponseFormat } from '../utils';
+import { Article } from '../models';
 
-const search = async (req, res) => {
+export const searchArticle = async (req, res) => {
   try {
-    const searchResults = await models.sequelize.query(`
-    SELECT id, title
-    FROM articles
-    WHERE _search @@ plainto_tsquery('english', :query);
-  `, {
-      model: models.Article,
-      replacements: { query: req.body.search },
+    const { search } = req.body;
+    const articleSearch = await Article.findAll({ limit: 10,
+      where: { [Op.or]:
+      { title: { [Op.iLike]: `%${search}%` },
+        body: { [Op.iLike]: `%${search}%` },
+        description: { [Op.iLike]: `%${search}%` } } },
+      raw: true,
+      attributes: ['id', 'title']
     });
 
-    if (searchResults[0]) {
+    if (articleSearch.length > 0) {
       return res.status(200).json(responseFormat({
         status: 'success',
-        data: searchResults
+        data: articleSearch,
       }));
     }
 
-    return res.status(404).json(responseFormat({
+    return res.status(404).json(errorResponseFormat({
       status: 'fail',
-      data: {
-        message: 'No Search Record found'
-      }
+      message: 'No Search Record Found'
     }));
   } catch (error) {
-    console.log(error);
     return res.status(500).json(errorResponseFormat({
-      message: 'Server error. Please Try again Later. Thanks'
+      status: 'error',
+      message: 'Server Error, Please try again Later'
     }));
   }
 };
-
-export default search;

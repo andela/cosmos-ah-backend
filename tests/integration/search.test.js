@@ -44,9 +44,8 @@ describe('Search Test', () => {
           .to.have.property('status')
           .eql('fail');
         const { body } = res;
-        const { data } = body;
         expect(body).should.be.an('object');
-        expect(data).to.have.property('message').to.eql('No Search Record found');
+        expect(body).to.have.property('message').to.eql('No Search Record Found');
         done();
       });
   });
