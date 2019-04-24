@@ -67,19 +67,21 @@ export const followAndUnfollowUser = async (req, res) => {
 export const getFollowing = async (req, res) => {
   try {
     const { user: { id } } = req;
-    const userDetails = await User.findOne(
+    const userDetails = (await User.findOne(
       {
         where: { id },
-        include: [{ model: Follower, as: 'following', }]
-      });
-    if (userDetails.following.length === 0) {
-      return res.status(404).json(
-        responseFormat({
-          status: 'fail',
-          data: 'Sorry, you are currently not following any user'
-        })
-      );
-    }
+        include: [{
+          model: Follower,
+          as: 'following',
+          include: {
+            model: User,
+            as: 'followers',
+            attributes: ['id', 'fullName', 'email']
+          } }],
+        attributes: ['id', 'fullName']
+      })).toJSON();
+
+    userDetails.following = userDetails.following.map(user => user.followers);
     return res.status(200).json(
       responseFormat({
         status: 'success',
@@ -107,18 +109,20 @@ export const getFollowing = async (req, res) => {
 export const getFollowers = async (req, res) => {
   try {
     const { user: { id } } = req;
-    const userDetails = await User.findOne({
+    const userDetails = (await User.findOne({
       where: { id },
-      include: [{ model: Follower, as: 'followers' }],
-    });
-    if (userDetails.followers.length === 0) {
-      return res.status(404).json(
-        responseFormat({
-          status: 'fail',
-          data: 'Sorry, know user is currently following you'
-        })
-      );
-    }
+      include: [{
+        model: Follower,
+        as: 'followers',
+        include: {
+          model: User,
+          as: 'following',
+          attributes: ['id', 'fullName', 'email']
+        } }],
+      attributes: ['id', 'fullName']
+    })).toJSON();
+
+    userDetails.followers = userDetails.followers.map(user => user.following);
     return res.status(200).json(
       responseFormat({
         status: 'success',
