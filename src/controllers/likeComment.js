@@ -1,4 +1,4 @@
-import { likeDislike } from '../utils/LikeDislike';
+import { likeDislike } from '../utils/likeDislike';
 import { LikeComment } from '../models';
 import { responseFormat, errorResponseFormat } from '../utils';
 
