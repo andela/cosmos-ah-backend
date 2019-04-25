@@ -33,7 +33,6 @@ import {
   articleReportValidation,
   articleTagValidation,
   articleRatingValidation,
-  commentValidation,
   checkQueryParams,
 } from '../middlewares/articles';
 import { checkParam } from '../middlewares/checkParam';
@@ -42,6 +41,8 @@ import { editUser } from '../controllers/editUser';
 import { followUser } from '../controllers/follower';
 import getAuthors from '../controllers/authors';
 import highlightArticle from '../controllers/highlight';
+import { commentValidation, verifyComment } from '../middlewares/comments';
+ import { likeComment } from '../controllers/likeComment';
 import { forgotPassword, resetPassword } from '../controllers/authentication/passwordReset';
 import resetFieldValidation from '../middlewares/auth/resetPassword';
 
@@ -57,6 +58,10 @@ router
   .route('/articles/:id/like')
   .patch(checkParam, Auth.authenticateUser, verifyArticle, likeArticle);
 router.route('/articles/:id/highlight').post(Auth.authenticateUser, checkParam, highlightArticle);
+
+router
+   .route('/comments/:id/like')
+   .patch(checkParam, Auth.authenticateUser, verifyComment, likeComment);
 
 /**
  * Resource handling articles
