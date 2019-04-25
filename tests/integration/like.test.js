@@ -63,7 +63,7 @@ describe('PATCH /api/v1/:commentId/like', () => {
       });
   });
 
-   it('should unlike an comment', (done) => {
+  it('should unlike an comment', (done) => {
     agent
       .patch('/api/v1/comments/979eaa2e-5b8f-4103-8192-4639afae2bb9/like')
       .set('Authorization', JWT_TOKEN)
@@ -74,7 +74,7 @@ describe('PATCH /api/v1/:commentId/like', () => {
       });
   });
 
-   it('should unlike an comment', (done) => {
+  it('should unlike an comment', (done) => {
     agent
       .patch('/api/v1/comments/979eaa2e-5b8f-4103-8192-4639afae2bb6/like')
       .set('Authorization', JWT_TOKEN)
@@ -84,7 +84,7 @@ describe('PATCH /api/v1/:commentId/like', () => {
       });
   });
 
-   it('should respond with error invalid comment ID', (done) => {
+  it('should respond with error invalid comment ID', (done) => {
     agent
       .patch('/api/v1/comments/7/like')
       .set('Authorization', JWT_TOKEN)
