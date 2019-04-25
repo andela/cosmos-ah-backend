@@ -9,7 +9,7 @@ import {
   reportArticle,
   bookmarkArticle,
   editArticleTag,
-  rateArticle
+  rateArticle,
 } from '../controllers/article';
 import { addComment } from '../controllers/comment';
 import checkFields from '../middlewares/auth/loginValidator';
@@ -33,7 +33,6 @@ import {
   articleReportValidation,
   articleTagValidation,
   articleRatingValidation,
-  commentValidation,
   checkQueryParams,
 } from '../middlewares/articles';
 import { checkParam } from '../middlewares/checkParam';
@@ -42,7 +41,8 @@ import { editUser } from '../controllers/editUser';
 import { followUser } from '../controllers/follower';
 import getAuthors from '../controllers/authors';
 import highlightArticle from '../controllers/highlight';
-
+import { commentValidation, verifyComment } from '../middlewares/comments';
+import { likeComment } from '../controllers/likeComment';
 
 const router = Router();
 
@@ -55,6 +55,10 @@ router
   .route('/articles/:id/like')
   .patch(checkParam, Auth.authenticateUser, verifyArticle, likeArticle);
 router.route('/articles/:id/highlight').post(Auth.authenticateUser, checkParam, highlightArticle);
+
+router
+  .route('/comments/:id/like')
+  .patch(checkParam, Auth.authenticateUser, verifyComment, likeComment);
 
 /**
  * Resource handling articles
@@ -85,7 +89,6 @@ router
 
 //  Route for adding tags to an article
 router.put('/articles/tags/:id', Auth.authenticateUser, articleTagValidation, editArticleTag);
-
 
 // Route for facebook Authentication
 router.get(
@@ -155,6 +158,11 @@ router.get(
 
 router.get('/authors', Auth.authenticateUser, getAuthors);
 
-router.post('/articles/:articleId/ratings', Auth.authenticateUser, articleRatingValidation, rateArticle);
+router.post(
+  '/articles/:articleId/ratings',
+  Auth.authenticateUser,
+  articleRatingValidation,
+  rateArticle,
+);
 
 export default router;
