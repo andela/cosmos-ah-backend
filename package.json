@@ -4,7 +4,7 @@
   "description": "A Social platform for the creative at heart",
   "main": "index.js",
   "scripts": {
-    "build": "babel -d ./dist ./src",
+    "build": "babel -d ./dist ./src  --copy-files --source-maps inline",
     "clean": "rm -rf ./build",
     "coverage": "nyc report --reporter=text-lcov | coveralls",
     "db-create": "sequelize db:create",
