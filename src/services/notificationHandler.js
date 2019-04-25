@@ -16,19 +16,17 @@ export const extractFieldToArray = (payload, key) => {
 /**
  * @name oneToManyFollowers
  * @description This is the method for grasping collections done in a query
- * @param {object|void} param Should contain an object
+ * @param {object|void} userId Should be a string
  * @returns {function} Returns a collection
  */
-export const oneToManyFollowers = async ({ userId: id }) => {
-  const userFollowers = await User.findOne({
-    where: { id },
-    include: [
-      {
-        model: Follower,
-        as: 'userFollowers',
-        attributes: ['followerId'],
-      },
-    ],
+export const oneToManyFollowers = async ({ userId }) => {
+  const userFollowers = await Follower.findAll({
+    where: { followerId: userId, },
+    include: [{
+      model: User,
+      as: 'following',
+    }],
+    raw: true,
   });
   return userFollowers;
 };
@@ -41,27 +39,28 @@ export const oneToManyFollowers = async ({ userId: id }) => {
  * @returns {object} Returns the collection of saved notifications
  */
 export const transformArrayToObject = (userFollowers, meta) => {
-  const result = extractFieldToArray(userFollowers, 'followerId');
+  const result = extractFieldToArray(userFollowers, 'following.id');
   return result.map(prop => ({ userId: prop, ...meta }));
 };
 
 /**
  * @name saveNotifications
  * @description This is the method for inserting articles
- * @param {object} payload The containing user details
+ * @param {object} user The containing user details
+ * @param {object} payload The containing article/comment details
  * @param {object} meta The containing meta details
  * @returns {object} Returns the collection of saved notifications
  */
-export const saveNotifications = async ({ userId, }, meta) => {
+export const saveNotifications = async (user, payload, meta) => {
   try {
+    const { userId, } = payload;
     const followers = await oneToManyFollowers({ userId });
-    const { userFollowers } = followers.get({ plain: true });
     await Notification.bulkCreate(
-      transformArrayToObject(userFollowers, meta),
+      transformArrayToObject(followers, meta),
       { hooks: true, individualHooks: true, validate: false, },
     );
-    return true;
+    return followers;
   } catch (error) {
-    throw new Error(error);
+    throw new Error('Notification save failed.');
   }
 };

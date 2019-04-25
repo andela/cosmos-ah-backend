@@ -13,7 +13,8 @@ const options = {
 engine.Server.prototype.generateId = (req) => {
   try {
     const query = '_query';
-    return verifyToken(req[query].authorization.replace('Bearer ', '')).id;
+    const token = verifyToken(req[query].authorization.replace('Bearer ', '')).id;
+    return token;
   } catch (error) {
     return false;
   }

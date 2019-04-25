@@ -1,5 +1,5 @@
 import sequelize from 'sequelize';
-import { Article, Comment, Bookmark, Report, Rating, Sequelize } from '../models';
+import { Article, Comment, Bookmark, Report, Rating, Sequelize, } from '../models';
 import { slug, userAuthoredThisArticle } from '../utils/article';
 import {
   responseHandler,
@@ -21,23 +21,25 @@ import { saveNotifications } from '../services/notificationHandler';
  * @returns {object} Returns the inserted article after success
  */
 export const addArticle = async (req, res) => {
-  const { body } = req;
-  const { id: userId } = req.user;
+  const { body, user } = req;
+  const { id: userId, fullName } = req.user;
   delete body.isDeletedByAuthor;
   try {
-    const article = await Article.create({ userId, slug: slug(body.title), ...body });
+    let article = await Article.create({ userId, slug: slug(body.title), ...body });
+    const { dataValues } = article;
+    article = { authorName: fullName, ...dataValues };
+    responseHandler(res, 201, {
+      status: 'success',
+      message: 'Your article was successfully created!',
+      data: article,
+    });
     if (article.published) {
-      await saveNotifications(article, {
+      await saveNotifications(user, article, {
         message: `${fullName} just published an article`,
         subjectUrl: article.slug,
       });
       await notify(article, 'article-created');
     }
-    return responseHandler(res, 201, {
-      status: 'success',
-      message: 'Your article was successfully created!',
-      data: article,
-    });
   } catch (error) {
     const { name: errorName } = error;
     if (errorName === 'SequelizeForeignKeyConstraintError') {

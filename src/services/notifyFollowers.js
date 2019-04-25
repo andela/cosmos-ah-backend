@@ -1,5 +1,8 @@
+import { limit, } from 'stringz';
+import { sendNotificationMail } from '../utils/email';
 import { io } from '../utils/notification/brodcast';
-import { extractFieldToArray, oneToManyFollowers } from './notificationHandler';
+import { oneToManyFollowers } from './notificationHandler';
+import { compileTemplate } from '../templates';
 
 /**
  * @name notifyHandler
@@ -10,16 +13,35 @@ import { extractFieldToArray, oneToManyFollowers } from './notificationHandler';
  * @returns {function} Emits a notification to the selected collection
  */
 export const notifyHandler = async (notifies, payload, eventName) => {
-  if (typeof eventName !== 'string') { throw new Error('Event name must be of type string'); }
   try {
+    if (typeof eventName !== 'string') { throw new Error('Event name must be of type string'); }
     await notifies.forEach(async (notify) => {
-      await io.to(notify).emit(eventName, payload);
+      const { 'following.id': id } = notify;
+      await io.to(id).emit(eventName, payload);
     });
     return true;
   } catch (error) {
     return false;
   }
 };
+
+/**
+ * @name sendToEmail
+ * @description This is the method for sending notifications to users via email
+ * @param {object|void} followers Array of all followers
+ * @param {string} param Message to be sent
+ * @returns {function} Emits a notification to the selected collection
+ */
+export const sendToEmail = async (followers, param) => followers.forEach(async ({ 'following.email': email }) => {
+  const appUrl = 'https://author-haven-stage.herokuapp.com/api/v1';
+  const actionLink = `${process.env.AH_API_URL}/articles/${param.id}`;
+  param.body = param.body.length > 250 ? `${limit(param.body, 250)} ...` : param.body;
+  const html = await compileTemplate(
+    '/mailer/notifyOnArticlePublish.hbs',
+    { email, ...param, appUrl, actionLink, },
+  );
+  await sendNotificationMail({ email, subject: `${param.title} by ${param.authorName}`, html });
+});
 
 /**
  * @name notify
@@ -30,10 +52,9 @@ export const notifyHandler = async (notifies, payload, eventName) => {
  */
 export const notify = async (param, eventName) => {
   const { userId } = param;
-  let followers = await oneToManyFollowers({ userId });
-  const { userFollowers } = followers.get({ plain: true });
-  followers = extractFieldToArray(userFollowers, 'followerId');
-  return notifyHandler(followers, param, eventName);
+  const followers = await oneToManyFollowers({ userId });
+  await notifyHandler(followers, param, eventName);
+  await sendToEmail(followers, param);
 };
 
 /**
@@ -43,6 +64,4 @@ export const notify = async (param, eventName) => {
  * @param {string} socketId ID of the socket
  * @returns {boolean} Returns boolean.
  */
-export const clearNotifications = async (payload, socketId) => {
-  console.log(payload, socketId);
-};
+export const clearNotifications = async (payload, socketId) => console.log(payload, socketId);
