@@ -42,7 +42,7 @@ import { followUser } from '../controllers/follower';
 import getAuthors from '../controllers/authors';
 import highlightArticle from '../controllers/highlight';
 import { commentValidation, verifyComment } from '../middlewares/comments';
- import { likeComment } from '../controllers/likeComment';
+import { likeComment } from '../controllers/likeComment';
 import { forgotPassword, resetPassword } from '../controllers/authentication/passwordReset';
 import resetFieldValidation from '../middlewares/auth/resetPassword';
 
@@ -60,8 +60,8 @@ router
 router.route('/articles/:id/highlight').post(Auth.authenticateUser, checkParam, highlightArticle);
 
 router
-   .route('/comments/:id/like')
-   .patch(checkParam, Auth.authenticateUser, verifyComment, likeComment);
+  .route('/comments/:id/like')
+  .patch(checkParam, Auth.authenticateUser, verifyComment, likeComment);
 
 /**
  * Resource handling articles
