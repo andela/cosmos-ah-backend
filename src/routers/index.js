@@ -43,6 +43,10 @@ import getAuthors from '../controllers/authors';
 import highlightArticle from '../controllers/highlight';
 import { commentValidation, verifyComment } from '../middlewares/comments';
 import { likeComment } from '../controllers/likeComment';
+import { forgotPassword, resetPassword } from '../controllers/authentication/passwordReset';
+import resetFieldValidation from '../middlewares/auth/resetPassword';
+
+
 
 const router = Router();
 
@@ -89,6 +93,12 @@ router
 
 //  Route for adding tags to an article
 router.put('/articles/tags/:id', Auth.authenticateUser, articleTagValidation, editArticleTag);
+
+
+// Routes for password reset
+router
+  .post('/forgot-password', forgotPassword)
+  .put('/password-reset/:resetToken', resetFieldValidation, resetPassword);
 
 // Route for facebook Authentication
 router.get(

@@ -75,6 +75,23 @@ export default {
         createdAt: new Date(),
         updatedAt: new Date(),
       },
+      {
+        id: '146fa633-98dd-467f-9e4d-48eac3ee14e4',
+        fullName: 'Simple Mart',
+        email: 'simple@mailinator.com',
+        username: 'simplemart',
+        password: '$2y$10$N9JKEBqy0MUi7bH1a07/pOWBLj2Me9UTAAM56qBH54lSzxdvV4Dxe',
+        bio:
+            "Hold on now, aren't there already specs for this kind of thing? - Well... no. While there are a few handy specifications for dealing with JSON data, most notably Douglas Crockford's JSONRequest proposal, there's nothing to address the problems of general application-level messaging. More on this later.",
+        imageUrl: 'http://waterease.herokuapp.com/images/board/comfort.jpg',
+        notification: true,
+        role: 'author',
+        verified: true,
+        passwordResetToken: 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJlbWFpbCI6InNpbXBsZUBtYWlsaW5hdG9yLmNvbSIsImlhdCI6MTU1NTUxNTAyOSwiZXhwIjoxNTg3MDcyNjI5fQ.wDB5SzRAdZEJ5EITaqwhPZtcMNlkP6mLy7Kh1oWC7ms',
+        resetTokenExpires: new Date(new Date().setDate(new Date().getDate() + 2)),
+        createdAt: new Date(),
+        updatedAt: new Date(),
+      },
     ],
     {}
   ),
