@@ -1,7 +1,7 @@
 import { User } from '../models';
 
 const strategyCallback = async (accessToken, refreshToken, profile, done) => {
-  const { id, displayName, photos, emails, username } = profile;
+  const { id, displayName, photos, emails } = profile;
 
   try {
     const [user] = await User.findOrCreate({
@@ -10,7 +10,7 @@ const strategyCallback = async (accessToken, refreshToken, profile, done) => {
         fullName: displayName,
         password: id,
         email: emails[0].value,
-        username,
+        username: emails[0].value,
         imageUrl: photos[0].value,
       },
     });
