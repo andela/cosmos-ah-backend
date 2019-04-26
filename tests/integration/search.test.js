@@ -1,6 +1,5 @@
 import chai from 'chai';
 import chaiHttp from 'chai-http';
-import { search, searchError, searchValidationError } from '../mock/user';
 import { startServer } from '../../src/server';
 
 const { expect } = chai;
@@ -17,8 +16,7 @@ describe('Search Test', () => {
 
   it('Should return success for cosmos search', (done) => {
     agent
-      .post('/api/v1/search/articles')
-      .send(search)
+      .get('/api/v1/search/articles?searchParams=cosmos')
       .end((err, res) => {
         expect(res).to.have.status(200);
         expect(res.body)
@@ -36,8 +34,7 @@ describe('Search Test', () => {
 
   it('Should return failure for cosmos search', (done) => {
     agent
-      .post('/api/v1/search/articles')
-      .send(searchError)
+      .get('/api/v1/search/articles?searchParams=error')
       .end((err, res) => {
         const { body } = res;
         expect(res).to.have.status(404);
@@ -46,22 +43,6 @@ describe('Search Test', () => {
           .eql('fail');
         expect(body).should.be.an('object');
         expect(body.data).to.have.property('message').to.eql('No Search Record Found');
-        done();
-      });
-  });
-
-  it('Should return validation error for cosmos search', (done) => {
-    agent
-      .post('/api/v1/search/articles')
-      .send(searchValidationError)
-      .end((err, res) => {
-        const { body } = res;
-        expect(res).to.have.status(400);
-        expect(body)
-          .to.have.property('status')
-          .eql('fail');
-        expect(body).should.be.an('object');
-        expect(body.message).to.have.property('search').to.eql('The search field is required.');
         done();
       });
   });

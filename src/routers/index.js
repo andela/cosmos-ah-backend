@@ -50,7 +50,6 @@ import { trimBody } from '../middlewares';
 import search from '../controllers/search';
 import checkSearchBody from '../middlewares/search';
 import { searchArticle } from '../controllers/search';
-import checkSearchBody from '../middlewares/search';
 
 const router = Router();
 
@@ -172,7 +171,7 @@ router.get('/authors', Auth.authenticateUser, getAuthors);
 
 router.post('/articles/:articleId/ratings', Auth.authenticateUser, articleRatingValidation, rateArticle);
 
-router.post('/search/articles', checkSearchBody, searchArticle);
+router.get('/search/articles', searchArticle);
 
 router.patch(
   '/articles/:articleId/publish',

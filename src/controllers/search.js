@@ -4,12 +4,12 @@ import { Article } from '../models';
 
 export const searchArticle = async (req, res) => {
   try {
-    const { search } = req.body;
+    const { searchParams } = req.query;
     const articleSearch = await Article.findAll({ limit: 10,
       where: { [Op.or]:
-      { title: { [Op.iLike]: `%${search}%` },
-        body: { [Op.iLike]: `%${search}%` },
-        description: { [Op.iLike]: `%${search}%` } } },
+      { title: { [Op.iLike]: `%${searchParams}%` },
+        body: { [Op.iLike]: `%${searchParams}%` },
+        description: { [Op.iLike]: `%${searchParams}%` } } },
       raw: true,
       attributes: ['id', 'title', 'body', 'description']
     });
