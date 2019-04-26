@@ -21,10 +21,10 @@ import { saveNotifications } from '../services/notificationHandler';
  * @returns {object} Returns the inserted article after success
  */
 export const addArticle = async (req, res) => {
-  const { body, user } = req;
-  const { id: userId, fullName } = req.user;
-  delete body.isDeletedByAuthor;
   try {
+    const { body, user } = req;
+    const { id: userId, fullName } = req.user;
+    delete body.isDeletedByAuthor;
     let article = await Article.create({ userId, slug: slug(body.title), ...body });
     const { dataValues } = article;
     article = { authorName: fullName, ...dataValues };
