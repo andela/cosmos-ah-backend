@@ -9,7 +9,8 @@ import {
   reportArticle,
   bookmarkArticle,
   editArticleTag,
-  rateArticle
+  rateArticle,
+  publishArticle
 } from '../controllers/article';
 import { addComment } from '../controllers/comment';
 import checkFields from '../middlewares/auth/loginValidator';
@@ -167,6 +168,13 @@ router.get('/authors', Auth.authenticateUser, getAuthors);
 
 router.post('/articles/:articleId/ratings', Auth.authenticateUser, articleRatingValidation, rateArticle);
 
+router.patch(
+  '/articles/:articleId/publish',
+  Auth.authenticateUser,
+  verifyArticle,
+  isAuthor,
+  publishArticle,
+);
 
 router.all('*', (req, res) => {
   res.status(404).json({
