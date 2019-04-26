@@ -164,4 +164,12 @@ router.get('/authors', Auth.authenticateUser, getAuthors);
 
 router.post('/articles/:articleId/ratings', Auth.authenticateUser, articleRatingValidation, rateArticle);
 
+
+router.all('*', (req, res) => {
+  res.status(404).json({
+    status: 404,
+    error: 'Incorrect API endpoint'
+  });
+});
+
 export default router;
