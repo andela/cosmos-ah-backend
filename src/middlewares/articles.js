@@ -37,8 +37,10 @@ export const articleValidation = async (req, res, next) => {
  * @returns {function} Calls next function/action
  */
 export const verifyArticle = async (req, res, next) => {
-  const { id } = req.params;
-  const article = await findById(Article, id);
+  let { id, articleId } = req.params;
+  id = !id ? articleId : id;
+  articleId = !articleId ? id : articleId;
+  const article = await findById(Article, { id, articleId, }, { isDeletedByAuthor: false });
   if (!article) { return responseHandler(res, 404, { status: 'fail', message: 'Article not found!', }); }
   const { dataValues: { userId: authorId } } = article;
   req.authorId = authorId;

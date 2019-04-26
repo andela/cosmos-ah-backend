@@ -207,7 +207,7 @@ describe('DELETE /api/v1/articles/:id', () => {
       .set('Authorization', JWT_TOKEN)
       .end((_err, res) => {
         const { body } = res;
-        expect(res).to.have.status(202);
+        expect(res).to.have.status(200);
         expect(body).should.be.an('object');
         expect(body).to.have.property('status');
         expect(body).to.have.property('message');
@@ -241,6 +241,7 @@ describe('POST /api/v1/articles/:id/highlight', () => {
     app = await startServer(5000);
     agent = chai.request(app);
   });
+
   it('Should return status: 201', (done) => {
     agent
       .post('/api/v1/articles/a7f6cbad-db13-4531-a0e2-498f1c30766e/highlight')
@@ -258,6 +259,7 @@ describe('POST /api/v1/articles/:id/highlight', () => {
         done();
       });
   });
+
   after(async (done) => {
     app.close();
     app = null;
@@ -270,6 +272,7 @@ describe('POST /api/v1/articles/:id/highlight', () => {
     app = await startServer(5000);
     agent = chai.request(app);
   });
+
   it('Should return status: 403 when startIndex and stopIndex is not passed', (done) => {
     agent
       .post('/api/v1/articles/a7f6cbad-db13-4531-a0e2-498f1c30766e/highlight')
@@ -283,6 +286,7 @@ describe('POST /api/v1/articles/:id/highlight', () => {
         done();
       });
   });
+
   after(async (done) => {
     app.close();
     app = null;
@@ -312,6 +316,33 @@ describe('POST /api/v1/articles/:id/highlight', () => {
         done();
       });
   });
+  after(async (done) => {
+    app.close();
+    app = null;
+    done();
+  });
+});
+
+describe('POST /api/v1/articles/:id/publish', () => {
+  beforeEach(async () => {
+    app = await startServer(5000);
+    agent = chai.request(app);
+  });
+
+  it('Should return status: 200 when Article not on the table', (done) => {
+    agent
+      .patch('/api/v1/articles/979eaa2e-5b8f-4103-8192-4639afae2ba8/publish')
+      .set('Authorization', JWT_TOKEN)
+      .end((_err, res) => {
+        const { body } = res;
+        expect(res).to.have.status(200);
+        expect(body).should.be.an('object');
+        expect(body).to.have.property('status');
+        expect(body).to.have.property('message');
+        done();
+      });
+  });
+
   after(async (done) => {
     app.close();
     app = null;
