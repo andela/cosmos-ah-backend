@@ -162,10 +162,3 @@ export const handleDBErrors = (error, { req, Sequelize }, cb) => {
   }
   return cb(errorResponseMessage);
 };
-
-export const validateSearchParams = (body) => {
-  const rules = {
-    search: 'required'
-  };
-  return new Validator(body, rules);
-};
