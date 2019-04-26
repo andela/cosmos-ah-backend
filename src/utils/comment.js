@@ -24,7 +24,6 @@ export const getLastComment = async (commentId) => {
   try {
     const histories = await CommentEditHistory.findAll({ where: { commentId }, raw: true });
     const lastHistory = histories[histories.length - 1];
-    console.log(lastHistory);
     return lastHistory ? lastHistory.commentBody : '';
   } catch (error) {
     throw error;
