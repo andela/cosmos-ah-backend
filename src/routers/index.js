@@ -39,7 +39,7 @@ import {
 import { checkParam } from '../middlewares/checkParam';
 import checkEditBody from '../middlewares/editProfileValidator';
 import { editUser } from '../controllers/editUser';
-import { followUser } from '../controllers/follower';
+import { followAndUnfollowUser, getFollowing, getFollowers } from '../controllers/follower';
 import getAuthors from '../controllers/authors';
 import highlightArticle from '../controllers/highlight';
 import { forgotPassword, resetPassword } from '../controllers/authentication/passwordReset';
@@ -126,7 +126,10 @@ router.get('/auth/linkedin', linkedinUser);
 router.post('/articles/:articleId/comments', Auth.authenticateUser, commentValidation, addComment);
 
 // Route for user following and unfollowing
-router.post('/followers/:id/follow', checkParam, Auth.authenticateUser, followUser);
+router.post('/followers/:id/follow', checkParam, Auth.authenticateUser, followAndUnfollowUser);
+router.get('/followings', Auth.authenticateUser, getFollowing);
+router.get('/followers', Auth.authenticateUser, getFollowers);
+
 
 /**
  * Resource handling signup
