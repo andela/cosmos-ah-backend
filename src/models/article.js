@@ -61,20 +61,28 @@ export default (sequelize, DataTypes) => {
         type: DataTypes.INTEGER,
         defaultValue: 1,
       },
+      isDeletedByAuthor: {
+        type: DataTypes.BOOLEAN,
+        defaultValue: false,
+      },
     },
     {
       tableName: 'articles',
       hooks: {
         beforeCreate(article) {
-          const totalReadTime = computeArticleReadingTime(article.get('body'));
+          const totalReadTime = computeArticleReadingTime(
+            article.get('body'),
+          );
           article.set('totalReadTime', totalReadTime);
         },
         beforeUpdate(article) {
-          const totalReadTime = computeArticleReadingTime(article.get('body'));
+          const totalReadTime = computeArticleReadingTime(
+            article.get('body'),
+          );
           article.set('totalReadTime', totalReadTime);
-        }
-      }
-    }
+        },
+      },
+    },
   );
   Article.associate = (models) => {
     Article.belongsToMany(models.User, {
