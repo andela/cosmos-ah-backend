@@ -25,7 +25,7 @@ import {
   viewUser,
 } from '../controllers/authentication/user';
 import checkBody from '../middlewares/signUpValidator';
-import likeArticle from '../controllers/like';
+import likeArticle from '../controllers/likeArticle';
 import {
   articleValidation,
   verifyArticle,

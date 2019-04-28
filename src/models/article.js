@@ -91,7 +91,7 @@ export default (sequelize, DataTypes) => {
       through: 'article_user',
       onDelete: 'CASCADE',
     });
-    Article.hasMany(models.Like, {
+    Article.hasMany(models.LikeArticle, {
       foreignKey: 'userId',
       as: 'userLikes',
       onDelete: 'CASCADE',

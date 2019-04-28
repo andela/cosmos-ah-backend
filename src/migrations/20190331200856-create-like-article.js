@@ -1,5 +1,5 @@
 export default {
-  up: (queryInterface, Sequelize) => queryInterface.createTable('likes', {
+  up: (queryInterface, Sequelize) => queryInterface.createTable('like_articles', {
     id: {
       allowNull: false,
       primaryKey: true,
@@ -32,5 +32,5 @@ export default {
       type: Sequelize.DATE,
     },
   }),
-  down: queryInterface => queryInterface.dropTable('likes'),
+  down: queryInterface => queryInterface.dropTable('like_articles'),
 };
