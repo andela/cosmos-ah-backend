@@ -8,3 +8,8 @@ export const testUser = {
   fullName: 'Chike Ozulumba',
   email: 'testuser@email.com',
 };
+export const testUser1 = {
+  id: '7e824eba-2a9e-4933-affa-6a3da937e47c',
+  fullName: 'Sheyi Say',
+  email: 'testuser@email.com',
+};

@@ -9,7 +9,8 @@ import {
   reportArticle,
   bookmarkArticle,
   editArticleTag,
-  rateArticle
+  rateArticle,
+  publishArticle
 } from '../controllers/article';
 import { addComment } from '../controllers/comment';
 import checkFields from '../middlewares/auth/loginValidator';
@@ -38,7 +39,7 @@ import {
 import { checkParam } from '../middlewares/checkParam';
 import checkEditBody from '../middlewares/editProfileValidator';
 import { editUser } from '../controllers/editUser';
-import { followUser } from '../controllers/follower';
+import { followAndUnfollowUser, getFollowing, getFollowers } from '../controllers/follower';
 import getAuthors from '../controllers/authors';
 import highlightArticle from '../controllers/highlight';
 import { commentValidation, verifyComment } from '../middlewares/comments';
@@ -131,7 +132,10 @@ router.get('/auth/linkedin', linkedinUser);
 router.post('/articles/:articleId/comments', Auth.authenticateUser, commentValidation, addComment);
 
 // Route for user following and unfollowing
-router.post('/followers/:id/follow', checkParam, Auth.authenticateUser, followUser);
+router.post('/followers/:id/follow', checkParam, Auth.authenticateUser, followAndUnfollowUser);
+router.get('/followings', Auth.authenticateUser, getFollowing);
+router.get('/followers', Auth.authenticateUser, getFollowers);
+
 
 /**
  * Resource handling signup
@@ -169,6 +173,13 @@ router.get('/authors', Auth.authenticateUser, getAuthors);
 
 router.post('/articles/:articleId/ratings', Auth.authenticateUser, articleRatingValidation, rateArticle);
 
+router.patch(
+  '/articles/:articleId/publish',
+  Auth.authenticateUser,
+  verifyArticle,
+  isAuthor,
+  publishArticle,
+);
 
 router.all('*', (req, res) => {
   res.status(404).json({

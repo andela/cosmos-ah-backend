@@ -21,6 +21,7 @@ import { findAndCount } from '../utils/query';
 export const addArticle = async (req, res) => {
   const { body } = req;
   const { id: userId } = req.user;
+  delete body.isDeletedByAuthor;
   try {
     const article = await Article.create({ userId, slug: slug(body.title), ...body });
     return responseHandler(res, 201, {
@@ -49,9 +50,11 @@ export const addArticle = async (req, res) => {
  */
 export const editArticle = async (req, res) => {
   const success = 1;
+  const { body } = req;
+  delete body.isDeletedByAuthor;
   try {
     const { id } = req.params;
-    const article = await Article.update(req.body, { where: { id }, returning: true });
+    const article = await Article.update(body, { where: { id }, returning: true });
     if (success === article[0]) {
       const [, [updatedArticle]] = article;
       return responseHandler(res, 202, {
@@ -109,9 +112,12 @@ export const deleteArticle = async (req, res) => {
   const { id } = req.params;
   try {
     const deleted = 1;
-    const destroyArticle = await Article.destroy({ where: { id } });
+    const destroyArticle = await Article.update(
+      { isDeletedByAuthor: true },
+      { where: { id }, },
+    );
     if (destroyArticle >= deleted) {
-      return responseHandler(res, 202, {
+      return responseHandler(res, 200, {
         status: 'success',
         message: 'Your article has been removed.',
       });
@@ -268,7 +274,7 @@ export const getAllArticles = async (req, res) => {
     const paginate = { limit, offset, subQuery: false };
 
     const articles = await Article.findAll({
-      where: { published: true },
+      where: { published: true, isDeletedByAuthor: false, },
       order: [['createdAt', 'ASC']],
       group: ['Article.id', 'comments.id'],
       ...paginate,
@@ -292,24 +298,50 @@ export const getAllArticles = async (req, res) => {
  * @description This is the method for deleting an article
  * @param {object} req The request object
  * @param {object} res The response object
- * @returns {int} Returns true after deleting an article
+ * @returns {boolean} Returns true after deleting an article
  * @returns {object} Returns response object
  */
 export const getAnArticleByID = async (req, res) => {
   const { id } = req.params;
   try {
     const article = await Article.findOne({
-      where: { id, published: true },
+      where: { id, published: true, isDeletedByAuthor: false, },
       group: ['Article.id'],
-      include: [{
-        model: Comment,
-        as: 'comments',
-        limit: 10,
-        offset: 0,
-      }]
+      include: [
+        {
+          model: Comment,
+          as: 'comments',
+          limit: 10,
+          offset: 0,
+        },
+      ],
     });
     if (!article) { return responseHandler(res, 404, { status: 'fail', message: 'Article not found!' }); }
     return responseHandler(res, 200, { status: 'success', data: article });
+  } catch (error) {
+    return responseHandler(res, 500, { status: 'error', message: 'An internal server error occured!' });
+  }
+};
+
+/**
+ * @name publishArticle
+ * @description This is the method for deleting an article
+ * @param {object} req The request object
+ * @param {object} res The response object
+ * @returns {boolean} Returns true after deleting an article
+ * @returns {object} Returns response object
+ */
+export const publishArticle = async (req, res) => {
+  try {
+    const { articleId: id, } = req.params;
+    const article = await Article.update({ published: true, }, { where: { id, }, returning: true });
+    if (!article) { return responseHandler(res, 404, { status: 'fail', message: 'Article not found!' }); }
+    const [, [publishedArticle]] = article;
+    return responseHandler(res, 200, {
+      status: 'success',
+      message: 'Your article has been published!',
+      data: publishedArticle,
+    });
   } catch (error) {
     return responseHandler(res, 500, { status: 'error', message: 'An internal server error occured!' });
   }

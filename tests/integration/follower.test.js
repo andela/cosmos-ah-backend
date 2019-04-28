@@ -35,6 +35,28 @@ describe('User Following API test', () => {
         done();
       });
   });
+  it('Should return a success if all followings are returned', (done) => {
+    agent
+      .get('/api/v1/followings')
+      .set('Authorization', token)
+      .end((err, res) => {
+        expect(res).to.have.status(200);
+        expect(res.body).to.have.property('status').eql('success');
+        expect(res.body).to.have.property('data').to.be.an('object');
+        done();
+      });
+  });
+  it('Should return a success if all followers are returned', (done) => {
+    agent
+      .get('/api/v1/followers')
+      .set('Authorization', token)
+      .end((err, res) => {
+        expect(res).to.have.status(200);
+        expect(res.body).to.have.property('status').eql('success');
+        expect(res.body).to.have.property('data').to.be.an('object');
+        done();
+      });
+  });
   it('Should unfollow a user successfully', (done) => {
     agent
       .post('/api/v1/followers/979eaa2e-5b8f-4103-8192-4639afae2ba7/follow')
