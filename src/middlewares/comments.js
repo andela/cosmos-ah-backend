@@ -1,7 +1,7 @@
 import { Comment } from '../models';
 import { validateComment } from '../utils/comment';
 import { parseErrorResponse, responseHandler } from '../utils';
-import { findById } from '../utils/query';
+
 
 export const commentValidation = async (req, res, next) => {
   const validate = await validateComment(req.body);
@@ -18,7 +18,7 @@ export const commentValidation = async (req, res, next) => {
 
 export const verifyComment = async (req, res, next) => {
   const { id } = req.params;
-  const comment = await findById(Comment, id);
+  const comment = await Comment.findByPk(id);
   if (!comment) {
     return responseHandler(res, 404, { status: 'fail', message: 'Comment not found!' });
   }

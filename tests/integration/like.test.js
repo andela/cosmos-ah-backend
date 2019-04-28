@@ -1,18 +1,30 @@
 import chai from 'chai';
 import chaiHttp from 'chai-http';
 import { startServer } from '../../src/server';
-import { JWT_TOKEN } from '../mock/user';
+// import { JWT_TOKEN } from '../mock/user';
 
 const { expect } = chai;
 let app = null;
 let agent = null;
-
+let JWT_TOKEN = '';
 chai.use(chaiHttp);
 
 describe('LIKE ARTICLE', () => {
   beforeEach(async () => {
     app = await startServer(6600);
     agent = chai.request(app);
+  });
+  it('Should login', (done) => {
+    agent
+      .post('/api/v1/login')
+      .send({
+        email: 'test@andela.com',
+        password: 'Secret@1234',
+      })
+      .end((req, res) => {
+        JWT_TOKEN = res.body.data.token;
+        done();
+      });
   });
   it('should like an article', (done) => {
     agent
@@ -76,7 +88,7 @@ describe('PATCH /api/v1/:commentId/like', () => {
 
   it('should unlike an comment', (done) => {
     agent
-      .patch('/api/v1/comments/979eaa2e-5b8f-4103-8192-4639afae2bb6/like')
+      .patch('/api/v1/comments/d06c4f86-557f-4b82-bfed-ad8f2393cbe4/like')
       .set('Authorization', JWT_TOKEN)
       .end((err, res) => {
         expect(res.statusCode).to.equal(404);
