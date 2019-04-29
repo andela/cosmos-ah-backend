@@ -1,4 +1,5 @@
 import Validator from 'validatorjs';
+import { CommentEditHistory } from '../models';
 
 /**
  * @description This is the method for validating comment before inserting
@@ -8,12 +9,25 @@ import Validator from 'validatorjs';
 
 export const validateComment = (payload) => {
   const rules = {
-    body: 'required',
+    body: 'required|string',
   };
 
   const errorMessages = {
-    'required.body': 'comment body is required'
+    'required.body': 'comment body is required',
+    'string.body': 'comment must be a string',
 
   };
   return new Validator(payload, rules, errorMessages);
 };
+
+export const getLastComment = async (commentId) => {
+  try {
+    const histories = await CommentEditHistory.findAll({ where: { commentId }, raw: true });
+    const lastHistory = histories[histories.length - 1];
+    return lastHistory ? lastHistory.commentBody : '';
+  } catch (error) {
+    throw error;
+  }
+};
+
+export const commentIsTheSame = (oldComment, newComment) => oldComment !== newComment;

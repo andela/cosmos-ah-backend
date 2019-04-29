@@ -12,7 +12,7 @@ import {
   rateArticle,
   publishArticle
 } from '../controllers/article';
-import { addComment } from '../controllers/comment';
+import { addComment, editComment, getAllComments, getAComment } from '../controllers/comment';
 import checkFields from '../middlewares/auth/loginValidator';
 import Auth from '../middlewares/authenticator';
 import socialRedirect from '../controllers/authentication/socialRedirect';
@@ -45,6 +45,7 @@ import getAuthors from '../controllers/authors';
 import highlightArticle from '../controllers/highlight';
 import { forgotPassword, resetPassword } from '../controllers/authentication/passwordReset';
 import resetFieldValidation from '../middlewares/auth/resetPassword';
+import { trimBody } from '../middlewares';
 
 const router = Router();
 
@@ -123,7 +124,16 @@ router.get(
 
 router.get('/auth/linkedin/callback', linkedinCallback);
 router.get('/auth/linkedin', linkedinUser);
-router.post('/articles/:articleId/comments', Auth.authenticateUser, commentValidation, addComment);
+
+router
+  .route('/articles/:articleId/comments')
+  .post(Auth.authenticateUser, commentValidation, addComment)
+  .get(Auth.authenticateUser, getAllComments);
+
+router
+  .route('/articles/:articleId/comments/:commentId')
+  .get(Auth.authenticateUser, getAComment)
+  .put(Auth.authenticateUser, trimBody, commentValidation, editComment);
 
 // Route for user following and unfollowing
 router.post('/followers/:id/follow', checkParam, Auth.authenticateUser, followAndUnfollowUser);
