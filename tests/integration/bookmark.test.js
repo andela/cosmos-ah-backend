@@ -13,7 +13,7 @@ chai.use(chaiHttp);
 
 describe('POST /api/v1/:articleId/bookmark', () => {
   beforeEach(async () => {
-    app = await startServer(5500);
+    app = await startServer(5000);
     agent = chai.request(app);
   });
 
@@ -51,6 +51,18 @@ describe('POST /api/v1/:articleId/bookmark', () => {
         assert.equal(status, 404);
         assert.isObject(body);
         assert.equal(body.message, 'invalid artcile id of type UUID');
+        done();
+      });
+  });
+
+  it('when article UUID as id does not exist', (done) => {
+    agent.get('/api/v1/article/7fd94aad-8a0b-4231-acba-3b83dce14939/bookmark')
+      .set('Authorization', JWT_TOKEN)
+      .end((_err, res) => {
+        const { status, body } = res;
+        assert.equal(status, 404);
+        assert.isObject(body);
+        assert.equal(body.message, 'invalid article id');
         done();
       });
   });

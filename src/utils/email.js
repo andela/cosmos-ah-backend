@@ -19,4 +19,19 @@ const sendMail = (payload) => {
   return transporter.sendMail(mailOptions);
 };
 
+export const sendNotificationMail = async ({ email, subject, html }, from = 'no-reply@authors-haven.com') => {
+  try {
+    const mailOptions = {
+      from,
+      to: email,
+      subject,
+      Html: html,
+    };
+    const mailSent = await transporter.sendMail(mailOptions);
+    return mailSent;
+  } catch (error) {
+    throw new Error(error);
+  }
+};
+
 export default sendMail;

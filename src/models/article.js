@@ -74,6 +74,7 @@ export default (sequelize, DataTypes) => {
             article.get('body'),
           );
           article.set('totalReadTime', totalReadTime);
+          article.set('slug', `${process.env.AH_API_URL}/articles/${article.get('slug')}`);
         },
         beforeUpdate(article) {
           const totalReadTime = computeArticleReadingTime(

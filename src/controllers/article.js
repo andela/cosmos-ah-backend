@@ -1,5 +1,5 @@
 import sequelize from 'sequelize';
-import { Article, Comment, Bookmark, Report, Rating, Sequelize } from '../models';
+import { Article, Comment, Bookmark, Report, Rating, Sequelize, } from '../models';
 import { slug, userAuthoredThisArticle } from '../utils/article';
 import {
   responseHandler,
@@ -10,6 +10,8 @@ import {
   handleDBErrors
 } from '../utils';
 import { findAndCount } from '../utils/query';
+import { notify } from '../services/notifyFollowers';
+import { saveNotifications } from '../services/notificationHandler';
 
 /**
  * @name addArticle
@@ -19,16 +21,25 @@ import { findAndCount } from '../utils/query';
  * @returns {object} Returns the inserted article after success
  */
 export const addArticle = async (req, res) => {
-  const { body } = req;
-  const { id: userId } = req.user;
-  delete body.isDeletedByAuthor;
   try {
-    const article = await Article.create({ userId, slug: slug(body.title), ...body });
-    return responseHandler(res, 201, {
+    const { body, user } = req;
+    const { id: userId, fullName } = req.user;
+    delete body.isDeletedByAuthor;
+    let article = await Article.create({ userId, slug: slug(body.title), ...body });
+    const { dataValues } = article;
+    article = { authorName: fullName, ...dataValues };
+    responseHandler(res, 201, {
       status: 'success',
       message: 'Your article was successfully created!',
       data: article,
     });
+    if (article.published) {
+      await saveNotifications(user, article, {
+        message: `${fullName} just published an article`,
+        subjectUrl: article.slug,
+      });
+      await notify(article, 'article-created');
+    }
   } catch (error) {
     const { name: errorName } = error;
     if (errorName === 'SequelizeForeignKeyConstraintError') {
@@ -288,7 +299,6 @@ export const getAllArticles = async (req, res) => {
     });
     return responseHandler(res, 200, { status: 'success', data: articles, pages, });
   } catch (error) {
-    console.log(error);
     return responseHandler(res, 500, { status: 'error', message: 'An internal server error occured!' });
   }
 };

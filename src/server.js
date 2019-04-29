@@ -10,6 +10,7 @@ import docs from '../swagger.json';
 import router from './routers/index';
 import passportConfig from './middlewares/localStrategy';
 import { sequelize } from './models';
+import { io, options } from './utils/notification/brodcast';
 
 const SequelizeStore = require('connect-session-sequelize')(session.Store);
 
@@ -32,8 +33,9 @@ export const startServer = port => new Promise((resolve, reject) => {
 
   const app = express();
   httpServer = http.createServer(app);
-  app.set('json spaces', 2);
+  io.attach(httpServer, options);
 
+  app.set('json spaces', 2);
   app.use(bodyParser.json());
   app.use(bodyParser.urlencoded({ extended: false }));
   app.use(cors());
@@ -82,7 +84,7 @@ export const startServer = port => new Promise((resolve, reject) => {
     next();
   });
 
-  const server = app.listen(port, () => resolve(server));
+  const server = httpServer.listen(port, () => resolve(server));
 });
 
 export const closeServer = () => new Promise((resolve, reject) => {

@@ -1,7 +1,9 @@
 {
   "name": "cosmos-ah-backend",
   "description": "",
-  "scripts": {},
+  "scripts": {
+    "postdeploy": "npm install"
+  },
   "env": {
     "BASE_URL": {
       "required": true
