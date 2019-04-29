@@ -83,7 +83,7 @@ describe('Util test', () => {
       });
     });
 
-    it('should return error 2', () => {
+    it('should return error', () => {
       handleDBErrors(dbError, { req, Sequelize }, (message) => {
         message.should.equal('Database error: table "articles" is not present');
       });

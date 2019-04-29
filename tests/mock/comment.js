@@ -13,3 +13,17 @@ export const invalidComment = {
 export const invalidarticleUUID = {
   articleId: '1839374c-53ea-438c-xxxxxxxxx',
 };
+
+export default {
+  comment,
+  uncompleteCommentBody,
+  invalidComment,
+  invalidarticleUUID,
+  mockCommentIds: {
+    valid: ['979eaa2e-5b8f-4103-8192-4639afae2bb9'],
+    invalid: ['979eaa2e-5b8f-4103-8192-4639afae2bb']
+  },
+  mockCommentArticleIds: {
+    valid: ['979eaa2e-5b8f-4103-8192-4639afae2ba8', '979eaa2e-5b8f-4103-8192-4639afae2ba7']
+  }
+};
