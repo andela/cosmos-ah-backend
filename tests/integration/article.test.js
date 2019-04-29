@@ -35,6 +35,15 @@ describe('GET /api/v1/articles/:id?', () => {
       });
   });
 
+  it('Should return status: 400 when uuid formart as parameter is invalid', (done) => {
+    agent.get('/api/v1/articles/ijekfekjfbenwrgjbrgjrhkbnrejkgbnerkjfgnrekfjbrnekjfrenbgfkejrgmnbr')
+      .set('Authorization', JWT_TOKEN)
+      .end((_err, res) => {
+        expect(res).to.have.status(400);
+        done();
+      });
+  });
+
   it('Should return status: 200 for getting all articles in paginated format when valid query parameters are supplied', (done) => {
     agent.get('/api/v1/articles?page=1&limit=5')
       .set('Authorization', JWT_TOKEN)
@@ -47,6 +56,16 @@ describe('GET /api/v1/articles/:id?', () => {
 
   it('Should return status: 400 for getting all articles in paginated format when invalid query parameters value are supplied', (done) => {
     agent.get('/api/v1/articles?page=1&limit=0')
+      .set('Authorization', JWT_TOKEN)
+      .end((_err, res) => {
+        expect(res).to.have.status(400);
+        expect(res.body.status).to.equal('fail');
+        done();
+      });
+  });
+
+  it('Should return status: 400 for getting all articles when query parameters are not allowed', (done) => {
+    agent.get('/api/v1/articles?otondo=9')
       .set('Authorization', JWT_TOKEN)
       .end((_err, res) => {
         expect(res).to.have.status(400);
