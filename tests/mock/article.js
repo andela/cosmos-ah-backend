@@ -6,7 +6,8 @@ export const ARTICLE = {
   description: 'Lorem ipsum dolor sit amet, sit ut dolor alterum, sed malis referrentur cu. Aperiam fabulas eos ea. Sea mazim senserit tincidunt te.',
   body: generateDummyWords('lorem', 500),
   imageUrl: 'https://picsum.photos/200/300',
-  tags: ['hello', 'async', 'await']
+  tags: ['hello', 'async', 'await'],
+  published: true,
 };
 
 export const UPDATED_ARTICLE = {
@@ -15,7 +16,8 @@ export const UPDATED_ARTICLE = {
   description: 'Lorem ipsum dolor sit amet, sit ut dolor alterum, sed malis referrentur cu. Aperiam fabulas eos ea. Sea mazim senserit tincidunt te.',
   body: 'Lorem ipsum dolor sit amet, sit ut dolor alterum, sed malis referrentur cu. Aperiam fabulas eos ea. Sea mazim senserit tincidunt te. Mei volutpat delicatissimi ut, id mollis alienum argumentum has, semper efficiendi sed ea. Ius decore consul forensibus ne, enim verear corpora sit ut. Usu eu possit equidem menandri, quo et noster officiis iracundia.',
   imageUrl: 'https://picsum.photos/200/300',
-  tags: ['hello', 'async', 'await']
+  tags: ['hello', 'async', 'await'],
+  published: true,
 };
 
 export const MALFORMED_ARTICLE = {

@@ -47,7 +47,6 @@ import { forgotPassword, resetPassword } from '../controllers/authentication/pas
 import resetFieldValidation from '../middlewares/auth/resetPassword';
 import { trimBody } from '../middlewares';
 
-
 const router = Router();
 
 router.get('/', (req, res) => res.status(200).json({
