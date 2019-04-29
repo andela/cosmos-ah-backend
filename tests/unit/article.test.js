@@ -71,9 +71,5 @@ describe('Article Utils test', () => {
         });
       });
     });
-
-    describe('validateArticleReport()', () => {
-
-    });
   });
 });

@@ -17,11 +17,14 @@
     "camelcase": 0,
     "no-console": 0,
     "import/prefer-default-export": 0,
+    "indent": [0, "tab"],
     "function-paren-newline": 0,
     "object-curly-newline": 0,
     "curly": ["error", "multi-line"],
     "import/no-unresolved": [2, { "commonjs": true }],
     "no-shadow": ["error", { "allow": ["req", "res", "err"] }],
+    "no-mixed-spaces-and-tabs": 0,
+    "no-tabs": ["error", { "allowIndentationTabs": true }],
     "valid-jsdoc": [
       "error",
       {

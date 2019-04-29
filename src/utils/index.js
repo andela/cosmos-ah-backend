@@ -75,7 +75,7 @@ export const parseErrorResponse = (responses) => {
   return errorMessages;
 };
 
-export const validateEditParameters = async (body) => {
+export const validateEditParameters = (body) => {
   const rules = {
     fullName: 'required',
     notification: 'required',
@@ -87,11 +87,12 @@ export const validateEditParameters = async (body) => {
 
 /**
  * @function checkIDParamType
- * @param {void|string} param
+ * @param {void|string} param Valid UUID string
+ * @param {void|string} key UUID format version
  * @returns {object} Returns an hash of each field name to response messages
  */
-export const checkIDParamType = (param) => {
-  if (!isUUID(param, '4')) { return false; }
+export const checkIDParamType = (param, key = '4') => {
+  if (!isUUID(param, key)) { return false; }
   return true;
 };
 /**

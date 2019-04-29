@@ -16,7 +16,7 @@ describe('Signup Authentication Test', () => {
     agent = chai.request(app);
   });
 
-  it('Should return success for signup route', () => {
+  it('Should return failure for signup route', () => {
     agent
       .post('/api/v1/signup')
       .send(createUserError)
