@@ -75,7 +75,7 @@ export const parseErrorResponse = (responses) => {
   return errorMessages;
 };
 
-export const validateEditParameters = async (body) => {
+export const validateEditParameters = (body) => {
   const rules = {
     fullName: 'required',
     notification: 'required',

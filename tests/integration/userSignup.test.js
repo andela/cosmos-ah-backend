@@ -1,7 +1,7 @@
 import chai from 'chai';
 import chaiHttp from 'chai-http';
 import jwt from 'jsonwebtoken';
-import { createUser, createUserEmailError, editPayload, createUserError, createEditUser } from '../mock/user';
+import { createUser, createUserEmailError, editPayload, createUserError, createEditUser, editErrorPayload, editIdErrorPayload } from '../mock/user';
 import Auth from '../../src/middlewares/authenticator';
 import { startServer } from '../../src/server';
 
@@ -99,6 +99,38 @@ describe('Signup Authentication Test', () => {
           .eql('fail');
         expect(res.body.message).to.have.property('notification')
           .eql('The notification field is required.');
+        done();
+      });
+  });
+
+  it('Should return error for editing a profile', (done) => {
+    agent
+      .put('/api/v1/profile/edit')
+      .set({ Authorization: Auth.generateToken(editErrorPayload) })
+      .send(createEditUser)
+      .end((err, res) => {
+        expect(res).to.have.status(404);
+        expect(res.body)
+          .to.have.property('status')
+          .eql('error');
+        expect(res.body).to.have.property('message')
+          .eql('This User Does not Exist');
+        done();
+      });
+  });
+
+  it('Should return error for editing a profile', (done) => {
+    agent
+      .put('/api/v1/profile/edit')
+      .set({ Authorization: Auth.generateToken(editIdErrorPayload) })
+      .send(createEditUser)
+      .end((err, res) => {
+        expect(res).to.have.status(400);
+        expect(res.body)
+          .to.have.property('status')
+          .eql('error');
+        expect(res.body).to.have.property('message')
+          .eql('Invalid userId supplied');
         done();
       });
   });
