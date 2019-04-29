@@ -46,9 +46,6 @@ import highlightArticle from '../controllers/highlight';
 import { forgotPassword, resetPassword } from '../controllers/authentication/passwordReset';
 import resetFieldValidation from '../middlewares/auth/resetPassword';
 import { trimBody } from '../middlewares';
-
-import search from '../controllers/search';
-import checkSearchBody from '../middlewares/search';
 import { searchArticle } from '../controllers/search';
 
 const router = Router();

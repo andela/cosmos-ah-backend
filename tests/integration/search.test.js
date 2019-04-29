@@ -25,7 +25,7 @@ describe('Search Test', () => {
         const { body } = res;
         const { data } = body;
         expect(body).should.be.an('object');
-        expect(data[0].id).to.eql('979eaa2e-5b8f-4103-8192-4639afae2ba8');
+        expect(data[0].id).to.eql('979eaa2e-5b8f-4103-8192-4639afae2ba4');
         expect(data[0].title).to.eql('Cosmos group');
         expect(body).to.have.property('data');
         done();
