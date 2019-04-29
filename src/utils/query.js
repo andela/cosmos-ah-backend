@@ -2,11 +2,13 @@
  * @name findById
  * @description This is function for getting records by primary key
  * @param {object} Model The object model
- * @param {string} id The primary key
+ * @param {object} id Containing the primary key
+ * @param {object} conditions Containing optional conditions
  * @returns {object} Returns record query
  */
-export const findById = async (Model, id) => {
-  const record = await Model.findByPk(id);
+export const findById = async (Model, { id, articleId, }, conditions = null) => {
+  id = !id ? articleId : id;
+  const record = await Model.findByPk(id, { where: conditions });
   return record;
 };
 
