@@ -10,7 +10,7 @@ import {
   bookmarkArticle,
   editArticleTag,
   rateArticle,
-  publishArticle
+  publishArticle,
   getReadingStats
 } from '../controllers/article';
 import { addComment, editComment, getAllComments, getAComment } from '../controllers/comment';
