@@ -20,6 +20,22 @@ export const validateComment = (payload) => {
   return new Validator(payload, rules, errorMessages);
 };
 
+
+export const likeDislike = async (Model, condition) => {
+  const [, isNewRecord] = await Model.findOrCreate({ where: condition });
+  const { userId, ...countCondition } = condition;
+  if (!isNewRecord) {
+    const deleteRecord = await Model.destroy({ where: condition });
+    if (deleteRecord) {
+      const likeCount = await Model.count({ where: countCondition });
+      return { like: false, likeCount };
+    }
+  } else {
+    const likeCount = await Model.count({ where: countCondition });
+    return { like: true, likeCount };
+  }
+};
+
 export const getLastComment = async (commentId) => {
   try {
     const histories = await CommentEditHistory.findAll({ where: { commentId }, raw: true });
@@ -31,3 +47,4 @@ export const getLastComment = async (commentId) => {
 };
 
 export const commentIsTheSame = (oldComment, newComment) => oldComment !== newComment;
+

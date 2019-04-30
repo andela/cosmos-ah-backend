@@ -5,8 +5,8 @@
  * @returns {Model} Returns Like model
  */
 export default (sequelize, DataTypes) => {
-  const Like = sequelize.define(
-    'Like',
+  const LikeArticle = sequelize.define(
+    'LikeArticle',
     {
       id: {
         type: DataTypes.UUID,
@@ -24,20 +24,20 @@ export default (sequelize, DataTypes) => {
       },
     },
     {
-      tableName: 'likes',
+      tableName: 'like_articles',
     },
   );
-  Like.associate = (models) => {
-    Like.belongsTo(models.Article, {
+  LikeArticle.associate = (models) => {
+    LikeArticle.belongsTo(models.Article, {
       foreignKey: 'articleId',
       as: 'article',
       onDelete: 'CASCADE',
     });
-    Like.belongsTo(models.User, {
+    LikeArticle.belongsTo(models.User, {
       foreignKey: 'userId',
       as: 'user',
       onDelete: 'CASCADE',
     });
   };
-  return Like;
+  return LikeArticle;
 };
