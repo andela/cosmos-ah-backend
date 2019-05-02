@@ -789,7 +789,7 @@
         }
       ],
       "get": {
-        "tags": ["Bookmark"],
+        "tags": ["Bookmarks"],
         "summary": "Article bookmarking",
         "description": "This endpoint can be used to bookmark and unbookmark an article",
         "operationId": "bookmarkArticle",
@@ -1044,7 +1044,7 @@
         }
       ],
       "post": {
-        "tags": ["Highlight"],
+        "tags": ["Highlights"],
         "summary": "This endpoint enables an article to be highlighted",
         "operationId": "highlightArticle",
         "requestBody": {
