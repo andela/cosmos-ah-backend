@@ -10,7 +10,7 @@ export default {
         password: '$2a$10$ijw.0rXSMhzRlBWV1xsEEOOZ3c6sVnVE7TmzttlfwtojXOtPd8hte',
         bio:
             "Hold on now, aren't there already specs for this kind of thing? - Well... no. While there are a few handy specifications for dealing with JSON data, most notably Douglas Crockford's JSONRequest proposal, there's nothing to address the problems of general application-level messaging. More on this later.",
-        imageUrl: 'http://waterease.herokuapp.com/images/board/comfort.jpg',
+        imageUrl: 'https://res.cloudinary.com/dmq014llt/image/upload/v1557326099/people/beautiful-brunette-cute.jpg',
         notification: true,
         role: 'admin',
         verified: true,
@@ -25,7 +25,7 @@ export default {
         password: '$2a$10$ijw.0rXSMhzRlBWV1xsEEOOZ3c6sVnVE7TmzttlfwtojXOtPd8hte',
         bio:
             "Hold on now, aren't there already specs for this kind of thing? - Well... no. While there are a few handy specifications for dealing with JSON data, most notably Douglas Crockford's JSONRequest proposal, there's nothing to address the problems of general application-level messaging. More on this later.",
-        imageUrl: 'http://waterease.herokuapp.com/images/board/comfort.jpg',
+        imageUrl: 'https://res.cloudinary.com/dmq014llt/image/upload/v1557326099/people/beautiful-brunette-cute.jpg',
         notification: true,
         role: 'admin',
         verified: false,
@@ -41,7 +41,7 @@ export default {
         password: '$2a$10$ijw.0rXSMhzRlBWV1xsEEOOZ3c6sVnVE7TmzttlfwtojXOtPd8hte',
         bio:
             "Hold on now, aren't there already specs for this kind of thing? - Well... no. While there are a few handy specifications for dealing with JSON data, most notably Douglas Crockford's JSONRequest proposal, there's nothing to address the problems of general application-level messaging. More on this later.",
-        imageUrl: 'http://waterease.herokuapp.com/images/board/comfort.jpg',
+        imageUrl: 'https://res.cloudinary.com/dmq014llt/image/upload/v1557326099/people/beautiful-brunette-cute.jpg',
         notification: true,
         role: 'admin',
         createdAt: new Date(),
@@ -55,7 +55,7 @@ export default {
         password: '$2a$10$vZU/3YSDac3JTh53Ti0SPugEi2.6cfl2iBmN/guxiXOAKnxoprcVC',
         bio:
             "Hold on now, aren't there already specs for this kind of thing? - Well... no. While there are a few handy specifications for dealing with JSON data, most notably Douglas Crockford's JSONRequest proposal, there's nothing to address the problems of general application-level messaging. More on this later.",
-        imageUrl: 'http://waterease.herokuapp.com/images/board/comfort.jpg',
+        imageUrl: 'https://res.cloudinary.com/dmq014llt/image/upload/v1557326099/people/beautiful-brunette-cute.jpg',
         notification: true,
         role: 'admin',
         createdAt: new Date(),
@@ -69,7 +69,7 @@ export default {
         password: '$2a$10$ijw.0rXSMhzRlBWV1xsEEOOZ3c6sVnVE7TmzttlfwtojXOtPd8hte',
         bio:
             "Hold on now, aren't there already specs for this kind of thing? - Well... no. While there are a few handy specifications for dealing with JSON data, most notably Douglas Crockford's JSONRequest proposal, there's nothing to address the problems of general application-level messaging. More on this later.",
-        imageUrl: 'http://waterease.herokuapp.com/images/board/comfort.jpg',
+        imageUrl: 'https://res.cloudinary.com/dmq014llt/image/upload/v1557326099/people/beautiful-brunette-cute.jpg',
         notification: true,
         role: 'author',
         createdAt: new Date(),
@@ -83,7 +83,7 @@ export default {
         password: '$2a$10$F83SBdFDL.dFEeCKm3YC6O/NXKeYO/QxxsZY2FN/W2DoG38hhdhbi',
         bio:
             "Hold on now, aren't there already specs for this kind of thing? - Well... no. While there are a few handy specifications for dealing with JSON data, most notably Douglas Crockford's JSONRequest proposal, there's nothing to address the problems of general application-level messaging. More on this later.",
-        imageUrl: 'http://waterease.herokuapp.com/images/board/comfort.jpg',
+        imageUrl: 'https://res.cloudinary.com/dmq014llt/image/upload/v1557326099/people/beautiful-brunette-cute.jpg',
         notification: true,
         role: 'author',
         verified: true,
@@ -100,7 +100,7 @@ export default {
         password: '$2y$10$N9JKEBqy0MUi7bH1a07/pOWBLj2Me9UTAAM56qBH54lSzxdvV4Dxe',
         bio:
             "Hold on now, aren't there already specs for this kind of thing? - Well... no. While there are a few handy specifications for dealing with JSON data, most notably Douglas Crockford's JSONRequest proposal, there's nothing to address the problems of general application-level messaging. More on this later.",
-        imageUrl: 'http://waterease.herokuapp.com/images/board/comfort.jpg',
+        imageUrl: 'https://res.cloudinary.com/dmq014llt/image/upload/v1557326099/people/beautiful-brunette-cute.jpg',
         notification: true,
         role: 'author',
         verified: true,
@@ -117,7 +117,7 @@ export default {
         password: '$2a$10$ijw.0rXSMhzRlBWV1xsEEOOZ3c6sVnVE7TmzttlfwtojXOtPd8hte',
         bio:
             "Hold on now, aren't there already specs for this kind of thing? - Well... no. While there are a few handy specifications for dealing with JSON data, most notably Douglas Crockford's JSONRequest proposal, there's nothing to address the problems of general application-level messaging. More on this later.",
-        imageUrl: 'http://waterease.herokuapp.com/images/board/comfort.jpg',
+        imageUrl: 'https://res.cloudinary.com/dmq014llt/image/upload/v1557326099/people/beautiful-brunette-cute.jpg',
         notification: true,
         role: 'author',
         createdAt: new Date(),
@@ -131,27 +131,26 @@ export default {
         password: '$2a$10$ijw.0rXSMhzRlBWV1xsEEOOZ3c6sVnVE7TmzttlfwtojXOtPd8hte',
         bio:
             "Hold on now, aren't there already specs for this kind of thing? - Well... no. While there are a few handy specifications for dealing with JSON data, most notably Douglas Crockford's JSONRequest proposal, there's nothing to address the problems of general application-level messaging. More on this later.",
-        imageUrl: 'http://waterease.herokuapp.com/images/board/comfort.jpg',
+        imageUrl: 'https://res.cloudinary.com/dmq014llt/image/upload/v1557326099/people/beautiful-brunette-cute.jpg',
         notification: true,
         role: 'author',
         createdAt: new Date(),
         updatedAt: new Date(),
       },
       {
-        id: 'd81da338-a52a-411e-93f1-b2a74a31414a',
-        fullName: 'Tdd Opps',
-        email: 'chike.a.ozulumba@andela.com',
-        username: 'chiketddchikeandela',
+        id: '7e824eba-2a9e-4933-affa-6a3da937e47a',
+        fullName: 'Sherlock Holmes',
+        email: 'sherlock@holmes.com',
+        username: 'sherlock',
         password: '$2a$10$ijw.0rXSMhzRlBWV1xsEEOOZ3c6sVnVE7TmzttlfwtojXOtPd8hte',
-        bio:
-            "Hold on now, aren't there already specs for this kind of thing? - Well... no. While there are a few handy specifications for dealing with JSON data, most notably Douglas Crockford's JSONRequest proposal, there's nothing to address the problems of general application-level messaging. More on this later.",
-        imageUrl: 'http://waterease.herokuapp.com/images/board/comfort.jpg',
+        bio: 'my bio',
+        imageUrl: 'https://res.cloudinary.com/dmq014llt/image/upload/v1557326099/people/beautiful-brunette-cute.jpg',
         notification: true,
         verificationToken: 'cd5bb9a0-270d-4b1f-88e7-605de02a4b09',
-        role: 'author',
+        role: 'admin',
         createdAt: new Date(),
         updatedAt: new Date(),
-      },
+      }
     ],
     {}
   ),

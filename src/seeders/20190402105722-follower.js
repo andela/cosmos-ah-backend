@@ -29,7 +29,7 @@ export default {
         followerId: '979eaa2e-5b8f-4103-8192-4639afae2ba9',
         createdAt: new Date(),
         updatedAt: new Date(),
-      },
+      }
     ],
     {}
   ),

@@ -47,4 +47,3 @@ export const getLastComment = async (commentId) => {
 };
 
 export const commentIsTheSame = (oldComment, newComment) => oldComment !== newComment;
-

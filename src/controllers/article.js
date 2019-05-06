@@ -1,5 +1,13 @@
 import sequelize from 'sequelize';
-import { Article, Comment, Bookmark, Report, Rating, Sequelize, } from '../models';
+import {
+  Article,
+  Comment,
+  Bookmark,
+  Report,
+  Rating,
+  Sequelize,
+  ArticleReadHistory
+} from '../models';
 import { slug, userAuthoredThisArticle } from '../utils/article';
 import {
   responseHandler,
@@ -7,7 +15,8 @@ import {
   errorResponseFormat,
   omitProps,
   sendResponse,
-  handleDBErrors
+  handleDBErrors,
+  addArticleToReadHistory
 } from '../utils';
 import { findAndCount } from '../utils/query';
 import { notify } from '../services/notifyFollowers';
@@ -244,18 +253,19 @@ export const rateArticle = async (req, res) => {
         articleId,
         value: userRating
       },
+      attributes: ['id', 'articleId', 'userId', 'value']
     });
 
     if (!created) {
       const updatedRating = await rating.update({ value: userRating }, { returning: true });
       return sendResponse(res, 200, {
         responseType: 'success',
-        data: omitProps(updatedRating.dataValues, ['createdAt', 'updatedAt']),
+        data: omitProps(updatedRating.get({ plain: true }), ['createdAt', 'updatedAt']),
       });
     }
     return sendResponse(res, 201, {
       responseType: 'success',
-      data: omitProps(rating.dataValues, ['createdAt', 'updatedAt']),
+      data: rating,
     });
   } catch (error) {
     handleDBErrors(error, { req, Sequelize }, message => sendResponse(res, 500, {
@@ -327,6 +337,8 @@ export const getAnArticleByID = async (req, res) => {
       ],
     });
     if (!article) { return responseHandler(res, 404, { status: 'fail', message: 'Article not found!' }); }
+    // This article will be added to this user read history
+    await addArticleToReadHistory(id, req.user.id);
     return responseHandler(res, 200, { status: 'success', data: article });
   } catch (error) {
     return responseHandler(res, 500, { status: 'error', message: 'An internal server error occured!' });
@@ -354,5 +366,40 @@ export const publishArticle = async (req, res) => {
     });
   } catch (error) {
     return responseHandler(res, 500, { status: 'error', message: 'An internal server error occured!' });
+  }
+};
+
+/* @description This gets the reading stats of the user
+ * @function getReadingStats
+ * @param {Request} req
+ * @param {Response} res
+ * @returns {object} Returns response object
+*/
+export const getReadingStats = async (req, res) => {
+  try {
+    const userReadHistory = await ArticleReadHistory.findAll({
+      where: { userId: req.user.id },
+      include: [{
+        model: Article,
+        as: 'article',
+        attributes: ['id', 'title', 'slug']
+      }],
+      attributes: { exclude: ['createdAt', 'updatedAt'] }
+    });
+
+    const readArticles = userReadHistory.map(history => history.article);
+
+    return res.status(200).json({
+      status: 'success',
+      data: {
+        totalArticleReadCount: readArticles.length,
+        articles: readArticles,
+      }
+    });
+  } catch (error) {
+    return res.status(500).json({
+      status: 'error',
+      message: 'internal server error occurred'
+    });
   }
 };

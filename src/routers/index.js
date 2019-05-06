@@ -10,7 +10,8 @@ import {
   bookmarkArticle,
   editArticleTag,
   rateArticle,
-  publishArticle
+  publishArticle,
+  getReadingStats
 } from '../controllers/article';
 import { addComment, editComment, getAllComments, getAComment } from '../controllers/comment';
 import checkFields from '../middlewares/auth/loginValidator';
@@ -78,7 +79,7 @@ router
  */
 router
   .route('/articles/:id?')
-  .get(checkQueryParams, getArticleHandler)
+  .get(checkQueryParams, Auth.authenticateUser, getArticleHandler)
   .post(Auth.authenticateUser, articleValidation, addArticle)
   .delete(checkParam, Auth.authenticateUser, verifyArticle, isAuthor, deleteArticle)
   .put(checkParam, Auth.authenticateUser, articleValidation, verifyArticle, isAuthor, editArticle);
@@ -182,6 +183,8 @@ router.patch(
   isAuthor,
   publishArticle,
 );
+
+router.get('/user-reading-stats', Auth.authenticateUser, getReadingStats);
 
 router.all('*', (req, res) => {
   res.status(404).json({

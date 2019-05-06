@@ -248,10 +248,9 @@ describe('DELETE /api/v1/articles/:id', () => {
       });
   });
 
-  after(async (done) => {
-    app.close();
+  after(async () => {
+    await app.close();
     app = null;
-    done();
   });
 });
 
