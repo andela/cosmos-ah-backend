@@ -15,7 +15,7 @@
     "no-param-reassign": 0,
     "comma-dangle": 0,
     "camelcase": 0,
-    "no-console": 0,
+    "no-console": 1,
     "import/prefer-default-export": 0,
     "indent": [0, "tab"],
     "function-paren-newline": 0,
