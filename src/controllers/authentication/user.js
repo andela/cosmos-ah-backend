@@ -158,7 +158,7 @@ export const linkedinCallback = async (req, res) => {
 
     res.cookie('jwt-token', token);
 
-    res.redirect('/api/v1');
+    res.redirect('https://ah-frontend-stage.herokuapp.com');
   } catch (error) {
     return res.status(500).json(errorResponseFormat({
       status: 'error',

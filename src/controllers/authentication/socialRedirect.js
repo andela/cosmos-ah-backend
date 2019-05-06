@@ -5,7 +5,7 @@ const socialRedirect = (req, res) => {
 
   const token = Authenticator.generateToken({ id, email, role, username });
   res.cookie('jwt-token', token);
-  res.redirect('/api/v1');
+  res.redirect('https://ah-frontend-stage.herokuapp.com');
 };
 
 
