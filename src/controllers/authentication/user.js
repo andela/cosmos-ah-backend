@@ -154,12 +154,9 @@ export const linkedinCallback = async (req, res) => {
     });
 
     const { id, fullName, email, username, imageUrl } = user[0];
-    const token = Auth.generateToken({ id, fullName, email, username, imageUrl });
 
-    res.cookie('jwt-token', token);
-
-    res.redirect('https://ah-frontend-stage.herokuapp.com');
-  } catch (error) {
+    return res.status(200).json(responseFormat({ status: 'success', data: { token: Auth.generateToken({ id, fullName, email, username, imageUrl }) }, }));
+   } catch (error) {
     return res.status(500).json(errorResponseFormat({
       status: 'error',
       message: 'Something Went Wrong',
