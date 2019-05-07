@@ -1,10 +1,9 @@
-import Auth from '../../middlewares/authenticator';
-import { responseFormat } from '../../utils/index';
+import Authenticator from '../../middlewares/authenticator';
 
 const socialRedirect = (req, res) => {
   const { id, email, role, username } = req.user;
-
-  return res.status(200).json(responseFormat({ status: 'success', data: { token: Auth.generateToken({ id, email, role, username }) }, }));
+  const token = Authenticator.generateToken({ id, email, role, username });
+  res.redirect(`https://ah-frontend-stage.herokuapp.com?token=${token}`);
 };
 
 
