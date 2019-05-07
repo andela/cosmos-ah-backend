@@ -157,7 +157,7 @@ export const linkedinCallback = async (req, res) => {
 
     const token = Auth.generateToken({ id, fullName, email, username, imageUrl });
     // res.redirect(`https://ah-frontend-stage.herokuapp.com?token=${token}`);
-    res.redirect(`http://localhost:9001/token=${token}`);
+    res.redirect(`http://localhost:9001?token=${token}`);
    } catch (error) {
     return res.status(500).json(errorResponseFormat({
       status: 'error',
