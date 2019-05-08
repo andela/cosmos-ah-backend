@@ -134,7 +134,7 @@
         }
       }
     },
-    "/verify/{id}/verificationToken": {
+    "/verify/{id}/{verificationToken}": {
       "get": {
         "tags": ["User"],
         "parameters": [
@@ -142,9 +142,19 @@
             "name": "id",
             "in": "path",
             "schema": {
+              "type": "string",
+              "format": "uuid"
+            },
+            "description": "ID of the user",
+            "required": true
+          },
+          {
+            "name": "verificationToken",
+            "in": "path",
+            "schema": {
               "type": "string"
             },
-            "description": "user id",
+            "description": "ID used for verification",
             "required": true
           }
         ],
@@ -239,7 +249,7 @@
           "schema": {
             "type": "string"
           },
-          "description": "user reset token",
+          "description": "User reset token",
           "required": true
         }
       ],
@@ -441,9 +451,10 @@
           "name": "id",
           "in": "path",
           "schema": {
-            "type": "integer"
+            "type": "string",
+            "format": "uuid"
           },
-          "description": "numeric ID of the user",
+          "description": "ID of the user",
           "required": true
         }
       ],
@@ -626,9 +637,10 @@
           "name": "articleId",
           "in": "path",
           "schema": {
-            "type": "integer"
+            "type": "string",
+            "format": "uuid"
           },
-          "description": "numeric ID of the article",
+          "description": "ID of the article",
           "required": true
         }
       ],
@@ -780,9 +792,10 @@
           "name": "articleId",
           "in": "path",
           "schema": {
-            "type": "string"
+            "type": "string",
+            "format": "uuid"
           },
-          "description": "numeric ID of the article",
+          "description": "ID of the article",
           "required": true
         }
       ],
@@ -836,9 +849,10 @@
           "name": "articleId",
           "in": "path",
           "schema": {
-            "type": "string"
+            "type": "string",
+            "format": "uuid"
           },
-          "description": "numeric ID of the article",
+          "description": "ID of the article",
           "required": true
         }
       ],
@@ -912,9 +926,10 @@
           "name": "articleId",
           "in": "path",
           "schema": {
-            "type": "string"
+            "type": "string",
+            "format": "uuid"
           },
-          "description": "numeric ID of the article",
+          "description": "ID of the article",
           "required": true
         }
       ],
@@ -997,14 +1012,14 @@
           "name": "id",
           "in": "path",
           "schema": {
-            "type": "integer",
+            "type": "string",
             "format": "uuid"
           },
-          "description": "numeric ID of the user",
+          "description": "ID of the user",
           "required": true
         }
       ],
-      "get": {
+      "post": {
         "security": [
           {
             "bearerAuth": []
@@ -1133,10 +1148,11 @@
         {
           "name": "id",
           "schema": {
-            "type": "number"
+            "type": "string",
+            "format": "uuid"
           },
           "in": "path",
-          "description": "Numeric ID of the article",
+          "description": "ID of the article",
           "required": true
         }
       ],
@@ -1214,10 +1230,10 @@
           "name": "id",
           "in": "path",
           "schema": {
-            "type": "integer",
+            "type": "string",
             "format": "uuid"
           },
-          "description": "numeric ID of the article",
+          "description": "ID of the article",
           "required": true
         }
       ],
@@ -1260,10 +1276,10 @@
           "name": "id",
           "in": "path",
           "schema": {
-            "type": "integer",
+            "type": "string",
             "format": "uuid"
           },
-          "description": "numeric ID of the comment",
+          "description": "ID of the comment",
           "required": true
         }
       ],
@@ -1323,10 +1339,10 @@
           "name": "articleId",
           "in": "path",
           "schema": {
-            "type": "integer",
+            "type": "string",
             "format": "uuid"
           },
-          "description": "numeric ID of the article",
+          "description": "ID of the article",
           "required": true
         }
       ],
@@ -1397,10 +1413,10 @@
           "name": "id",
           "in": "path",
           "schema": {
-            "type": "integer",
+            "type": "string",
             "format": "uuid"
           },
-          "description": "numeric ID of the article",
+          "description": "ID of the article",
           "required": true
         }
       ],
@@ -1466,10 +1482,10 @@
           "name": "id",
           "in": "path",
           "schema": {
-            "type": "integer",
+            "type": "string",
             "format": "uuid"
           },
-          "description": "numeric ID of the article",
+          "description": "ID of the article",
           "required": true
         }
       ],
