@@ -36,7 +36,6 @@ export const addArticle = async (req, res) => {
     delete body.isDeletedByAuthor;
     let article = await Article.create({ userId, slug: slug(body.title), ...body });
     const { dataValues } = article;
-    console.log(dataValues);
     article = { authorName: fullName, ...dataValues };
     responseHandler(res, 201, {
       status: 'success',

@@ -31,7 +31,6 @@ describe('User View Profile Test', () => {
         expect(user.fullName).to.have.eql('Martins Aloba');
         expect(user.email).to.have.eql('martins@gmail.com');
         expect(user.username).to.have.eql('martinsaloba');
-        expect(user.imageUrl).to.have.eql('http://waterease.herokuapp.com/images/board/comfort.jpg');
         done();
       });
   });
