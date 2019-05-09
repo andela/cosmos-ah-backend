@@ -79,7 +79,7 @@ router
  */
 router
   .route('/articles/:id?')
-  .get(checkQueryParams, Auth.authenticateUser, getArticleHandler)
+  .get(checkQueryParams, getArticleHandler)
   .post(Auth.authenticateUser, articleValidation, addArticle)
   .delete(checkParam, Auth.authenticateUser, verifyArticle, isAuthor, deleteArticle)
   .put(checkParam, Auth.authenticateUser, articleValidation, verifyArticle, isAuthor, editArticle);

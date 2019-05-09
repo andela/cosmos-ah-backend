@@ -29,16 +29,16 @@
         "requestBody": {
           "description": "A newly-registered user",
           "content": {
-            "*/*": {
+            "application/json": {
               "schema": {
                 "type": "object",
                 "properties": {
-                  "firstName": {
-                    "description": "User first name",
+                  "fullName": {
+                    "description": "User full Name",
                     "type": "string"
                   },
-                  "lastName": {
-                    "description": "User last name",
+                  "username": {
+                    "description": "Username",
                     "type": "string"
                   },
                   "email": {
@@ -99,7 +99,7 @@
         "requestBody": {
           "description": "The request body should contain email address and a password",
           "content": {
-            "*/*": {
+            "application/json": {
               "schema": {
                 "type": "object",
                 "properties": {
@@ -134,7 +134,7 @@
         }
       }
     },
-    "/verify/{id}/verificationToken": {
+    "/verify/{id}/{verificationToken}": {
       "get": {
         "tags": ["User"],
         "parameters": [
@@ -142,9 +142,19 @@
             "name": "id",
             "in": "path",
             "schema": {
+              "type": "string",
+              "format": "uuid"
+            },
+            "description": "ID of the user",
+            "required": true
+          },
+          {
+            "name": "verificationToken",
+            "in": "path",
+            "schema": {
               "type": "string"
             },
-            "description": "user id",
+            "description": "ID used for verification",
             "required": true
           }
         ],
@@ -239,7 +249,7 @@
           "schema": {
             "type": "string"
           },
-          "description": "user reset token",
+          "description": "User reset token",
           "required": true
         }
       ],
@@ -298,6 +308,7 @@
         "operationId": "facebookAuth",
         "responses": {
           "200": {
+            "description": "Successful Operation",
             "content": {
               "application/json": {
                 "schema": {
@@ -317,6 +328,7 @@
         "operationId": "googleAuth",
         "responses": {
           "200": {
+            "description": "Successful Operation",
             "content": {
               "application/json": {
                 "schema": {
@@ -336,6 +348,7 @@
         "operationId": "linkedinAuth",
         "responses": {
           "200": {
+            "description": "Successful Operation",
             "content": {
               "application/json": {
                 "schema": {
@@ -355,6 +368,7 @@
         "operationId": "twitterAuth",
         "responses": {
           "200": {
+            "description": "Successful Operation",
             "content": {
               "application/json": {
                 "schema": {
@@ -368,12 +382,18 @@
     },
     "/profile/edit": {
       "put": {
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
         "tags": ["User"],
         "summary": "User profile update",
         "description": "This endpoint can be used to update a user's profile",
         "operationId": "editProfile",
         "responses": {
           "200": {
+            "description": "Successful Operation",
             "content": {
               "application/json": {
                 "schema": {
@@ -392,7 +412,8 @@
               }
             }
           },
-          "404": {
+          "400": {
+            "description": "Failure Operation",
             "content": {
               "application/json": {
                 "schema": {
@@ -401,7 +422,8 @@
               }
             }
           },
-          "400": {
+          "404": {
+            "description": "Failure Operation",
             "content": {
               "application/json": {
                 "schema": {
@@ -411,6 +433,7 @@
             }
           },
           "500": {
+            "description": "Failure Operation",
             "content": {
               "application/json": {
                 "schema": {
@@ -428,19 +451,26 @@
           "name": "id",
           "in": "path",
           "schema": {
-            "type": "integer"
+            "type": "string",
+            "format": "uuid"
           },
-          "description": "numeric ID of the user",
+          "description": "ID of the user",
           "required": true
         }
       ],
       "get": {
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
         "tags": ["User"],
         "summary": "User profile update",
         "description": "This endpoint can be used to update a user's profile",
         "operationId": "viewProfile",
         "responses": {
           "200": {
+            "description": "Successful Operation",
             "content": {
               "application/json": {
                 "schema": {
@@ -449,7 +479,8 @@
               }
             }
           },
-          "404": {
+          "400": {
+            "description": "Failure Operation",
             "content": {
               "application/json": {
                 "schema": {
@@ -458,7 +489,8 @@
               }
             }
           },
-          "400": {
+          "404": {
+            "description": "Failure Operation",
             "content": {
               "application/json": {
                 "schema": {
@@ -468,6 +500,7 @@
             }
           },
           "500": {
+            "description": "Failure Operation",
             "content": {
               "application/json": {
                 "schema": {
@@ -481,26 +514,33 @@
     },
     "/authors": {
       "get": {
-        "tags": ["User"]
-      },
-      "summary": "Authors",
-      "description": "Authors",
-      "operationId": "getAuthors",
-      "responses": {
-        "200": {
-          "content": {
-            "application/json": {
-              "schema": {
-                "$ref": "#/components/schemas/SuccessResponse"
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "tags": ["User"],
+        "summary": "Authors",
+        "description": "Authors",
+        "operationId": "getAuthors",
+        "responses": {
+          "200": {
+            "description": "Succeful Operation",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/SuccessResponse"
+                }
               }
             }
-          }
-        },
-        "500": {
-          "content": {
-            "application/json": {
-              "schema": {
-                "$ref": "#/components/schemas/ErrorResponse"
+          },
+          "500": {
+            "description": "Failure Operation",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
               }
             }
           }
@@ -543,6 +583,11 @@
         }
       },
       "post": {
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
         "tags": ["Articles"],
         "summary": "This endpoint creates an article",
         "description": "Use this endpoint to create an article",
@@ -550,7 +595,7 @@
         "requestBody": {
           "description": "The request body should contain a title, body and description field",
           "content": {
-            "*/*": {
+            "application/json": {
               "schema": {
                 "type": "object",
                 "properties": {
@@ -592,9 +637,10 @@
           "name": "articleId",
           "in": "path",
           "schema": {
-            "type": "integer"
+            "type": "string",
+            "format": "uuid"
           },
-          "description": "numeric ID of the article",
+          "description": "ID of the article",
           "required": true
         }
       ],
@@ -636,6 +682,11 @@
         }
       },
       "put": {
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
         "tags": ["Articles"],
         "summary": "This endpoint updates a single article",
         "operationId": "updateArticle",
@@ -663,6 +714,11 @@
         }
       },
       "delete": {
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
         "tags": ["Articles"],
         "summary": "This endpoint deletes single article",
         "operationId": "deleteArticle",
@@ -698,6 +754,7 @@
         "operationId": "searchArticles",
         "responses": {
           "200": {
+            "description": "Successful Operation",
             "content": {
               "application/json": {
                 "schema": {
@@ -707,6 +764,7 @@
             }
           },
           "404": {
+            "description": "Failure Operation",
             "content": {
               "application/json": {
                 "schema": {
@@ -716,6 +774,7 @@
             }
           },
           "500": {
+            "description": "Failure Operation",
             "content": {
               "application/json": {
                 "schema": {
@@ -733,19 +792,26 @@
           "name": "articleId",
           "in": "path",
           "schema": {
-            "type": "string"
+            "type": "string",
+            "format": "uuid"
           },
-          "description": "numeric ID of the article",
+          "description": "ID of the article",
           "required": true
         }
       ],
       "patch": {
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
         "tags": ["Articles"],
         "summary": "Article publish endpoint",
         "description": "This action can be used to publish an article",
         "operationId": "publishArticle",
         "responses": {
           "200": {
+            "description": "Failure Operation",
             "content": {
               "application/json": {
                 "schema": {
@@ -765,6 +831,7 @@
             }
           },
           "500": {
+            "description": "Failure Operation",
             "content": {
               "application/json": {
                 "schema": {
@@ -782,19 +849,26 @@
           "name": "articleId",
           "in": "path",
           "schema": {
-            "type": "string"
+            "type": "string",
+            "format": "uuid"
           },
-          "description": "numeric ID of the article",
+          "description": "ID of the article",
           "required": true
         }
       ],
       "get": {
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
         "tags": ["Bookmarks"],
         "summary": "Article bookmarking",
         "description": "This endpoint can be used to bookmark and unbookmark an article",
         "operationId": "bookmarkArticle",
         "responses": {
           "200": {
+            "description": "Failure Operation",
             "content": {
               "application/json": {
                 "schema": {
@@ -804,6 +878,7 @@
             }
           },
           "201": {
+            "description": "Successful Operation",
             "content": {
               "application/json": {
                 "schema": {
@@ -812,7 +887,8 @@
               }
             }
           },
-          "404": {
+          "400": {
+            "description": "Failure Operation",
             "content": {
               "application/json": {
                 "schema": {
@@ -821,7 +897,8 @@
               }
             }
           },
-          "400": {
+          "404": {
+            "description": "Failure Operation",
             "content": {
               "application/json": {
                 "schema": {
@@ -831,6 +908,7 @@
             }
           },
           "500": {
+            "description": "Failure Operation",
             "content": {
               "application/json": {
                 "schema": {
@@ -848,13 +926,19 @@
           "name": "articleId",
           "in": "path",
           "schema": {
-            "type": "string"
+            "type": "string",
+            "format": "uuid"
           },
-          "description": "numeric ID of the article",
+          "description": "ID of the article",
           "required": true
         }
       ],
       "get": {
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
         "tags": ["Comments"],
         "summary": "This action retrieves all comments",
         "description": "This action can be used to retrieve all comments",
@@ -883,6 +967,11 @@
         }
       },
       "post": {
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
         "tags": ["Comments"],
         "summary": "This endpoints creates article comments",
         "operationId": "createComments",
@@ -923,20 +1012,26 @@
           "name": "id",
           "in": "path",
           "schema": {
-            "type": "integer",
+            "type": "string",
             "format": "uuid"
           },
-          "description": "numeric ID of the user",
+          "description": "ID of the user",
           "required": true
         }
       ],
-      "get": {
+      "post": {
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
         "tags": ["Followers"],
         "summary": "User can follow other users",
         "description": "This endpoint can be used to enable users follow each other",
         "operationId": "followUser",
         "responses": {
           "200": {
+            "description": "Successful Operation",
             "content": {
               "application/json": {
                 "schema": {
@@ -946,6 +1041,7 @@
             }
           },
           "403": {
+            "description": "Failure Operation",
             "content": {
               "application/json": {
                 "schema": {
@@ -955,6 +1051,7 @@
             }
           },
           "404": {
+            "description": "Failure Operation",
             "content": {
               "application/json": {
                 "schema": {
@@ -964,6 +1061,7 @@
             }
           },
           "500": {
+            "description": "Failure Operation",
             "content": {
               "application/json": {
                 "schema": {
@@ -977,12 +1075,18 @@
     },
     "/followings": {
       "get": {
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
         "summary": "User followers endpoint",
         "description": "This action can be used to retrieve a list of users following another user",
         "operationId": "userFollowings",
         "tags": ["Followers"],
         "responses": {
           "200": {
+            "description": "Failure Operation",
             "content": {
               "application/json": {
                 "schema": {
@@ -992,6 +1096,7 @@
             }
           },
           "500": {
+            "description": "Failure Operation",
             "content": {
               "application/json": {
                 "schema": {
@@ -1005,12 +1110,18 @@
     },
     "/followers": {
       "get": {
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
         "tags": ["Followers"],
         "summary": "User followers endpoint",
         "description": "This action can be used to get all the followers of a user",
         "operationId": "userFollowers",
         "responses": {
           "200": {
+            "description": "Failure Operation",
             "content": {
               "application/json": {
                 "schema": {
@@ -1020,6 +1131,7 @@
             }
           },
           "500": {
+            "description": "Failure Operation",
             "content": {
               "application/json": {
                 "schema": {
@@ -1031,19 +1143,25 @@
         }
       }
     },
-    "/articles/{id}/highlight": {
+    "articles/{id}/highlight": {
       "parameters": [
         {
           "name": "id",
           "schema": {
-            "type": "number"
+            "type": "string",
+            "format": "uuid"
           },
           "in": "path",
-          "description": "Numeric ID of the article",
+          "description": "ID of the article",
           "required": true
         }
       ],
       "post": {
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
         "tags": ["Highlights"],
         "summary": "This endpoint enables an article to be highlighted",
         "operationId": "highlightArticle",
@@ -1106,20 +1224,25 @@
         }
       }
     },
-    "/articles/{id}/like": {
+    "articles/{id}/like": {
       "parameters": [
         {
           "name": "id",
           "in": "path",
           "schema": {
-            "type": "integer",
+            "type": "string",
             "format": "uuid"
           },
-          "description": "numeric ID of the article",
+          "description": "ID of the article",
           "required": true
         }
       ],
       "patch": {
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
         "tags": ["Likes"],
         "summary": "This endpoint enables an article to be liked",
         "operationId": "likeArticle",
@@ -1153,25 +1276,31 @@
           "name": "id",
           "in": "path",
           "schema": {
-            "type": "integer",
+            "type": "string",
             "format": "uuid"
           },
-          "description": "numeric ID of the comment",
+          "description": "ID of the comment",
           "required": true
         }
       ],
       "get": {
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
         "tags": ["Likes"],
         "summary": "Action for liking a comment",
         "description": "This action can be used to like an article's comment",
         "operationId": "likeComment",
         "responses": {
           "200": {
+            "description": "Successful Operation",
             "content": {
               "application/json": {
                 "schema": {
                   "properties": {
-                    "type": "object",
+                    "type": {},
                     "status": {
                       "type": "string"
                     },
@@ -1192,6 +1321,7 @@
             }
           },
           "400": {
+            "description": "Failure Operation",
             "content": {
               "application/json": {
                 "schema": {
@@ -1203,20 +1333,26 @@
         }
       }
     },
-    "/article/{articleId}/ratings": {
+    "articles/{articleId}/ratings": {
       "parameters": [
         {
-          "name": "id",
+          "name": "articleId",
           "in": "path",
           "schema": {
-            "type": "integer",
+            "type": "string",
             "format": "uuid"
           },
-          "description": "numeric ID of the article",
+          "description": "ID of the article",
           "required": true
         }
       ],
+      "/ratings": null,
       "post": {
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
         "tags": ["Ratings"],
         "summary": "User article rating",
         "description": "This endpoint can be used to rate an article",
@@ -1238,8 +1374,8 @@
           }
         },
         "responses": {
-          "201": {
-            "description": "successful article rating creation",
+          "200": {
+            "description": "successful article rating update",
             "content": {
               "application/json": {
                 "schema": {
@@ -1248,8 +1384,8 @@
               }
             }
           },
-          "200": {
-            "description": "successful article rating update",
+          "201": {
+            "description": "successful article rating creation",
             "content": {
               "application/json": {
                 "schema": {
@@ -1277,14 +1413,19 @@
           "name": "id",
           "in": "path",
           "schema": {
-            "type": "integer",
+            "type": "string",
             "format": "uuid"
           },
-          "description": "numeric ID of the article",
+          "description": "ID of the article",
           "required": true
         }
       ],
       "post": {
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
         "tags": ["Reports"],
         "summary": "This endpoint can be used to report an article",
         "operationId": "reportArticle",
@@ -1335,20 +1476,26 @@
         }
       }
     },
-    "/articles/tags/{id}": {
+    "articles/tags/{id}": {
       "parameters": [
         {
           "name": "id",
           "in": "path",
           "schema": {
-            "type": "integer",
+            "type": "string",
             "format": "uuid"
           },
-          "description": "numeric ID of the article",
+          "description": "ID of the article",
           "required": true
         }
       ],
+      "/tags": null,
       "put": {
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
         "tags": ["Tags"],
         "summary": "This endpoint can be used to add tags to an article",
         "operationId": "tagArticle",
@@ -1360,7 +1507,7 @@
                 "type": "object",
                 "properties": {
                   "tags": {
-                    "type": "array"
+                    "type": []
                   }
                 }
               }
@@ -1389,16 +1536,6 @@
               }
             }
           },
-          "404": {
-            "description": "error response",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/ErrorResponse"
-                }
-              }
-            }
-          },
           "400": {
             "description": "error response",
             "content": {
@@ -1408,6 +1545,16 @@
                   "items": {
                     "$ref": "#/components/schemas/ErrorResponse"
                   }
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "error response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
                 }
               }
             }
@@ -1430,6 +1577,13 @@
     }
   },
   "components": {
+    "securitySchemes": {
+      "bearerAuth": {
+        "type": "http",
+        "scheme": "bearer",
+        "bearerFormat": "JWT"
+      }
+    },
     "schemas": {
       "User": {
         "type": "object",
@@ -1747,7 +1901,7 @@
             "type": "string"
           },
           "data": {
-            "type": "array",
+            "type": [],
             "$ref": "#/components/schemas/Article"
           },
           "page": {
@@ -1762,7 +1916,7 @@
             "type": "string"
           },
           "data": {
-            "type": "array",
+            "type": [],
             "$ref": "#/components/schemas/Article"
           },
           "message": {

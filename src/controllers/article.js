@@ -36,6 +36,7 @@ export const addArticle = async (req, res) => {
     delete body.isDeletedByAuthor;
     let article = await Article.create({ userId, slug: slug(body.title), ...body });
     const { dataValues } = article;
+    console.log(dataValues);
     article = { authorName: fullName, ...dataValues };
     responseHandler(res, 201, {
       status: 'success',
@@ -338,7 +339,9 @@ export const getAnArticleByID = async (req, res) => {
     });
     if (!article) { return responseHandler(res, 404, { status: 'fail', message: 'Article not found!' }); }
     // This article will be added to this user read history
-    await addArticleToReadHistory(id, req.user.id);
+    if (req.user) {
+      await addArticleToReadHistory(id, req.user.id);
+    }
     return responseHandler(res, 200, { status: 'success', data: article });
   } catch (error) {
     return responseHandler(res, 500, { status: 'error', message: 'An internal server error occured!' });
@@ -367,7 +370,7 @@ export const publishArticle = async (req, res) => {
   } catch (error) {
     return responseHandler(res, 500, { status: 'error', message: 'An internal server error occured!' });
   }
-}
+};
 
 /* @description This gets the reading stats of the user
  * @function getReadingStats
