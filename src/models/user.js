@@ -110,6 +110,11 @@ export default (sequelize, DataTypes) => {
       as: 'userFavourites',
       onDelete: 'CASCADE',
     });
+    User.hasMany(models.LikeComment, {
+      foreignKey: 'userId',
+      as: 'user',
+      onDelete: 'CASCADE',
+    });
     User.hasMany(models.Rating, {
       foreignKey: 'userId',
       as: 'userRatings',

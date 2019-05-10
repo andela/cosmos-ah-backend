@@ -93,8 +93,8 @@ export default (sequelize, DataTypes) => {
       onDelete: 'CASCADE',
     });
     Article.hasMany(models.LikeArticle, {
-      foreignKey: 'userId',
-      as: 'userLikes',
+      foreignKey: 'articleId',
+      as: 'article_likes',
       onDelete: 'CASCADE',
     });
     Article.hasMany(models.Comment, {

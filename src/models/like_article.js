@@ -17,10 +17,18 @@ export default (sequelize, DataTypes) => {
       userId: {
         type: DataTypes.UUID,
         allowNull: false,
+        references: {
+          model: 'users',
+          key: 'id',
+        },
       },
       articleId: {
         type: DataTypes.UUID,
         allowNull: false,
+        references: {
+          model: 'articles',
+          key: 'id',
+        },
       },
     },
     {
@@ -30,7 +38,7 @@ export default (sequelize, DataTypes) => {
   LikeArticle.associate = (models) => {
     LikeArticle.belongsTo(models.Article, {
       foreignKey: 'articleId',
-      as: 'article',
+      as: 'article_likes',
       onDelete: 'CASCADE',
     });
     LikeArticle.belongsTo(models.User, {

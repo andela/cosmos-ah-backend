@@ -17,10 +17,26 @@ export default (sequelize, DataTypes) => {
       userId: {
         type: DataTypes.UUID,
         allowNull: false,
+        references: {
+          model: 'users',
+          key: 'id',
+        },
       },
       commentId: {
         type: DataTypes.UUID,
         allowNull: false,
+        references: {
+          model: 'comments',
+          key: 'id',
+        },
+      },
+      createdAt: {
+        allowNull: false,
+        type: DataTypes.DATE,
+      },
+      updatedAt: {
+        allowNull: false,
+        type: DataTypes.DATE,
       },
     },
     {

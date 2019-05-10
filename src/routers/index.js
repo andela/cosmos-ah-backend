@@ -48,6 +48,7 @@ import { forgotPassword, resetPassword } from '../controllers/authentication/pas
 import resetFieldValidation from '../middlewares/auth/resetPassword';
 import { trimBody } from '../middlewares';
 import { searchArticle } from '../controllers/search';
+import { getAllLikes } from '../controllers/like';
 
 const router = Router();
 
@@ -182,6 +183,8 @@ router.patch(
   isAuthor,
   publishArticle,
 );
+
+router.get('/likes/all', Auth.authenticateUser, getAllLikes);
 
 router.all('*', (req, res) => {
   res.status(404).json({
