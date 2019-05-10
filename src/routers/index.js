@@ -152,7 +152,7 @@ router.get('/followers', Auth.authenticateUser, getFollowers);
 router.put('/profile/edit', Auth.authenticateUser, checkEditBody, editUser);
 
 // Route for viewing a profile
-router.get('/profile/view/:id', Auth.authenticateUser, viewUser);
+router.get('/profile/:id?', Auth.authenticateUser, viewUser);
 
 // route for twitter authentication
 router.get('/auth/twitter', passport.authenticate('twitter'));
