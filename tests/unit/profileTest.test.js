@@ -18,7 +18,7 @@ before(async () => {
 describe('User View  Error Profile Test that does not exist', () => {
   it('Should return error for fetching user profile that does not exist', () => {
     agent
-      .get('/api/v1/profile/view/979eaa2e-5b8f-4103-8192-4639afae2ba')
+      .get('/api/v1/profile/979eaa2e-5b8f-4103-8192-4639afae2ba')
       .set({ Authorization: Auth.generateToken(payload) })
       .end((err, res) => {
         const { body } = res;

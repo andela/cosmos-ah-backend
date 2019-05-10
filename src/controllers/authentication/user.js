@@ -59,8 +59,14 @@ export const verifyUser = async (req, res) => {
 };
 
 export const viewUser = async (req, res) => {
+  let { id } = req.params;
+  if (!id) {
+    const { id: userId } = req.user;
+    id = userId;
+  }
+
   try {
-    const user = await User.findByPk(req.params.id, {
+    const user = await User.findByPk(id, {
       attributes: {
         exclude: [
           'password',
@@ -94,11 +100,11 @@ export const viewUser = async (req, res) => {
           message: 'Invalid userId supplied',
         }));
       }
+      return res.status(500).json(errorResponseFormat({
+        status: 'error',
+        message: 'Something Went Wrong',
+      }));
     }
-    return res.status(500).json(errorResponseFormat({
-      status: 'error',
-      message: 'Something Went Wrong',
-    }));
   }
 };
 
