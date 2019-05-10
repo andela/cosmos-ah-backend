@@ -156,8 +156,8 @@ export const linkedinCallback = async (req, res) => {
     const { id, fullName, email, username, imageUrl } = user[0];
 
     const token = Auth.generateToken({ id, fullName, email, username, imageUrl });
-    res.redirect(`https://ah-frontend-stage.herokuapp.com/handlesocialauth?token=${token}`);
-    // res.redirect(`http://localhost:9001/handlesocialauth?token=${token}`);
+    // res.redirect(`https://ah-frontend-stage.herokuapp.com/handlesocialauth?token=${token}`);
+    res.redirect(`http://localhost:9001/handlesocialauth?token=${token}`);
    } catch (error) {
     return res.status(500).json(errorResponseFormat({
       status: 'error',
