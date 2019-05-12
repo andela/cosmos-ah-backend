@@ -38,8 +38,8 @@ export default (sequelize, DataTypes) => {
         allowNull: false,
       },
       imageUrl: {
-        type: DataTypes.STRING,
-        allowNull: true,
+        type: DataTypes.ARRAY(DataTypes.TEXT),
+        defaultValue: [],
       },
       published: {
         type: DataTypes.BOOLEAN,
