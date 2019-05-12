@@ -33,8 +33,8 @@ export default {
       allowNull: false,
     },
     imageUrl: {
-      type: Sequelize.STRING,
-      allowNull: true,
+      type: Sequelize.ARRAY(Sequelize.TEXT),
+      defaultValue: [],
     },
     published: {
       type: Sequelize.BOOLEAN,
