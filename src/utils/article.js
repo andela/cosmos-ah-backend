@@ -12,7 +12,7 @@ export const validateArticle = async (payload) => {
   const rules = {
     title: 'required|string',
     description: 'string|min:3|max:255',
-    body: ['required', 'string', 'max:10000', 'regex:/[a-zA-Z]/i'],
+    body: ['required', 'string', 'max:100000000000000', 'regex:/[a-zA-Z]/i'],
     imageUrl: 'array',
     // eslint-disable-next-line max-len
     // imageUrl: ['regex:/^(https?|ftp|torrent|image|irc):\\/\\/(-\\.)?([^\\s\\/?\\.#-]+\\.?)+(\\/[^\\s]*)?$/i', 'string'],

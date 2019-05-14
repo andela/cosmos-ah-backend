@@ -10,9 +10,11 @@ export default {
         password: '$2a$10$ijw.0rXSMhzRlBWV1xsEEOOZ3c6sVnVE7TmzttlfwtojXOtPd8hte',
         bio:
             "Hold on now, aren't there already specs for this kind of thing? - Well... no. While there are a few handy specifications for dealing with JSON data, most notably Douglas Crockford's JSONRequest proposal, there's nothing to address the problems of general application-level messaging. More on this later.",
-        imageUrl: 'http://waterease.herokuapp.com/images/board/comfort.jpg',
+        imageUrl: 'https://res.cloudinary.com/dmq014llt/image/upload/v1557326099/people/beautiful-brunette-cute.jpg',
         notification: true,
         role: 'admin',
+        passwordResetToken: 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJlbWFpbCI6ImNoaWtlQGdtYWlsLmNvbSIsImlhdCI6MTU1Nzc2Njg1NywiZXhwIjoxNTU3ODUzMjU3fQ.H7iNEJAUGH2yxrbTrAz7XI_MR3I4oyGRoBTknMIp8RQ',
+        resetTokenExpires: '2019-05-14T17:00:57.554Z',
         verified: true,
         createdAt: new Date(),
         updatedAt: new Date(),
