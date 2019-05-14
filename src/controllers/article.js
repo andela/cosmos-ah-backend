@@ -54,6 +54,7 @@ export const addArticle = async (req, res) => {
     if (errorName === 'SequelizeForeignKeyConstraintError') {
       return responseHandler(res, 401, { status: 'fail', message: 'You are unauthorized!' });
     }
+    console.log(error);
     return responseHandler(res, 500, {
       status: 'error',
       message: "For some reason, We can't save your article, please try again!",

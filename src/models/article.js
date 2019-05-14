@@ -1,4 +1,4 @@
-import { computeArticleReadingTime } from '../utils/article';
+import { computeArticleReadingTime, slug, } from '../utils/article';
 
 /**
  * @name init
@@ -74,7 +74,7 @@ export default (sequelize, DataTypes) => {
             article.get('body'),
           );
           article.set('totalReadTime', totalReadTime);
-          article.set('slug', `${process.env.AH_API_URL}/articles/${article.get('slug')}`);
+          article.set('slug', slug(article.get('title')));
         },
         beforeUpdate(article) {
           const totalReadTime = computeArticleReadingTime(

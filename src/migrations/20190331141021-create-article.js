@@ -29,7 +29,7 @@ export default {
       allowNull: true,
     },
     body: {
-      type: Sequelize.TEXT,
+      type: Sequelize.TEXT(10000000),
       allowNull: false,
     },
     imageUrl: {
