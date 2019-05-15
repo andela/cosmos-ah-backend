@@ -1,6 +1,6 @@
 import { User } from '../models';
 
-const strategyCallback = async (accessToken, refreshToken, profile, done, res) => {
+const strategyCallback = async (accessToken, refreshToken, profile, done) => {
   const { id, displayName, photos, emails } = profile;
 
   try {
@@ -16,7 +16,7 @@ const strategyCallback = async (accessToken, refreshToken, profile, done, res) =
     });
     return done(null, user.dataValues);
   } catch (error) {
-    return res.redirect('https://ah-frontend-stage.herokuapp.com/login');
+    throw (error);
   }
 };
 
