@@ -149,7 +149,8 @@ export const linkedinCallback = async (req, res) => {
         email: linkedinEmail,
         username: `${lastname} ${firstname}`,
         imageUrl: LinkedinImageUrl,
-        password: linkedinId
+        password: linkedinId,
+        verified: true
       }
     });
 

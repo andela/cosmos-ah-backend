@@ -12,6 +12,7 @@ const strategyCallback = async (accessToken, refreshToken, profile, done) => {
         email: emails[0].value,
         username: emails[0].value,
         imageUrl: photos[0].value,
+        verified: true
       },
     });
     return done(null, user.dataValues);
