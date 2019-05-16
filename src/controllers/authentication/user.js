@@ -149,20 +149,16 @@ export const linkedinCallback = async (req, res) => {
         email: linkedinEmail,
         username: `${lastname} ${firstname}`,
         imageUrl: LinkedinImageUrl,
-        password: linkedinId
+        password: linkedinId,
+        verified: true
       }
     });
 
     const { id, fullName, email, username, imageUrl } = user[0];
+
     const token = Auth.generateToken({ id, fullName, email, username, imageUrl });
-
-    res.cookie('jwt-token', token);
-
-    res.redirect('/api/v1');
+    res.redirect(`https://ah-frontend-stage.herokuapp.com/handlesocialauth?token=${token}`);
   } catch (error) {
-    return res.status(500).json(errorResponseFormat({
-      status: 'error',
-      message: 'Something Went Wrong',
-    }));
+    return res.redirect('https://ah-frontend-stage.herokuapp.com/login');
   }
 };
