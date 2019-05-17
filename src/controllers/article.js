@@ -6,7 +6,8 @@ import {
   Report,
   Rating,
   Sequelize,
-  ArticleReadHistory
+  ArticleReadHistory,
+  User,
 } from '../models';
 import { slug, userAuthoredThisArticle, getRawArticleResults } from '../utils/article';
 import {
@@ -55,7 +56,6 @@ export const addArticle = async (req, res) => {
     if (errorName === 'SequelizeForeignKeyConstraintError') {
       return responseHandler(res, 401, { status: 'fail', message: 'You are unauthorized!' });
     }
-    console.log(error);
     return responseHandler(res, 500, {
       status: 'error',
       message: "For some reason, We can't save your article, please try again!",
@@ -299,9 +299,14 @@ export const getAllArticles = async (req, res) => {
     const articles = await Article.findAll({
       where: { published: true, isDeletedByAuthor: false, },
       order: [['createdAt', 'ASC']],
-      group: ['Article.id', 'comments.id', 'ratings.id'],
+      group: ['Article.id', 'comments.id', 'author.id', 'ratings.id'],
       ...paginate,
       include: [
+        {
+          model: User,
+          as: 'author',
+          attributes: ['id', 'fullName', 'username', 'imageUrl']
+        },
         {
           model: Comment,
           as: 'comments',
@@ -309,7 +314,6 @@ export const getAllArticles = async (req, res) => {
             [sequelize.fn('COUNT', sequelize.col('comments.id')), 'all'],
           ],
         },
-
         {
           model: Rating,
           as: 'ratings',
@@ -338,8 +342,12 @@ export const getAnArticleByID = async (req, res) => {
   try {
     const article = await Article.findOne({
       where: { id, published: true, isDeletedByAuthor: false, },
-      group: ['Article.id'],
       include: [
+        {
+          model: User,
+          as: 'author',
+          attributes: ['id', 'fullName', 'username', 'imageUrl']
+        },
         {
           model: Comment,
           as: 'comments',
