@@ -1,7 +1,6 @@
-// import bcrypt from 'bcryptjs';
+import uuid from 'uuid/v4';
 import { User } from '../../models';
 import sendMail from '../../utils/email';
-import Auth from '../../middlewares/authenticator';
 import { responseFormat, errorResponseFormat } from '../../utils/index';
 import { subject, content } from '../../utils/mailContent/passwordReset';
 
@@ -16,7 +15,7 @@ export const forgotPassword = async (req, res) => {
         status: 'fail', message: 'Account associated with this email cannot be found'
       }));
     }
-    const passwordResetToken = Auth.generateToken({ email });
+    const passwordResetToken = uuid();
     const message = content(passwordResetToken);
     const resetInstruction = { email, subject, message };
     await user.update({ passwordResetToken, resetTokenExpires: date });
