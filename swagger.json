@@ -520,12 +520,12 @@
           }
         ],
         "tags": ["User"],
-        "summary": "Authors",
-        "description": "Authors",
+        "summary": "Authors list endpoint",
+        "description": "This endpoint can be used to retrieve a list of all endpoints",
         "operationId": "getAuthors",
         "responses": {
           "200": {
-            "description": "Succeful Operation",
+            "description": "Successful Operation",
             "content": {
               "application/json": {
                 "schema": {
