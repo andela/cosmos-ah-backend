@@ -20,6 +20,7 @@ describe('LIST AUTHORS', () => {
       .set('Authorization', JWT_TOKEN)
       .end((err, res) => {
         expect(res.statusCode).to.equal(200);
+        expect(res.body.data).to.be.an('array');
         done();
       });
   });
