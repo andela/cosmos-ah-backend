@@ -1,6 +1,7 @@
 import Validator from 'validatorjs';
 import isUUID from 'validator/lib/isUUID';
 import { ArticleReadHistory } from '../models';
+import { extractRatingValues } from './rating';
 
 export const responseFormat = (response) => {
   const { data, status, message } = response;
@@ -190,4 +191,26 @@ export const addArticleToReadHistory = async (articleId, userId) => {
   } catch (error) {
     throw error;
   }
+};
+
+/**
+ * @function computeArticleRatingTotal
+ * @param {*} ratings
+ * @returns {number} returns rating total for an article
+ */
+export const computeArticleRatingTotal = (ratings) => {
+  const ratingValues = extractRatingValues(ratings);
+  return ratingValues.reduce(
+  (prevRating, curRating) => prevRating + curRating, 0);
+};
+
+/**
+ * @function computeArticleAverageRating
+ * @param {object} ratings
+ * @return {number} Returns average rating for an article
+ */
+export const computeArticleAverageRating = (ratings) => {
+  const sumTotalOfRatings = computeArticleRatingTotal(ratings);
+  const totalRatings = ratings.length;
+  return sumTotalOfRatings / totalRatings;
 };

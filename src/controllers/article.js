@@ -16,7 +16,8 @@ import {
   omitProps,
   sendResponse,
   handleDBErrors,
-  addArticleToReadHistory
+  addArticleToReadHistory,
+  computeArticleAverageRating
 } from '../utils';
 import { findAndCount } from '../utils/query';
 import { notify } from '../services/notifyFollowers';
@@ -297,15 +298,28 @@ export const getAllArticles = async (req, res) => {
     const articles = await Article.findAll({
       where: { published: true, isDeletedByAuthor: false, },
       order: [['createdAt', 'ASC']],
-      group: ['Article.id', 'comments.id'],
+      group: ['Article.id', 'comments.id', 'ratings.id'],
       ...paginate,
-      include: [{
-        model: Comment,
-        as: 'comments',
-        attributes: [
-          [sequelize.fn('COUNT', sequelize.col('comments.id')), 'all'],
-        ],
-      }],
+      include: [
+        {
+          model: Comment,
+          as: 'comments',
+          attributes: [
+            [sequelize.fn('COUNT', sequelize.col('comments.id')), 'all'],
+          ],
+        },
+        {
+          model: Rating,
+          as: 'ratings',
+          attributes: ['id', 'userId', 'value']
+        }
+      ]
+    });
+
+    articles.forEach((article) => {
+      const articleRatings = article.get().ratings;
+      const rawArticleRatings = articleRatings.map(rating => rating.get());
+      article.dataValues.averageRating = computeArticleAverageRating(rawArticleRatings);
     });
     return responseHandler(res, 200, { status: 'success', data: articles, pages, });
   } catch (error) {
