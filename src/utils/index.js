@@ -214,3 +214,11 @@ export const computeArticleAverageRating = (ratings) => {
   const totalRatings = ratings.length;
   return sumTotalOfRatings / totalRatings;
 };
+
+export const addRatingAverageToArticles = articles => articles.map((article) => {
+    const parsedArticle = article.get();
+    const articleRatings = parsedArticle.ratings;
+    const parsedArticleRatings = articleRatings.map(rating => rating.get());
+    article.dataValues.averageRating = computeArticleAverageRating(parsedArticleRatings);
+    return article;
+  });

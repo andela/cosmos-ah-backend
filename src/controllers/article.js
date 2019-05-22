@@ -17,7 +17,7 @@ import {
   sendResponse,
   handleDBErrors,
   addArticleToReadHistory,
-  computeArticleAverageRating
+  addRatingAverageToArticles
 } from '../utils';
 import { findAndCount } from '../utils/query';
 import { notify } from '../services/notifyFollowers';
@@ -308,16 +308,18 @@ export const getAllArticles = async (req, res) => {
             [sequelize.fn('COUNT', sequelize.col('comments.id')), 'all'],
           ],
         },
+
+        {
+          model: Rating,
+          as: 'ratings',
+          attributes: ['id', 'value']
+        }
       ]
     });
-
-    articles.forEach((article) => {
-      const articleRatings = article.get().ratings;
-      const rawArticleRatings = articleRatings.map(rating => rating.get());
-      article.dataValues.averageRating = computeArticleAverageRating(rawArticleRatings);
-    });
-    return responseHandler(res, 200, { status: 'success', data: articles, pages, });
+    const parsedArticles = addRatingAverageToArticles(articles);
+    return responseHandler(res, 200, { status: 'success', data: parsedArticles, pages, });
   } catch (error) {
+    console.log(error);
     return responseHandler(res, 500, { status: 'error', message: 'An internal server error occured!' });
   }
 };
