@@ -308,11 +308,6 @@ export const getAllArticles = async (req, res) => {
             [sequelize.fn('COUNT', sequelize.col('comments.id')), 'all'],
           ],
         },
-        {
-          model: Rating,
-          as: 'ratings',
-          attributes: ['id', 'userId', 'value']
-        }
       ]
     });
 
