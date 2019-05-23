@@ -201,24 +201,39 @@ export const addArticleToReadHistory = async (articleId, userId) => {
 export const computeArticleRatingTotal = (ratings) => {
   const ratingValues = extractRatingValues(ratings);
   return ratingValues.reduce(
-  (prevRating, curRating) => prevRating + curRating, 0);
+    (prevRating, curRating) => prevRating + curRating, 0);
 };
 
 /**
  * @function computeArticleAverageRating
  * @param {object} ratings
+ * @param {function} calculateTotalRatings
  * @return {number} Returns average rating for an article
  */
 export const computeArticleAverageRating = (ratings) => {
-  const sumTotalOfRatings = computeArticleRatingTotal(ratings);
-  const totalRatings = ratings.length;
-  return sumTotalOfRatings / totalRatings;
+  const totalRatings = computeArticleRatingTotal(ratings);
+  return totalRatings / ratings.length;
 };
 
-export const addRatingAverageToArticles = articles => articles.map((article) => {
-    const parsedArticle = article.get();
-    const articleRatings = parsedArticle.ratings;
-    const parsedArticleRatings = articleRatings.map(rating => rating.get());
-    article.dataValues.averageRating = computeArticleAverageRating(parsedArticleRatings);
-    return article;
-  });
+// export const addRatingAverageToArticle = (article, rating) => {
+//  article.averageRating = computeArticleAverageRating(article.ratings);
+//  return article;
+// };
+
+export const addRatingAverageToArticle = (article, rating) => {
+  const newArticle = { ...article };
+  newArticle.averageRating = rating;
+  return newArticle;
+ };
+
+/**
+ * @function addRatingAverageToArticles
+ * @param {Array} articles
+ * @returns {Array} Returns an array of article with new prop 'averageRating'
+ */
+// export const addRatingAverageToArticles = articles => articles.map((article) => {
+//   article.averageRating = computeArticleAverageRating(article.ratings);
+//   return article;
+// });
+
+export const addRatingAverageToArticles = articles => articles.map(addRatingAverageToArticle);

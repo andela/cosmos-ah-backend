@@ -8,7 +8,7 @@ import {
   Sequelize,
   ArticleReadHistory
 } from '../models';
-import { slug, userAuthoredThisArticle } from '../utils/article';
+import { slug, userAuthoredThisArticle, getRawArticleResults } from '../utils/article';
 import {
   responseHandler,
   responseFormat,
@@ -17,7 +17,8 @@ import {
   sendResponse,
   handleDBErrors,
   addArticleToReadHistory,
-  addRatingAverageToArticles
+  addRatingAverageToArticles,
+  computeArticleAverageRating
 } from '../utils';
 import { findAndCount } from '../utils/query';
 import { notify } from '../services/notifyFollowers';
@@ -312,14 +313,14 @@ export const getAllArticles = async (req, res) => {
         {
           model: Rating,
           as: 'ratings',
-          attributes: ['id', 'value']
+          attributes: ['id', 'value', 'userId'],
+          raw: true
         }
       ]
     });
-    const parsedArticles = addRatingAverageToArticles(articles);
+    const parsedArticles = addRatingAverageToArticles(getRawArticleResults(articles));
     return responseHandler(res, 200, { status: 'success', data: parsedArticles, pages, });
   } catch (error) {
-    console.log(error);
     return responseHandler(res, 500, { status: 'error', message: 'An internal server error occured!' });
   }
 };
@@ -337,7 +338,7 @@ export const getAnArticleByID = async (req, res) => {
   try {
     const article = await Article.findOne({
       where: { id, published: true, isDeletedByAuthor: false, },
-      group: ['Article.id'],
+      group: ['Article.id', 'ratings.id'],
       include: [
         {
           model: Comment,
@@ -345,8 +346,16 @@ export const getAnArticleByID = async (req, res) => {
           limit: 10,
           offset: 0,
         },
+        {
+          model: Rating,
+          as: 'ratings',
+          attributes: ['id', 'value', 'userId'],
+          raw: true
+        }
       ],
     });
+    const averageArticleRating = computeArticleAverageRating(article.ratings);
+    console.log(averageArticleRating);
     if (!article) { return responseHandler(res, 404, { status: 'fail', message: 'Article not found!' }); }
     // This article will be added to this user read history
     if (req.user) {
