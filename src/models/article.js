@@ -86,21 +86,27 @@ export default (sequelize, DataTypes) => {
     },
   );
   Article.associate = (models) => {
-    Article.belongsToMany(models.User, {
+    const { User, LikeArticle, Comment, Rating } = models;
+    Article.belongsToMany(User, {
       foreignKey: 'userId',
       as: 'articleUser',
       through: 'article_user',
       onDelete: 'CASCADE',
     });
-    Article.hasMany(models.LikeArticle, {
+    Article.hasMany(LikeArticle, {
       foreignKey: 'userId',
       as: 'userLikes',
       onDelete: 'CASCADE',
     });
-    Article.hasMany(models.Comment, {
+    Article.hasMany(Comment, {
       foreignKey: 'articleId',
       onDelete: 'CASCADE',
       as: 'comments',
+    });
+    Article.hasMany(Rating, {
+      foreignKey: 'articleId',
+      onDelete: 'CASCADE',
+      as: 'ratings',
     });
   };
   return Article;

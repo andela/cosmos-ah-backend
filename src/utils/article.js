@@ -105,3 +105,10 @@ export const userAuthoredThisArticle = async (Article, { articleId, userId } = {
     return false;
   }
 };
+
+/**
+ * @function getRawArticleResults
+ * @param {Array} allArticles array of articles
+ * @returns {Array} Returns the raw array object values
+ */
+export const getRawArticleResults = allArticles => allArticles.map(article => article.get());

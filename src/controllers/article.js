@@ -8,7 +8,7 @@ import {
   Sequelize,
   ArticleReadHistory
 } from '../models';
-import { slug, userAuthoredThisArticle } from '../utils/article';
+import { slug, userAuthoredThisArticle, getRawArticleResults } from '../utils/article';
 import {
   responseHandler,
   responseFormat,
@@ -16,7 +16,8 @@ import {
   omitProps,
   sendResponse,
   handleDBErrors,
-  addArticleToReadHistory
+  addArticleToReadHistory,
+  addRatingAverageToArticles
 } from '../utils';
 import { findAndCount } from '../utils/query';
 import { notify } from '../services/notifyFollowers';
@@ -297,17 +298,27 @@ export const getAllArticles = async (req, res) => {
     const articles = await Article.findAll({
       where: { published: true, isDeletedByAuthor: false, },
       order: [['createdAt', 'ASC']],
-      group: ['Article.id', 'comments.id'],
+      group: ['Article.id', 'comments.id', 'ratings.id'],
       ...paginate,
-      include: [{
-        model: Comment,
-        as: 'comments',
-        attributes: [
-          [sequelize.fn('COUNT', sequelize.col('comments.id')), 'all'],
-        ],
-      }],
+      include: [
+        {
+          model: Comment,
+          as: 'comments',
+          attributes: [
+            [sequelize.fn('COUNT', sequelize.col('comments.id')), 'all'],
+          ],
+        },
+
+        {
+          model: Rating,
+          as: 'ratings',
+          attributes: ['id', 'value', 'userId'],
+          raw: true
+        }
+      ]
     });
-    return responseHandler(res, 200, { status: 'success', data: articles, pages, });
+    const parsedArticles = addRatingAverageToArticles(getRawArticleResults(articles));
+    return responseHandler(res, 200, { status: 'success', data: parsedArticles, pages, });
   } catch (error) {
     return responseHandler(res, 500, { status: 'error', message: 'An internal server error occured!' });
   }
@@ -333,7 +344,7 @@ export const getAnArticleByID = async (req, res) => {
           as: 'comments',
           limit: 10,
           offset: 0,
-        },
+        }
       ],
     });
     if (!article) { return responseHandler(res, 404, { status: 'fail', message: 'Article not found!' }); }
