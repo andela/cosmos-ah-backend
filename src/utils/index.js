@@ -215,25 +215,14 @@ export const computeArticleAverageRating = (ratings) => {
   return totalRatings / ratings.length;
 };
 
-// export const addRatingAverageToArticle = (article, rating) => {
-//  article.averageRating = computeArticleAverageRating(article.ratings);
-//  return article;
-// };
-
-export const addRatingAverageToArticle = (article, rating) => {
-  const newArticle = { ...article };
-  newArticle.averageRating = rating;
-  return newArticle;
- };
+export const addRatingAverageToArticle = (article) => {
+ article.averageRating = computeArticleAverageRating(article.ratings);
+ return article;
+};
 
 /**
  * @function addRatingAverageToArticles
  * @param {Array} articles
  * @returns {Array} Returns an array of article with new prop 'averageRating'
  */
-// export const addRatingAverageToArticles = articles => articles.map((article) => {
-//   article.averageRating = computeArticleAverageRating(article.ratings);
-//   return article;
-// });
-
 export const addRatingAverageToArticles = articles => articles.map(addRatingAverageToArticle);

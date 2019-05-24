@@ -17,8 +17,7 @@ import {
   sendResponse,
   handleDBErrors,
   addArticleToReadHistory,
-  addRatingAverageToArticles,
-  computeArticleAverageRating
+  addRatingAverageToArticles
 } from '../utils';
 import { findAndCount } from '../utils/query';
 import { notify } from '../services/notifyFollowers';
@@ -338,24 +337,16 @@ export const getAnArticleByID = async (req, res) => {
   try {
     const article = await Article.findOne({
       where: { id, published: true, isDeletedByAuthor: false, },
-      group: ['Article.id', 'ratings.id'],
+      group: ['Article.id'],
       include: [
         {
           model: Comment,
           as: 'comments',
           limit: 10,
           offset: 0,
-        },
-        {
-          model: Rating,
-          as: 'ratings',
-          attributes: ['id', 'value', 'userId'],
-          raw: true
         }
       ],
     });
-    const averageArticleRating = computeArticleAverageRating(article.ratings);
-    console.log(averageArticleRating);
     if (!article) { return responseHandler(res, 404, { status: 'fail', message: 'Article not found!' }); }
     // This article will be added to this user read history
     if (req.user) {
