@@ -1,8 +1,11 @@
+import htmlToText from 'html-to-text';
 import { limit, } from 'stringz';
 import { sendNotificationMail } from '../utils/email';
 import { io } from '../utils/notification/brodcast';
 import { oneToManyFollowers } from './notificationHandler';
 import { compileTemplate } from '../templates';
+
+const emailImages = [];
 
 /**
  * @name notifyHandler
@@ -35,11 +38,29 @@ export const notifyHandler = async (notifies, payload, eventName) => {
 export const sendToEmail = async (followers, param) => followers.forEach(async ({ 'following.email': email }) => {
   const appUrl = 'https://author-haven-stage.herokuapp.com/api/v1';
   const actionLink = `${process.env.AH_API_URL}/articles/${param.id}`;
-  param.body = param.body.length > 250 ? `${limit(param.body, 250)} ...` : param.body;
+  const text = htmlToText.fromString(param.body, {
+    format: {
+      paragraph: (elem, fn, options) => {
+        const h = fn(elem.children, options);
+        return h;
+      },
+      image: (elem) => {
+        if (elem.attribs !== undefined || elem.attribs.src !== null) {
+          emailImages.push(elem.attribs.src);
+        }
+        return '';
+      },
+    }
+  });
+  param.body = text.length > 250 ? `${limit(text, 250)} ...` : text;
+  const [emailImage] = emailImages;
+  param.images = emailImage;
+
   const html = await compileTemplate(
     '/mailer/notifyOnArticlePublish.hbs',
     { email, ...param, appUrl, actionLink, },
   );
+  // return console.log(html);
   await sendNotificationMail({ email, subject: `${param.authorName} just published an article`, html });
 });
 

@@ -6,9 +6,10 @@ import {
   Report,
   Rating,
   Sequelize,
-  ArticleReadHistory
+  ArticleReadHistory,
+  User,
 } from '../models';
-import { slug, userAuthoredThisArticle } from '../utils/article';
+import { slug, userAuthoredThisArticle, getRawArticleResults } from '../utils/article';
 import {
   responseHandler,
   responseFormat,
@@ -16,7 +17,8 @@ import {
   omitProps,
   sendResponse,
   handleDBErrors,
-  addArticleToReadHistory
+  addArticleToReadHistory,
+  addRatingAverageToArticles
 } from '../utils';
 import { findAndCount } from '../utils/query';
 import { notify } from '../services/notifyFollowers';
@@ -54,7 +56,6 @@ export const addArticle = async (req, res) => {
     if (errorName === 'SequelizeForeignKeyConstraintError') {
       return responseHandler(res, 401, { status: 'fail', message: 'You are unauthorized!' });
     }
-    console.log(error);
     return responseHandler(res, 500, {
       status: 'error',
       message: "For some reason, We can't save your article, please try again!",
@@ -298,17 +299,31 @@ export const getAllArticles = async (req, res) => {
     const articles = await Article.findAll({
       where: { published: true, isDeletedByAuthor: false, },
       order: [['createdAt', 'ASC']],
-      group: ['Article.id', 'comments.id'],
+      group: ['Article.id', 'comments.id', 'author.id', 'ratings.id'],
       ...paginate,
-      include: [{
-        model: Comment,
-        as: 'comments',
-        attributes: [
-          [sequelize.fn('COUNT', sequelize.col('comments.id')), 'all'],
-        ],
-      }],
+      include: [
+        {
+          model: User,
+          as: 'author',
+          attributes: ['id', 'fullName', 'username', 'imageUrl']
+        },
+        {
+          model: Comment,
+          as: 'comments',
+          attributes: [
+            [sequelize.fn('COUNT', sequelize.col('comments.id')), 'all'],
+          ],
+        },
+        {
+          model: Rating,
+          as: 'ratings',
+          attributes: ['id', 'value', 'userId'],
+          raw: true
+        }
+      ]
     });
-    return responseHandler(res, 200, { status: 'success', data: articles, pages, });
+    const parsedArticles = addRatingAverageToArticles(getRawArticleResults(articles));
+    return responseHandler(res, 200, { status: 'success', data: parsedArticles, pages, });
   } catch (error) {
     return responseHandler(res, 500, { status: 'error', message: 'An internal server error occured!' });
   }
@@ -327,14 +342,18 @@ export const getAnArticleByID = async (req, res) => {
   try {
     const article = await Article.findOne({
       where: { id, published: true, isDeletedByAuthor: false, },
-      group: ['Article.id'],
       include: [
+        {
+          model: User,
+          as: 'author',
+          attributes: ['id', 'fullName', 'username', 'imageUrl']
+        },
         {
           model: Comment,
           as: 'comments',
           limit: 10,
           offset: 0,
-        },
+        }
       ],
     });
     if (!article) { return responseHandler(res, 404, { status: 'fail', message: 'Article not found!' }); }

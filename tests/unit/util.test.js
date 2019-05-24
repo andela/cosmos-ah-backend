@@ -4,9 +4,12 @@ import {
   errorResponseFormat,
   generateDummyWords,
   handleDBErrors,
-  checkIDParamType
+  checkIDParamType,
+  computeArticleRatingTotal,
+  computeArticleAverageRating
 } from '../../src/utils';
 import { invalidArticleUUID } from '../mock/bookmark';
+import ratingMock from '../mock/rating';
 
 import Sequelize from '../mock/errors';
 
@@ -63,7 +66,7 @@ describe('Util test', () => {
     });
   });
 
-  describe('handle db errors', () => {
+  describe('handleDBerrors', () => {
     const {
       ForeignKeyConstraintError,
       DatabaseError
@@ -87,6 +90,22 @@ describe('Util test', () => {
       handleDBErrors(dbError, { req, Sequelize }, (message) => {
         message.should.equal('Database error: table "articles" is not present');
       });
+    });
+  });
+
+  describe('computeArticleRatingTotal', () => {
+    it('should return an article rating total', () => {
+      const { ratings } = ratingMock;
+      const totalRating = computeArticleRatingTotal(ratings);
+      expect(totalRating).to.equal(8);
+    });
+  });
+
+  describe('computeArticleAverageRating', () => {
+    it('should return an article rating average', () => {
+      const { ratings } = ratingMock;
+      const averageRating = computeArticleAverageRating(ratings);
+      expect(averageRating).to.equal(4);
     });
   });
 });
