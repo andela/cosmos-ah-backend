@@ -87,7 +87,7 @@ export default (sequelize, DataTypes) => {
   );
   Article.associate = (models) => {
     const { User, LikeArticle, Comment, Rating } = models;
-    Article.belongsToMany(User, {
+    Article.belongsTo(User, {
       foreignKey: 'userId',
       as: 'author',
       onDelete: 'CASCADE',
