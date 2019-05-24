@@ -61,7 +61,7 @@ export const sendToEmail = async (followers, param) => followers.forEach(async (
     { email, ...param, appUrl, actionLink, },
   );
   // return console.log(html);
-  await sendNotificationMail({ email, subject: `${param.authorName} just published an article`, html });
+  await sendNotificationMail({ email, subject: `${param.author.fullName} just published an article`, html });
 });
 
 /**

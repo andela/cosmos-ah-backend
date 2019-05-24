@@ -73,7 +73,6 @@ export const viewUser = async (req, res) => {
           'createdAt',
           'updatedAt',
           'notification',
-          'role',
         ],
       },
     });
