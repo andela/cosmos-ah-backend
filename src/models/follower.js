@@ -38,6 +38,16 @@ export default (sequelize, DataTypes) => {
       as: 'followers',
       onDelete: 'CASCADE',
     });
+    Follower.hasMany(models.Article, {
+      foreignKey: 'userId',
+      as: 'articles',
+      onDelete: 'CASCADE',
+    });
+    Follower.belongsTo(models.Article, {
+      foreignKey: 'followerId',
+      as: 'f_articles',
+      onDelete: 'CASCADE',
+    });
   };
   return Follower;
 };

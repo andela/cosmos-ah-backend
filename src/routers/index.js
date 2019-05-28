@@ -51,6 +51,7 @@ import resetFieldValidation from '../middlewares/auth/resetPassword';
 import { trimBody } from '../middlewares';
 import { searchArticle } from '../controllers/search';
 import { imageUploadHandler, imageDestroyHandler } from '../controllers/image';
+import { getFeeds } from '../controllers/feeds';
 
 const router = Router();
 
@@ -193,6 +194,8 @@ router
   .route('/image/:category/:mode/:token?')
   .post(fileUpload, imageUploadHandler)
   .delete(imageDestroyHandler);
+
+router.get('/feeds', Auth.authenticateUser, getFeeds);
 
 router.all('*', (req, res) => {
   res.status(404).json({

@@ -26,7 +26,6 @@ export const imageUploadHandler = async (req, res) => {
       const response = { files: [{ url, }] };
       return responseHandler(res, 201, { ...response });
     } catch (error) {
-      console.log(error);
       return responseHandler(res, 500, null);
     }
   }

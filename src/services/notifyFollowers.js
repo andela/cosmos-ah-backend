@@ -60,7 +60,6 @@ export const sendToEmail = async (followers, param) => followers.forEach(async (
     '/mailer/notifyOnArticlePublish.hbs',
     { email, ...param, appUrl, actionLink, },
   );
-  // return console.log(html);
   await sendNotificationMail({ email, subject: `${param.author.fullName} just published an article`, html });
 });
 
