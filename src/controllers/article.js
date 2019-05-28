@@ -6,7 +6,8 @@ import {
   Report,
   Rating,
   Sequelize,
-  ArticleReadHistory
+  ArticleReadHistory,
+  User,
 } from '../models';
 import { slug, userAuthoredThisArticle, getRawArticleResults } from '../utils/article';
 import {
@@ -33,11 +34,11 @@ import { saveNotifications } from '../services/notificationHandler';
 export const addArticle = async (req, res) => {
   try {
     const { body, user } = req;
-    const { id: userId, fullName } = req.user;
+    const { id: userId, fullName, email, imageUrl, username, } = req.user;
     delete body.isDeletedByAuthor;
     let article = await Article.create({ userId, slug: slug(body.title), ...body });
     const { dataValues } = article;
-    article = { authorName: fullName, ...dataValues };
+    article = { author: { id: userId, fullName, email, imageUrl, username, }, ...dataValues };
     responseHandler(res, 201, {
       status: 'success',
       message: 'Your article was successfully created!',
@@ -71,7 +72,8 @@ export const addArticle = async (req, res) => {
  */
 export const editArticle = async (req, res) => {
   const success = 1;
-  const { body } = req;
+  const { body, user } = req;
+  const { id: userId, fullName, email, imageUrl, username, } = user;
   delete body.isDeletedByAuthor;
   try {
     const { id } = req.params;
@@ -81,7 +83,10 @@ export const editArticle = async (req, res) => {
       return responseHandler(res, 202, {
         status: 'success',
         message: 'Article updated successfully!',
-        data: updatedArticle,
+        data: {
+          ...updatedArticle.get({ plain: true }),
+          author: { id: userId, fullName, email, imageUrl, username, },
+          },
       });
     }
   } catch (error) {
@@ -298,9 +303,14 @@ export const getAllArticles = async (req, res) => {
     const articles = await Article.findAll({
       where: { published: true, isDeletedByAuthor: false, },
       order: [['createdAt', 'ASC']],
-      group: ['Article.id', 'comments.id', 'ratings.id'],
+      group: ['Article.id', 'comments.id', 'author.id', 'ratings.id'],
       ...paginate,
       include: [
+        {
+          model: User,
+          as: 'author',
+          attributes: ['id', 'fullName', 'username', 'imageUrl']
+        },
         {
           model: Comment,
           as: 'comments',
@@ -308,7 +318,6 @@ export const getAllArticles = async (req, res) => {
             [sequelize.fn('COUNT', sequelize.col('comments.id')), 'all'],
           ],
         },
-
         {
           model: Rating,
           as: 'ratings',
@@ -336,9 +345,13 @@ export const getAnArticleByID = async (req, res) => {
   const { id } = req.params;
   try {
     const article = await Article.findOne({
-      where: { id, published: true, isDeletedByAuthor: false, },
-      group: ['Article.id'],
+      where: { id, isDeletedByAuthor: false, },
       include: [
+        {
+          model: User,
+          as: 'author',
+          attributes: ['id', 'fullName', 'username', 'imageUrl']
+        },
         {
           model: Comment,
           as: 'comments',
@@ -347,7 +360,11 @@ export const getAnArticleByID = async (req, res) => {
         }
       ],
     });
-    if (!article) { return responseHandler(res, 404, { status: 'fail', message: 'Article not found!' }); }
+    let altMessage = null;
+    if (article && article.published === false) {
+      altMessage = 'The article you are trying to access has not yet been publshed';
+    }
+    if (!article || (article && article.published === false)) { return responseHandler(res, 404, { status: 'fail', type: altMessage ? 'publish' : null, message: altMessage || 'Article not found!' }); }
     // This article will be added to this user read history
     if (req.user) {
       await addArticleToReadHistory(id, req.user.id);

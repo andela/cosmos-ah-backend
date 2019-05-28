@@ -1,5 +1,6 @@
 import { Router } from 'express';
 import passport from 'passport';
+import { fileUpload } from '../config/cloudinaryConfig';
 import passportAuth from '../middlewares/passport';
 import bookmarkValidation from '../middlewares/bookmark';
 import {
@@ -49,6 +50,7 @@ import { forgotPassword, resetPassword } from '../controllers/authentication/pas
 import resetFieldValidation from '../middlewares/auth/resetPassword';
 import { trimBody } from '../middlewares';
 import { searchArticle } from '../controllers/search';
+import { imageUploadHandler, imageDestroyHandler } from '../controllers/image';
 
 const router = Router();
 
@@ -60,6 +62,7 @@ router.get('/', (req, res) => res.status(200).json({
 router
   .route('/articles/:id/like')
   .patch(checkParam, Auth.authenticateUser, verifyArticle, likeArticle);
+
 router.route('/articles/:id/highlight').post(Auth.authenticateUser, checkParam, highlightArticle);
 
 router
@@ -185,6 +188,11 @@ router.patch(
 );
 
 router.get('/user-reading-stats', Auth.authenticateUser, getReadingStats);
+
+router
+  .route('/image/:category/:mode/:token?')
+  .post(fileUpload, imageUploadHandler)
+  .delete(imageDestroyHandler);
 
 router.all('*', (req, res) => {
   res.status(404).json({

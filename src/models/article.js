@@ -1,4 +1,4 @@
-import { computeArticleReadingTime } from '../utils/article';
+import { computeArticleReadingTime, slug, } from '../utils/article';
 
 /**
  * @name init
@@ -38,8 +38,8 @@ export default (sequelize, DataTypes) => {
         allowNull: false,
       },
       imageUrl: {
-        type: DataTypes.STRING,
-        allowNull: true,
+        type: DataTypes.ARRAY(DataTypes.TEXT),
+        defaultValue: [],
       },
       published: {
         type: DataTypes.BOOLEAN,
@@ -74,7 +74,7 @@ export default (sequelize, DataTypes) => {
             article.get('body'),
           );
           article.set('totalReadTime', totalReadTime);
-          article.set('slug', `${process.env.AH_API_URL}/articles/${article.get('slug')}`);
+          article.set('slug', slug(article.get('title')));
         },
         beforeUpdate(article) {
           const totalReadTime = computeArticleReadingTime(
@@ -87,10 +87,9 @@ export default (sequelize, DataTypes) => {
   );
   Article.associate = (models) => {
     const { User, LikeArticle, Comment, Rating } = models;
-    Article.belongsToMany(User, {
+    Article.belongsTo(User, {
       foreignKey: 'userId',
-      as: 'articleUser',
-      through: 'article_user',
+      as: 'author',
       onDelete: 'CASCADE',
     });
     Article.hasMany(LikeArticle, {

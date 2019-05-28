@@ -12,8 +12,10 @@ export const validateArticle = async (payload) => {
   const rules = {
     title: 'required|string',
     description: 'string|min:3|max:255',
-    body: ['required', 'string', 'max:10000', 'regex:/[a-zA-Z]/i'],
-    imageUrl: ['regex:/^(https?|ftp|torrent|image|irc):\\/\\/(-\\.)?([^\\s\\/?\\.#-]+\\.?)+(\\/[^\\s]*)?$/i', 'string'],
+    body: ['required', 'string', 'max:100000000000000', 'regex:/[a-zA-Z]/i'],
+    imageUrl: 'array',
+    // eslint-disable-next-line max-len
+    // imageUrl: ['regex:/^(https?|ftp|torrent|image|irc):\\/\\/(-\\.)?([^\\s\\/?\\.#-]+\\.?)+(\\/[^\\s]*)?$/i', 'string'],
     tags: ['array'],
   };
   const errorMessages = {
@@ -26,7 +28,7 @@ export const validateArticle = async (payload) => {
     'max.description': 'If your :attribute exceeds 255 characters, it becomes too much to handle',
     'required.body': 'Your article needs a body field for it to be valid',
     'max.body': 'If your :attribute exceeds 10000 characters, it becomes too much to handle',
-    'regex.imageUrl': 'The :attribute field requires a valid URL',
+    'array.imageUrl': 'The :attribute field must be an array type',
   };
   return new Validator(payload, rules, errorMessages);
 };

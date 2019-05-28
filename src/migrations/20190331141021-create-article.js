@@ -29,12 +29,12 @@ export default {
       allowNull: true,
     },
     body: {
-      type: Sequelize.TEXT,
+      type: Sequelize.TEXT(10000000),
       allowNull: false,
     },
     imageUrl: {
-      type: Sequelize.STRING,
-      allowNull: true,
+      type: Sequelize.ARRAY(Sequelize.TEXT),
+      defaultValue: [],
     },
     published: {
       type: Sequelize.BOOLEAN,

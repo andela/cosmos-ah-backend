@@ -2,7 +2,7 @@ import chai from 'chai';
 import jwt from 'jsonwebtoken';
 import chaiHttp from 'chai-http';
 import { startServer } from '../../src/server';
-import { failedVerificationLogin, successLogin, invalidLoginEmail, invalidLoginPassowrd, failedLoginValidation } from '../mock/login';
+import { successLogin, invalidLoginEmail, invalidLoginPassowrd, failedLoginValidation } from '../mock/login';
 
 const { expect } = chai;
 
@@ -15,17 +15,6 @@ describe('Users Login', () => {
   beforeEach(async () => {
     app = await startServer(5000);
     agent = chai.request(app);
-  });
-
-  it('should return error for account that is yet to be verifiied', (done) => {
-    agent.post('/api/v1/login')
-      .send(failedVerificationLogin)
-      .end((err, res) => {
-        expect(res).to.have.status(401);
-        const { body } = res;
-        expect(body.data).to.be.equal('You are yet to verify your account');
-        done();
-      });
   });
 
   it('should login user', (done) => {
