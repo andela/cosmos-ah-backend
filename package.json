@@ -77,7 +77,7 @@
     "socket.io-client": "^2.2.0",
     "stringz": "^1.0.0",
     "swagger-ui-express": "^4.0.2",
-    "underscore": "^1.9.1",
+    "underscore": "^1.12.1",
     "uuid": "^3.3.2",
     "validator": "^10.11.0",
     "validatorjs": "^3.15.1"
