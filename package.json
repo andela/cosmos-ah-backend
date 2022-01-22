@@ -58,7 +58,7 @@
     "jsonwebtoken": "^8.5.1",
     "multer": "^1.4.1",
     "nock": "^10.0.6",
-    "node-fetch": "^2.3.0",
+    "node-fetch": "^3.1.1",
     "nodemailer": "^6.1.0",
     "nodemailer-sendgrid": "^1.0.3",
     "passport": "^0.4.0",
